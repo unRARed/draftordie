@@ -1,0 +1,44 @@
+css:
+  .c-draft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #333;
+    color: #fff;
+    font-family: sans-serif;
+    font-size: 8px;
+    text-align: center;
+  }
+  .c-draft__round {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+  .c-draft__slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+  .c-draft__slot--qb { background-color: yellow; color: black; }
+  .c-draft__slot--rb { background-color: limegreen; color: black; }
+  .c-draft__slot--wr { background-color: blue; }
+  .c-draft__slot--te { background-color: hotpink; color: black; }
+  .c-draft__slot--k { background-color: purple; }
+  .c-draft__slot--dst { background-color: darkorange; }
+.c-draft
+  - @data[:round_count].times do |round_index|
+    .c-draft__round
+      - @data[:player_count].times do |player_index|
+        - player = Player.all.sample
+        div class="c-draft__slot c-draft__slot--#{player.position.downcase}"
+          strong Round #{round_index + 1}, Pick #{player_index + 1}
+          span #{player.name} (#{player.position})
