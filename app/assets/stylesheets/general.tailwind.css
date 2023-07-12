@@ -1,0 +1,11 @@
+body {
+  font-size: 0.8em;
+}
+
+a, a:visited {
+  @apply text-blue-600;
+}
+
+a:hover {
+  @apply text-blue-800;
+}

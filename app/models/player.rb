@@ -4,4 +4,6 @@ class Player < ApplicationRecord
 
   validates :name,
     uniqueness: { scope: [:team, :position, :scraped_at] }
+
+  delegate :name, to: :team, prefix: true
 end

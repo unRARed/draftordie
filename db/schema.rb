@@ -10,18 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_11_005437) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_12_062148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "drafts", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.string "slug"
     t.integer "round_count"
     t.integer "player_count"
     t.integer "selection_seconds"
-    t.integer "player_ids", default: [], array: true
+    t.integer "user_ids", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name", default: "", null: false
+    t.boolean "is_paused", default: false, null: false
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.string "access_code"
+    t.index ["user_id"], name: "index_drafts_on_user_id"
+  end
+
+  create_table "pairings", force: :cascade do |t|
+    t.text "context"
+    t.bigint "user_id", null: false
+    t.string "pairable_type", null: false
+    t.bigint "pairable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pairable_type", "pairable_id"], name: "index_pairings_on_pairable"
+    t.index ["user_id"], name: "index_pairings_on_user_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -34,14 +52,30 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_11_005437) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rounds", force: :cascade do |t|
+    t.bigint "draft_id", null: false
+    t.integer "number", null: false
+    t.boolean "is_reversed", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.index ["draft_id"], name: "index_rounds_on_draft_id"
+  end
+
   create_table "selections", force: :cascade do |t|
-    t.bigint "draft_id"
-    t.bigint "user_id"
+    t.bigint "round_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "player_id"
+    t.integer "pick_number"
     t.string "write_in_name"
     t.string "write_in_position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["draft_id"], name: "index_selections_on_draft_id"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.index ["player_id"], name: "index_selections_on_player_id"
+    t.index ["round_id"], name: "index_selections_on_round_id"
     t.index ["user_id"], name: "index_selections_on_user_id"
   end
 
@@ -57,6 +91,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_11_005437) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "selections", "drafts"
+  add_foreign_key "drafts", "users"
+  add_foreign_key "pairings", "users"
+  add_foreign_key "rounds", "drafts"
+  add_foreign_key "selections", "players"
+  add_foreign_key "selections", "rounds"
   add_foreign_key "selections", "users"
 end

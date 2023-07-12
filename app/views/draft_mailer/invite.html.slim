@@ -1,0 +1,5 @@
+div Use this access code to join "#{@draft.name}"
+= @draft.access_code
+hr
+= link_to "Join this Draft", draft_url(@draft),
+  class: "c-button c-button--secondary"

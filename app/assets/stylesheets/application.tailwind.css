@@ -1,3 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "general.tailwind";
+@import "components/layout.tailwind";
+@import "components/buttons.tailwind";
+@import "components/forms.tailwind";
+@import "components/draft_board.tailwind";
+
+.c-notification {
+  @apply bg-blue-100 border-blue-500 text-blue-700;
+}
+
+.c-container--md {
+  @apply max-w-md mx-auto;
+}

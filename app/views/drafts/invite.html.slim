@@ -1,0 +1,13 @@
+.c-container--md
+  = form_tag invite_draft_path(@draft),
+    method: :post, html: { class: "c-form" },
+    data: { turbo_method: :post } \
+  do
+    - if @draft.errors.any?
+      = render "shared/errors", target: @draft
+    .form-group.form-group--required
+      = label_tag :email, "Email",
+        class: "c-form__label"
+      = text_field_tag :email
+    = submit_tag "Send Invite",
+      class: "c-button c-button--positive"

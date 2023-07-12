@@ -62,6 +62,9 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "fantasy_draft_production"
 
+  config.action_mailer.default_url_options = {
+    host: 'draftordie.com', protocol: 'https'
+  }
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.

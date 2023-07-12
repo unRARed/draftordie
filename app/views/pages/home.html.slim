@@ -1,2 +1,8 @@
-h1 Pages#home
-p Find me in app/views/pages/home.html.slim
+- if user_signed_in?
+  - if current_user.drafts.any?
+    = link_to "Continue Draft",
+      draft_path(current_user.drafts.last),
+      class: "c-button"
+  = link_to "Start a Draft",
+    new_draft_path,
+    class: "c-button#{' c-button--secondary' if current_user.drafts.any?}"

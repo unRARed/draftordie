@@ -1,0 +1,13 @@
+@layer components {
+  .c-layout__main {
+    @apply bg-white;
+  }
+
+  .c-layout__header {
+    @apply bg-gray-100;
+  }
+
+  .c-layout__footer {
+    @apply bg-gray-100 text-center;
+  }
+}

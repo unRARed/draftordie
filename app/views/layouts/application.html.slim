@@ -1,0 +1,30 @@
+doctype html
+html
+  head
+    title Draft or Die
+    meta(
+      name="viewport"
+      content="width=device-width,initial-scale=1"
+    )
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag "application",
+      "data-turbo-track": "reload"
+    = javascript_include_tag "application",
+      "data-turbo-track": "reload", defer: true
+  body.c-layout
+    header.c-layout__header
+      - if user_signed_in?
+        span Signed in as #{current_user.email}
+        = link_to "Sign out",
+          destroy_user_session_path,
+          method: :delete,
+          data: { turbo_method: :delete }
+      - else
+        = link_to "Sign in", new_user_session_path
+    main.c-layout__main
+      - if flash.any?
+        = render "shared/flash"
+      = yield
+    footer.c-layout__footer
+        span &copy; #{Time.current.year} Draft or Die

@@ -1,0 +1,71 @@
+css:
+  .c-draft__board__slot {
+    width: #{100 / [@draft.users.count, 1].max}%;
+  }
+= link_to 'Edit', edit_draft_path(@draft)
+= link_to 'Begin Draft',
+  start_draft_path(@draft),
+  method: :patch,
+  data: { turbo_method: :patch }
+.c-draft
+  .c-draft__header
+    .c-draft__header__name = @draft.name
+    - if @draft.current_selection.nil?
+      strong No selection in progress
+    - else
+      .c-draft__header__selection
+        strong On the clock:
+        br
+        span = @draft.current_selection.user.email
+      .c-draft__header__clock
+        - clock = @draft.current_selection.time_remaining
+        span.minutes = "%02d" % clock.first
+        span
+          | :
+        span.seconds = "%02d" % clock.last
+    .c-draft__header__qr
+      == RQRCode::QRCode.new("https://draftordie.com#{request.env['PATH_INFO']}").as_svg( \
+        color: "000",
+        shape_rendering: "crispEdges",
+        module_size: 2,
+        standalone: true,
+        use_path: true \
+      )
+  .c-draft__board
+    - if @draft.rounds.empty?
+      p No rounds have been added to this draft.
+      = link_to 'Generate Board',
+        generate_draft_path(@draft),
+        method: :post,
+        data: { turbo_method: :post }
+    - else
+      - @draft.rounds.each do |round|
+        div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
+          - round.selections.each do |selection|
+            div class="#{selection_class(@draft, selection)}"
+              strong Rd. #{round.number} Pick #{selection.pick_number}
+              span #{selection.player_name} (#{selection.position})
+              span #{selection.user.email || 'Unknown User'}
+
+javascript:
+  let minutes = document.querySelector(".minutes").innerText;
+  let seconds = document.querySelector(".seconds").innerText;
+  if (minutes === "00" && seconds === "00") {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "#{request.env['PATH_INFO']}/start_next_selection");
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader(
+      'X-CSRF-Token',
+      document.querySelector('meta[name="csrf-token"]').content
+    )
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        console.log(xhr.status);
+        console.log(xhr.responseText);
+      }};
+
+    xhr.send();
+  }
+

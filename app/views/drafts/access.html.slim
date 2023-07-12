@@ -1,0 +1,11 @@
+.c-container--md
+  = form_tag access_draft_path(@draft),
+    method: :post, html: { class: "c-form" },
+    data: { turbo_method: :post } \
+  do
+    .form-group.form-group--required
+      = label_tag :access_code, "Access Code",
+        class: "c-form__label"
+      = text_field_tag :access_code
+    = submit_tag "Let me in!",
+      class: "c-button c-button--positive"

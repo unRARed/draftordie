@@ -34,6 +34,7 @@ css:
   .c-draft__slot--te { background-color: hotpink; color: black; }
   .c-draft__slot--k { background-color: purple; }
   .c-draft__slot--dst { background-color: darkorange; }
+= link_to 'Edit', edit_draft_path(@draft)
 .c-draft
   - @data[:round_count].times do |round_index|
     .c-draft__round

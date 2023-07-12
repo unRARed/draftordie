@@ -45,15 +45,15 @@ module FantasyDraft
     # GZip all responses
     config.middleware.use Rack::Deflater
 
-    config.to_prepare do
-      Devise::SessionsController.layout "auth"
-      # DeviseInvitable::RegistrationsController.layout "auth"
-      # Devise::InvitationsController.layout "auth"
-      Devise::RegistrationsController.layout "auth"
-      Devise::ConfirmationsController.layout "auth"
-      Devise::UnlocksController.layout "auth"
-      Devise::PasswordsController.layout "auth"
-      Devise::Mailer.layout "mailer"
-    end
+    # config.to_prepare do
+    #   Devise::SessionsController.layout "auth"
+    #   # DeviseInvitable::RegistrationsController.layout "auth"
+    #   # Devise::InvitationsController.layout "auth"
+    #   Devise::RegistrationsController.layout "auth"
+    #   Devise::ConfirmationsController.layout "auth"
+    #   Devise::UnlocksController.layout "auth"
+    #   Devise::PasswordsController.layout "auth"
+    #   Devise::Mailer.layout "mailer"
+    # end
   end
 end

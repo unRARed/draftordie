@@ -56,6 +56,7 @@ gem "rails_live_reload", "~> 0.3.4"
 
 gem "foreman", "~> 0.87.2"
 
+gem "rqrcode", "~> 2.0"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -63,6 +64,11 @@ group :development, :test do
   gem "rspec-rails"
   gem "byebug"
   gem "factory_bot_rails"
+  gem "faker"
+end
+
+group :test do
+  gem "capybara"
 end
 
 group :development do

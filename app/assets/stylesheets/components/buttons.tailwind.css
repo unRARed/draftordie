@@ -1,0 +1,14 @@
+@layer components {
+  a.c-button, .c-button {
+    @apply inline-block px-4 py-2 text-sm font-medium leading-5 text-center text-white transition duration-150 ease-in-out bg-blue-600 border rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:border-blue-400 active:bg-blue-700 cursor-pointer;
+    color: #fff !important;
+  }
+
+  a.c-button.c-button--secondary, .c-button.c-button--secondary {
+    @apply bg-purple-600 border-purple-500 hover:bg-purple-500 focus:border-purple-700 active:bg-purple-700 text-white;
+  }
+
+  a.c-button.c-button--positive, .c-button.c-button--positive {
+    @apply bg-green-600 border-green-500 hover:bg-green-500 focus:border-green-700 active:bg-green-700 text-white;
+  }
+}
