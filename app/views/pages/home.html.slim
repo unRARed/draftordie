@@ -1,8 +1,8 @@
 - if user_signed_in?
   - if current_user.drafts.any?
-    = link_to "Continue Draft",
-      draft_path(current_user.drafts.last),
-      class: "c-button"
+    - current_user.drafts.each do |draft|
+      = link_to "Load #{draft.name}",
+        draft_path(draft), class: "c-button"
   = link_to "Start a Draft",
     new_draft_path,
     class: "c-button#{' c-button--secondary' if current_user.drafts.any?}"
