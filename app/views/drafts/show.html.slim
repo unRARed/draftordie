@@ -3,10 +3,11 @@ css:
     width: #{100 / [@draft.users.count, 1].max}%;
   }
 = link_to 'Edit', edit_draft_path(@draft)
-= link_to 'Begin Draft',
-  start_draft_path(@draft),
-  method: :patch,
-  data: { turbo_method: :patch }
+- if @draft.rounds.any?
+  = link_to 'Begin Draft',
+    start_draft_path(@draft),
+    method: :patch,
+    data: { turbo_method: :patch }
 .c-draft
   .c-draft__header
     .c-draft__header__name = @draft.name
