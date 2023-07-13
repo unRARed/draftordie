@@ -9,6 +9,7 @@ class Draft < ApplicationRecord
   has_many :pairings, as: :pairable
   has_many :users, through: :pairings
 
+  validates :name, presence: true
   validates :round_count, :player_count, :selection_seconds,
     numericality: { greater_than: 0 }
   validates :round_count,

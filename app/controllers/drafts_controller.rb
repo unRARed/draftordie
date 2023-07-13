@@ -13,7 +13,13 @@ class DraftsController < ApplicationController
   ]
   before_action :load_full_draft, only: [:show]
   before_action :check_access_code,
-    except: [:new, :create, :access, :verify_and_join]
+    except: [:index, :new, :create, :access, :verify_and_join]
+  skip_after_action :verify_policy_scoped, :only => :index
+
+
+  def index
+    redirect_to root_path
+  end
 
   def access; end
 
@@ -53,10 +59,12 @@ class DraftsController < ApplicationController
   def edit; end
   def new
     @draft = Draft.new
+    authorize @draft
   end
 
   def create
     @draft = Draft.new(draft_params)
+    authorize @draft
     @draft.user = current_user
 
     if @draft.save
