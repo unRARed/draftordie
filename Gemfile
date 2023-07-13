@@ -85,3 +85,5 @@ group :development do
 end
 
 gem "watir", "~> 7.2"
+
+gem "pundit", "~> 2.3"

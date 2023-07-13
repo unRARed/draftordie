@@ -135,6 +135,7 @@ private
 
   def set_draft
     @draft = Draft.find_by_slug(params[:slug])
+    authorize @draft
   end
 
   def load_full_draft
@@ -142,6 +143,7 @@ private
       eager_load(:users).
       eager_load(rounds: { selections: :user }).
       find_by_slug(params[:slug])
+    authorize @draft
   end
 
   def check_access_code
