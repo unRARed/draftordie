@@ -14,6 +14,7 @@ RSpec.describe "Draft", type: :feature do
       fill_in "Number of Players", with: 4
       click_on "Create Draft"
       expect(page).to have_content("Draft created successfully")
+      expect(draft.users).to include(user)
     end
 
     context "with a draft" do

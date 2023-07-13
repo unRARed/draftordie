@@ -29,7 +29,9 @@ class DraftsController < ApplicationController
 
     unless @draft.access_code == access_code
       flash[:alert] = "Invalid access code"
-      return redirect_to access_draft_path(@draft)
+      return redirect_to access_draft_path(@draft,
+        params: { access_code: access_code}
+      )
     end
     session["draft_#{@draft.slug}_access_code"] = access_code
     unless @draft.users.include?(current_user)
@@ -68,6 +70,7 @@ class DraftsController < ApplicationController
     @draft.user = current_user
 
     if @draft.save
+      @draft.users << current_user
       flash[:notice] = "Draft created successfully"
       redirect_to edit_draft_path(@draft)
     else
@@ -159,7 +162,9 @@ private
 
     if session["draft_#{@draft.slug}_access_code"] != @draft.access_code
       flash[:alert] = "Access to this draft is restricted"
-      redirect_to access_draft_path(@draft)
+      redirect_to access_draft_path(@draft,
+        params: { access_code: params[:access_code] }
+      )
     end
   end
 end

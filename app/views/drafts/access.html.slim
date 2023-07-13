@@ -6,6 +6,7 @@
     .form-group.form-group--required
       = label_tag :access_code, "Access Code",
         class: "c-form__label"
-      = text_field_tag :access_code
+      = text_field_tag :access_code, params[:access_code],
+        class: "c-form__input"
     = submit_tag "Let me in!",
       class: "c-button c-button--positive"
