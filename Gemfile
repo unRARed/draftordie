@@ -87,3 +87,5 @@ end
 gem "watir", "~> 7.2"
 
 gem "pundit", "~> 2.3"
+
+gem "dockerfile-rails", ">= 1.5", :group => :development
