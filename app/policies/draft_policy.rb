@@ -16,12 +16,12 @@ class DraftPolicy < ApplicationPolicy
     create?
   end
 
-  # actions reserved for invted drafters
-  def start_next_selection?
-    is_draft_owner? || is_draft_member?
+  def show?
+    create?
   end
 
-  def show?
+  # actions reserved for invted drafters
+  def start_next_selection?
     is_draft_owner? || is_draft_member?
   end
 
