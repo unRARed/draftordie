@@ -16,12 +16,25 @@ class Draft < ApplicationRecord
   validates :player_count,
     numericality: { less_than_or_equal_to: 20 }
 
+  def is_started?
+    started_at.present?
+  end
+
   def selections_count
     selections.count{ |s| s.is_selected? }
   end
 
   def current_selection
     selections.find{ |s| !s.is_selected? }
+  end
+
+  # To determine if the draft is between selections,
+  # so we know whether to start the next selection
+  def is_between_selections?
+    return false if selections.all?{ |s| s.is_selected? }
+    return false unless !current_selection.nil?
+
+    current_selection.time_remaining == [0, 0]
   end
 
   def to_param

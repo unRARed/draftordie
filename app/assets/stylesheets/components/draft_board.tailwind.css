@@ -26,10 +26,13 @@
   }
 
   .c-draft__board__slot {
-    @apply flex-1 flex flex-col border-2 truncate text-xs;
+    @apply flex-1 flex flex-col truncate text-xs p-1;
   }
   .c-draft__board__slot--current {
-    @apply bg-green-200;
+    @apply bg-green-200 border-green-200;
+  }
+  .c-draft__board__slot--selected {
+    @apply bg-gray-100 border-gray-200 text-red-800;
   }
 
   .c-draft__board__slot--qb {

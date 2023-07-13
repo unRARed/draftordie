@@ -46,6 +46,14 @@ class Selection < ApplicationRecord
     minutes_and_seconds(draft.selection_seconds - elapsed_seconds)
   end
 
+  def seconds_remaining
+    unless self.started_at.present? && draft.started_at.present?
+      return draft.selection_seconds
+    end
+    elapsed_seconds = Time.current - self.started_at
+    draft.selection_seconds - elapsed_seconds
+  end
+
 private
 
   def finalize_selection

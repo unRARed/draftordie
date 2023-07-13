@@ -11,7 +11,8 @@
       = link_to '(Re)Generate Board',
         generate_draft_path(@draft),
         method: :post,
-        data: { turbo_method: :post },
+        data: { turbo_method: :post,
+          turbo_confirm: "Are you sure?" },
         class: "c-button c-button--secondary"
     - else
       = link_to 'Generate Board',

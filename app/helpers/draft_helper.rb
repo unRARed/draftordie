@@ -12,6 +12,9 @@ module DraftHelper
       classes << "c-draft__board__slot--" +
         selection.position.downcase
     end
+    if selection.is_selected?
+      classes << "c-draft__board__slot--selected"
+    end
     if draft.current_selection == selection
       classes << "c-draft__board__slot--current"
     end

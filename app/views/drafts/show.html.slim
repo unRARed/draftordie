@@ -19,11 +19,14 @@ css:
         br
         span = @draft.current_selection.user.email
       .c-draft__header__clock
-        - clock = @draft.current_selection.time_remaining
-        span.minutes = "%02d" % clock.first
-        span
-          | :
-        span.seconds = "%02d" % clock.last
+        - if @draft.is_started?
+          .b-countdown.b-countdown--simple data-to="#{Time.current + @draft.current_selection.seconds_remaining.seconds}"
+        - else
+          - clock = @draft.current_selection.time_remaining
+          span.minutes = "%02d" % clock.first
+          span
+            | :
+          span.seconds = "%02d" % clock.last
     .c-draft__header__qr
       == RQRCode::QRCode.new("https://draftordie.com#{request.env['PATH_INFO']}").as_svg( \
         color: "000",
@@ -48,25 +51,46 @@ css:
               span #{selection.player_name} (#{selection.position})
               span #{selection.user.email || 'Unknown User'}
 
-javascript:
-  let minutes = document.querySelector(".minutes").innerText;
-  let seconds = document.querySelector(".seconds").innerText;
-  if (minutes === "00" && seconds === "00") {
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "#{request.env['PATH_INFO']}/start_next_selection");
-    xhr.setRequestHeader("Accept", "application/json");
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader(
-      'X-CSRF-Token',
-      document.querySelector('meta[name="csrf-token"]').content
-    )
+- if @draft.is_started?
+  javascript:
+    var minutes, seconds;
 
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        console.log(xhr.status);
-        console.log(xhr.responseText);
-      }};
+    function handleSelection() {
+      if (!document.querySelector(".b-countdown__minutes")) { return; }
+      if (!document.querySelector(".b-countdown__seconds")) { return; }
 
-    xhr.send();
-  }
+      minutes = document.
+        querySelector(".b-countdown__minutes").
+        innerText.replace(/\s/g, "");
+      seconds = document.
+        querySelector(".b-countdown__seconds").
+        innerText.replace(/\s/g, "");
+      console.log(minutes, seconds);
+      if (minutes === "00" && seconds === "00") {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "#{request.env['PATH_INFO']}/start_next_selection");
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader(
+          'X-CSRF-Token', document.
+            querySelector('meta[name="csrf-token"]').content
+        )
 
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            console.log(xhr.status);
+            console.log(xhr.responseText);
+          }
+        };
+
+        xhr.send();
+        // wait 1 second for the server to do its thing
+        setTimeout(function () {
+          window.location.reload();
+        }, 250);
+      }
+    }
+
+    document.addEventListener('turbo:load', (evt) => {
+      setInterval(handleSelection, 3000);
+    }, false);

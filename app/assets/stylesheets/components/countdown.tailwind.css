@@ -1,0 +1,9 @@
+@layer components {
+  [class*="b-countdown__"] {
+    @apply text-6xl font-bold inline-block;
+  }
+  .b-countdown__seconds:before {
+    position: relative;
+    content: ":";
+  }
+}

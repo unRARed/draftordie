@@ -86,16 +86,19 @@ class DraftsController < ApplicationController
   end
 
   def start_next_selection
-    return if @draft.current_selection.time_remaining != [0, 0]
+    return unless @draft.is_between_selections?
 
-    @draft.current_selection.update ended_at: Time.current
-    @draft.current_selection.update started_at: Time.current
+    @draft.current_selection.update! ended_at: Time.current
+    @draft.current_selection.reload.
+      update! started_at: Time.current
   end
 
   def generate
     Draft.transaction do
       current_pick_number = 1
       @draft.rounds.destroy_all
+      @draft.update started_at: nil
+      @draft.update ended_at: nil
       @draft.round_count.times do |num|
         round_number = num + 1
         round = @draft.rounds.create(
