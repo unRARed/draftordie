@@ -17,6 +17,10 @@ class Draft < ApplicationRecord
   validates :player_count,
     numericality: { less_than_or_equal_to: 20 }
 
+  scope :preloaded, -> {
+    eager_load(:users).eager_load(rounds: { selections: :user })
+  }
+
   def is_started?
     started_at.present?
   end

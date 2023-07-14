@@ -11,7 +11,7 @@ class DraftsController < ApplicationController
     :access,
     :verify_and_join
   ]
-  before_action :load_full_draft, only: [:show]
+  before_action :load_full_draft, only: [:show, :member]
   before_action :check_access_code,
     except: [:index, :new, :create, :access, :verify_and_join]
   skip_after_action :verify_policy_scoped, :only => :index
@@ -42,10 +42,27 @@ class DraftsController < ApplicationController
   end
 
   def show
-    @draft = Draft.
-      eager_load(:users).
-      eager_load(rounds: { selections: :user }).
-      find_by_slug(params[:slug])
+    if @draft.user == current_user
+      # TODO: add admin view of board w/ links
+      #       to edit selections
+      return render
+    end
+
+    if @draft.users.include?(current_user)
+      return redirect_to member_draft_path(@draft)
+    end
+  end
+
+  def member
+    @selection = @draft.current_selection
+    if @selection.user == current_user
+      return redirect_to(edit_draft_selection_path(
+        @selection.draft, @selection
+      ))
+    end
+
+    # JUST FOR NOW
+    render "show"
   end
 
   def create_invite
@@ -150,10 +167,7 @@ private
   end
 
   def load_full_draft
-    @draft = Draft.
-      eager_load(:users).
-      eager_load(rounds: { selections: :user }).
-      find_by_slug(params[:slug])
+    @draft = Draft.preloaded.find_by_slug(params[:slug])
     authorize @draft
   end
 

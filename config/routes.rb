@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       post :invite, to: "drafts#create_invite"
       get :access
       post :access, to: "drafts#verify_and_join"
+      get :member
     end
+
+    resources :selections, only: [:edit, :update]
   end
 end

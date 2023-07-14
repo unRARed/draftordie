@@ -20,6 +20,11 @@ class DraftPolicy < ApplicationPolicy
     create?
   end
 
+  # for specific attached user's view of the draft
+  def member?
+    is_draft_member?
+  end
+
   # actions reserved for invted drafters
   def start_next_selection?
     is_draft_owner? || is_draft_member?
