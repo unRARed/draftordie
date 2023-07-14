@@ -46,6 +46,32 @@ class Draft < ApplicationRecord
     slug
   end
 
+  def generate_board
+    Draft.transaction do
+      current_pick_number = 1
+      rounds.destroy_all unless rounds.empty?
+      update started_at: nil, ended_at: nil
+      attached_users = users
+      round_count.times do |num|
+        round_number = num + 1
+        round = rounds.create(
+          number: round_number,
+          is_reversed: round_number.even?
+        )
+
+        # Create selections for the round
+        attached_users = attached_users.reverse if round.is_reversed?
+        attached_users.each do |user|
+          round.selections.create(
+            user: user,
+            pick_number: current_pick_number
+          )
+          current_pick_number += 1
+        end
+      end
+    end
+  end
+
   def generate_slug
     return if slug.present?
 

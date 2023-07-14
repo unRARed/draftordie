@@ -13,4 +13,8 @@ FactoryBot.define do
     round_count { 20 }
     player_count { 16 }
   end
+
+  trait :fast do
+    selection_seconds { 1 }
+  end
 end

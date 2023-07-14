@@ -69,6 +69,7 @@ end
 
 group :test do
   gem "capybara"
+  gem "webdrivers"
 end
 
 group :development do

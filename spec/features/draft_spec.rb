@@ -17,18 +17,12 @@ RSpec.describe "Draft", type: :feature do
       expect(draft.users).to include(user)
     end
 
-    context "with a draft" do
-      let!(:draft) { FactoryBot.create(:draft, user: user) }
-
-      before(:each) do
-        4.times{ draft.users << FactoryBot.create(:user) }
-        sign_in user
-      end
+    context "with a new draft" do
+      let(:draft) { FactoryBot.create(:draft, user: user) }
 
       scenario "invites users" do
         another_user = FactoryBot.create(:user)
         visit "/drafts/#{draft.slug}/edit"
-        save_and_open_page
         click_on "Invite Users"
         fill_in "Email", with: another_user.email
         click_on "Send Invite"
@@ -44,6 +38,41 @@ RSpec.describe "Draft", type: :feature do
         expect(page).to have_content("You have joined the draft!")
       end
 
+      context "with users" do
+        let(:draft) { FactoryBot.create(:draft, :fast, user: user) }
+
+        before(:each) do
+          3.times{ draft.users << FactoryBot.create(:user) }
+          draft.generate_board
+          sign_in user
+          ActionController::Base.allow_forgery_protection = true
+        end
+
+        after(:each) do
+          ActionController::Base.allow_forgery_protection = false
+        end
+
+        scenario "advances selections", js: true do
+          visit "/drafts/#{draft.slug}"
+          click_on "Begin Draft"
+          within(".c-draft__header") do
+            expect(page).to have_content(draft.users.first.email)
+          end
+          expect(page).to have_selector(
+            '.c-draft__board__slot--selected', count: 1)
+          within(".c-draft__header") do
+            expect(page).to have_content(draft.users.second.email)
+          end
+          expect(page).to have_selector(
+            '.c-draft__board__slot--selected', count: 2)
+          within(".c-draft__header") do
+            expect(page).to have_content(draft.users.third.email)
+          end
+          expect(page).to have_selector(
+            '.c-draft__board__slot--selected', count: 3)
+        end
+      end
+
       scenario "generates selections" do
         visit "/drafts/#{draft.slug}/edit"
         click_on "Generate Board"
@@ -53,7 +82,6 @@ RSpec.describe "Draft", type: :feature do
         expect(draft.rounds.count).to eq(2)
         expect(draft.selections.count).to eq(8)
       end
-      scenario "starts the draft"
     end
   end
 end

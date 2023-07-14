@@ -122,30 +122,7 @@ class DraftsController < ApplicationController
   end
 
   def generate
-    Draft.transaction do
-      current_pick_number = 1
-      @draft.rounds.destroy_all
-      @draft.update started_at: nil
-      @draft.update ended_at: nil
-      @draft.round_count.times do |num|
-        round_number = num + 1
-        round = @draft.rounds.create(
-          number: round_number,
-          is_reversed: round_number.even?
-        )
-
-        # Create selections for the round
-        users = @draft.users
-        users = users.reverse if round.is_reversed?
-        users.each do |user|
-          round.selections.create(
-            user: user,
-            pick_number: current_pick_number
-          )
-          current_pick_number += 1
-        end
-      end
-    end
+    @draft.generate_board
     redirect_to draft_path(@draft)
   end
 
