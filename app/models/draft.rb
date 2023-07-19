@@ -6,6 +6,11 @@ class Draft < ApplicationRecord
   has_many :selections,
     -> { order(pick_number: :asc)},
     through: :rounds
+  has_many :upcoming_selections, -> {
+      where(ended_at: nil)
+    },
+    through: :rounds,
+    source: :selections
   has_many :pairings, as: :pairable
   has_many :users, through: :pairings
 
@@ -30,13 +35,13 @@ class Draft < ApplicationRecord
   end
 
   def current_selection
-    selections.find{ |s| !s.is_selected? }
+    upcoming_selections.first
   end
 
   # To determine if the draft is between selections,
   # so we know whether to start the next selection
   def is_between_selections?
-    return false if selections.all?{ |s| s.is_selected? }
+    return false if upcoming_selections.empty?
     return false unless !current_selection.nil?
 
     current_selection.time_remaining == [0, 0]

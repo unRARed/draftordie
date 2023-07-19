@@ -48,7 +48,7 @@ css:
       - @draft.rounds.each do |round|
         div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
           - round.selections.each do |selection|
-            div class="#{selection_class(@draft, selection)}"
+            div id="pick_number_#{selection.pick_number}" class="#{selection_class(@draft, selection)}"
               strong Rd. #{round.number} Pick #{selection.pick_number}
               span #{selection.player_name} (#{selection.position})
               span #{selection.user.email || 'Unknown User'}

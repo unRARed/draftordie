@@ -1,0 +1,22 @@
+features:
+  - name: roster positions config
+    description: allow admin user to set number of positions each team is
+      required to draft
+  - name: color config
+    description: allow admin to set color of each position and missed picks
+  - name: trades
+    description: allow users to "pitch" trades to other teams or at least
+      the player "on the clock"
+  - name: autodraft
+    description: come up with different possible ways to handle autodrafting
+      such as missing the pick until the draft concludes, autodrafting a
+      random "top 10" player at the position of most need
+  - name: player rankings
+    description: keep rankings internally as maybe be needed for autodrafting
+      or other reasons
+  - name: keepers
+    description: allow draft to be configured to leverage keepers in a few
+      different ways
+  - name: results
+    description: create a results record when a draft concludes with its own
+      unique, longer slug and free up the short slug for other future drafts

@@ -55,6 +55,7 @@ RSpec.describe "Draft", type: :feature do
           expect(@draft.rounds.count).to eq(4)
           # 4 picks each of the 3 users and commish (4*4 = 16)
           expect(@draft.selections.count).to eq(16)
+          expect(@draft.upcoming_selections.count).to eq(16)
 
           within(".c-draft__header") do
             expect(page).to have_content(@draft.users.first.email)
@@ -71,6 +72,16 @@ RSpec.describe "Draft", type: :feature do
           end
           expect(page).to have_selector(
             '.c-draft__board__slot--selected', count: 3)
+
+          expect(@draft.selections.count).to eq(16)
+          expect(@draft.upcoming_selections.count).to eq(13)
+
+          selections = page.all(
+            class: 'c-draft__board__slot--selected'
+          ).each_with_index do |cell, cell_index|
+            expect(cell[:id]).
+              to eq("pick_number_#{cell_index + 1}")
+          end
         end
       end
     end
