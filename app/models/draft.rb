@@ -61,9 +61,9 @@ class Draft < ApplicationRecord
 
         # Create selections for the round
         attached_users = attached_users.reverse if round.is_reversed?
-        attached_users.each do |user|
+        attached_users.each do |attached_user|
           round.selections.create(
-            user: user,
+            user: attached_user,
             pick_number: current_pick_number
           )
           current_pick_number += 1

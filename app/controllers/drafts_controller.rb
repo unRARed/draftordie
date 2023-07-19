@@ -54,7 +54,7 @@ class DraftsController < ApplicationController
   end
 
   def member
-    @selection = @draft.current_selection
+    return render 'show' unless @selection = @draft.current_selection
     if @selection.user == current_user
       return redirect_to(edit_draft_selection_path(
         @selection.draft, @selection
@@ -85,9 +85,9 @@ class DraftsController < ApplicationController
     @draft = Draft.new(draft_params)
     authorize @draft
     @draft.user = current_user
+    @draft.users << current_user
 
     if @draft.save
-      @draft.users << current_user
       flash[:notice] = "Draft created successfully"
       redirect_to edit_draft_path(@draft)
     else

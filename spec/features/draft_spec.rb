@@ -6,15 +6,8 @@ RSpec.describe "Draft", type: :feature do
   describe "admin" do
     scenario "sets up a draft" do
       sign_in user
-      visit "/"
-      click_on "Start a Draft"
-      fill_in "Name", with: "My Draft"
-      fill_in "Number of Rounds", with: 4
-      fill_in "Time per Selection", with: 5
-      fill_in "Number of Players", with: 4
-      click_on "Create Draft"
-      expect(page).to have_content("Draft created successfully")
-      expect(draft.users).to include(user)
+      draft = setup_draft
+      expect(Draft.last.reload.users).to include(user)
     end
 
     context "with a new draft" do
@@ -22,6 +15,8 @@ RSpec.describe "Draft", type: :feature do
 
       scenario "invites users" do
         another_user = FactoryBot.create(:user)
+        draft.generate_board
+        sign_in user
         visit "/drafts/#{draft.slug}/edit"
         click_on "Invite Users"
         fill_in "Email", with: another_user.email
@@ -39,49 +34,55 @@ RSpec.describe "Draft", type: :feature do
       end
 
       context "with users" do
-        let(:draft) { FactoryBot.create(:draft, :fast, user: user) }
-
         before(:each) do
-          3.times{ draft.users << FactoryBot.create(:user) }
-          draft.generate_board
-          sign_in user
           ActionController::Base.allow_forgery_protection = true
+          sign_in user
+          setup_draft
+          @draft = Draft.last
+          3.times{ @draft.users << FactoryBot.create(:user) }
+          @draft.generate_board
+          visit "/drafts/#{@draft.slug}"
+          click_on "Begin Draft"
         end
 
         after(:each) do
           ActionController::Base.allow_forgery_protection = false
         end
 
-        scenario "advances selections", js: true do
-          visit "/drafts/#{draft.slug}"
-          click_on "Begin Draft"
+        scenario "advances selections automatically", js: true do
+          expect(page).to have_content("On the clock")
+          # 4 rounds, 3 for users, 1 for the commish
+          expect(@draft.rounds.count).to eq(4)
+          # 4 picks each of the 3 users and commish (4*4 = 16)
+          expect(@draft.selections.count).to eq(16)
+
           within(".c-draft__header") do
-            expect(page).to have_content(draft.users.first.email)
+            expect(page).to have_content(@draft.users.first.email)
           end
           expect(page).to have_selector(
             '.c-draft__board__slot--selected', count: 1)
           within(".c-draft__header") do
-            expect(page).to have_content(draft.users.second.email)
+            expect(page).to have_content(@draft.users.second.email)
           end
           expect(page).to have_selector(
             '.c-draft__board__slot--selected', count: 2)
           within(".c-draft__header") do
-            expect(page).to have_content(draft.users.third.email)
+            expect(page).to have_content(@draft.users.third.email)
           end
           expect(page).to have_selector(
             '.c-draft__board__slot--selected', count: 3)
         end
       end
-
-      scenario "generates selections" do
-        visit "/drafts/#{draft.slug}/edit"
-        click_on "Generate Board"
-        expect(page).to have_content("On the clock")
-
-        # 4 users * 2 rounds = 16 selections
-        expect(draft.rounds.count).to eq(2)
-        expect(draft.selections.count).to eq(8)
-      end
     end
+  end
+
+  def setup_draft
+    visit "/drafts/new"
+    fill_in "Name", with: "My Draft"
+    fill_in "Number of Rounds", with: 4
+    fill_in "Time per Selection", with: 1
+    fill_in "Number of Players", with: 4
+    click_on "Create Draft"
+    expect(page).to have_content("Draft created successfully")
   end
 end
