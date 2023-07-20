@@ -20,3 +20,5 @@ features:
   - name: results
     description: create a results record when a draft concludes with its own
       unique, longer slug and free up the short slug for other future drafts
+  - name: setting draft order
+    description: admin user can order the user list

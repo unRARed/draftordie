@@ -41,7 +41,6 @@ document.addEventListener('turbo:load', (evt) => {
       countdown.getElementsByClassName('b-countdown__seconds')[0];
 
     const interval = setInterval(() => {
-      console.log('interval');
       let remainingValue,
         minutesValue;
 

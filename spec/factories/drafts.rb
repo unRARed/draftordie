@@ -3,10 +3,11 @@ FactoryBot.define do
     name {
       Faker::Lorem.unique.words(number: 3).join(" ").titleize
     }
-    slug { nil }
     round_count { 2 }
     player_count { 4 }
-    selection_seconds { 30 }
+    selection_seconds { 5 }
+    user
+    # slug
   end
 
   trait :max do

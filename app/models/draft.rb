@@ -30,6 +30,10 @@ class Draft < ApplicationRecord
     started_at.present?
   end
 
+  def is_ended?
+    ended_at.present? || upcoming_selections.empty?
+  end
+
   def selections_count
     selections.count{ |s| s.is_selected? }
   end
@@ -53,26 +57,30 @@ class Draft < ApplicationRecord
 
   def generate_board
     Draft.transaction do
+      is_reversed = false
       current_pick_number = 1
+      round_number = 1
       rounds.destroy_all unless rounds.empty?
       update started_at: nil, ended_at: nil
-      attached_users = users
       round_count.times do |num|
-        round_number = num + 1
         round = rounds.create(
           number: round_number,
-          is_reversed: round_number.even?
+          is_reversed: is_reversed
         )
 
         # Create selections for the round
-        attached_users = attached_users.reverse if round.is_reversed?
-        attached_users.each do |attached_user|
+        #
+        ordered_users = is_reversed ?
+          self.users.reverse : self.users
+        ordered_users.each do |ordered_user|
           round.selections.create(
-            user: attached_user,
+            user: ordered_user,
             pick_number: current_pick_number
           )
           current_pick_number += 1
         end
+        round_number += 1
+        is_reversed = !is_reversed
       end
     end
   end

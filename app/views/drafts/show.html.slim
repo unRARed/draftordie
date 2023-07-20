@@ -5,7 +5,7 @@ css:
 - if policy(@draft).edit?
   = link_to 'Edit', edit_draft_path(@draft)
 - if policy(@draft).start?
-  - if @draft.rounds.any?
+  - if @draft.rounds.any? && !@draft.is_ended?
     = link_to 'Begin Draft',
       start_draft_path(@draft),
       method: :patch,
@@ -44,6 +44,8 @@ css:
         generate_draft_path(@draft),
         method: :post,
         data: { turbo_method: :post }
+    - elsif @draft.is_ended?
+      p All selections have been made.
     - else
       - @draft.rounds.each do |round|
         div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
@@ -53,10 +55,11 @@ css:
               span #{selection.player_name} (#{selection.position})
               span #{selection.user.email || 'Unknown User'}
 
-- if @draft.is_started?
-  javascript:
-    var minutes, seconds;
+javascript [data-turbo-eval="false"]:
+  var minutes, seconds, checkNext;
 
+  document.addEventListener('turbo:load', (evt) => {
+      if (!document.querySelector(".c-draft__board__slot--current")) { return; }
     function handleSelection() {
       if (!document.querySelector(".b-countdown__minutes")) { return; }
       if (!document.querySelector(".b-countdown__seconds")) { return; }
@@ -67,8 +70,9 @@ css:
       seconds = document.
         querySelector(".b-countdown__seconds").
         innerText.replace(/\s/g, "");
-      console.log(minutes, seconds);
       if (minutes === "00" && seconds === "00") {
+        console.log("time reached 00:00");
+        console.log("signaling to start next selection");
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "#{request.env['PATH_INFO']}/start_next_selection");
         xhr.setRequestHeader("Accept", "application/json");
@@ -86,13 +90,10 @@ css:
         };
 
         xhr.send();
-        // wait 1 second for the server to do its thing
-        setTimeout(function () {
-          window.location.reload();
-        }, 250);
+
+        Turbo.visit(window.location, { action: "replace" });
+        clearInterval(checkNext);
       }
     }
-
-    document.addEventListener('turbo:load', (evt) => {
-      setInterval(handleSelection, 3000);
-    }, false);
+    checkNext = setInterval(handleSelection, 2000);
+  }, false);

@@ -115,8 +115,9 @@ class DraftsController < ApplicationController
 
   def start_next_selection
     return unless @draft.is_between_selections?
-
     @draft.current_selection.update! ended_at: Time.current
+
+    return if @draft.current_selection.nil?
     @draft.current_selection.reload.
       update! started_at: Time.current
   end
