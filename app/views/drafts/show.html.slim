@@ -74,7 +74,7 @@ javascript [data-turbo-eval="false"]:
         console.log("time reached 00:00");
         console.log("signaling to start next selection");
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", "#{request.env['PATH_INFO']}/start_next_selection");
+        xhr.open("POST", "#{start_next_selection_draft_path(@draft)}");
         xhr.setRequestHeader("Accept", "application/json");
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.setRequestHeader(
