@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_12_171953) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_23_153050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,6 +73,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_171953) do
     t.datetime "updated_at", null: false
     t.datetime "started_at"
     t.datetime "ended_at"
+    t.bigint "draft_id", null: false
+    t.index ["draft_id"], name: "index_selections_on_draft_id"
     t.index ["player_id"], name: "index_selections_on_player_id"
     t.index ["round_id"], name: "index_selections_on_round_id"
     t.index ["user_id"], name: "index_selections_on_user_id"
@@ -93,7 +95,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_171953) do
   add_foreign_key "drafts", "users"
   add_foreign_key "pairings", "users"
   add_foreign_key "rounds", "drafts"
+  add_foreign_key "selections", "drafts"
   add_foreign_key "selections", "players"
   add_foreign_key "selections", "rounds"
   add_foreign_key "selections", "users"
+
+  create_view "view_draft_progression_candidates", sql_definition: <<-SQL
+      SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
+      drafts.slug AS draft_slug,
+      current_selection.pick_number AS current_pick_number,
+      ((current_selection.started_at + ((drafts.selection_seconds)::double precision * 'PT1S'::interval)) < LOCALTIMESTAMP) AS is_selected,
+      prior_selection.id AS prior_selection_id,
+      current_selection.id AS current_selection_id,
+      next_selection.id AS next_selection_id
+     FROM ((((drafts
+       JOIN rounds ON ((drafts.id = rounds.draft_id)))
+       JOIN selections current_selection ON (((current_selection.draft_id = drafts.id) AND (current_selection.started_at IS NOT NULL) AND (current_selection.ended_at IS NULL))))
+       LEFT JOIN selections prior_selection ON (((prior_selection.draft_id = drafts.id) AND (prior_selection.pick_number IS NOT NULL) AND (prior_selection.pick_number = (current_selection.pick_number - 1)))))
+       LEFT JOIN selections next_selection ON (((next_selection.draft_id = drafts.id) AND (next_selection.pick_number IS NOT NULL) AND (next_selection.pick_number = (current_selection.pick_number + 1)))))
+    WHERE ((drafts.started_at IS NOT NULL) AND (drafts.is_paused = false));
+  SQL
 end

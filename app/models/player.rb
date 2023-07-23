@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: players
+#
+#  id         :bigint           not null, primary key
+#  bye_week   :integer
+#  name       :string
+#  position   :string
+#  scraped_at :datetime
+#  team       :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Player < ApplicationRecord
   validates :name, :team, :position, :bye_week,
     presence: true

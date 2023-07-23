@@ -1,7 +1,35 @@
+# == Schema Information
+#
+# Table name: drafts
+#
+#  id                :bigint           not null, primary key
+#  access_code       :string
+#  ended_at          :datetime
+#  is_paused         :boolean          default(FALSE), not null
+#  name              :string           default(""), not null
+#  player_count      :integer
+#  round_count       :integer
+#  selection_seconds :integer
+#  slug              :string
+#  started_at        :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  user_id           :bigint           not null
+#
+# Indexes
+#
+#  index_drafts_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
+#
 class Draft < ApplicationRecord
   before_save :generate_slug, :generate_access_code
   belongs_to :user
 
+  has_one :progression,
+    class_name: "ViewDraftProgressionCandidate"
   has_many :rounds, dependent: :destroy
   has_many :selections,
     -> { order(pick_number: :asc)},
@@ -75,7 +103,8 @@ class Draft < ApplicationRecord
         ordered_users.each do |ordered_user|
           round.selections.create(
             user: ordered_user,
-            pick_number: current_pick_number
+            pick_number: current_pick_number,
+            draft: self
           )
           current_pick_number += 1
         end
@@ -83,18 +112,6 @@ class Draft < ApplicationRecord
         is_reversed = !is_reversed
       end
     end
-  end
-
-  def generate_slug
-    return if slug.present?
-
-    value ||= SecureRandom.alphanumeric(5).downcase
-    unless Draft.where(slug: value).exists?
-      self.slug = value
-      return
-    end
-
-    generate_slug
   end
 
   def generate_access_code
@@ -107,5 +124,23 @@ class Draft < ApplicationRecord
     end
 
     generate_access_code
+  end
+
+  def self.poll
+    
+  end
+
+private
+
+  def generate_slug
+    return if slug.present?
+
+    value ||= SecureRandom.alphanumeric(5).downcase
+    unless Draft.where(slug: value).exists?
+      self.slug = value
+      return
+    end
+
+    generate_slug
   end
 end

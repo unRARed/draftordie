@@ -11,16 +11,16 @@ css:
       method: :patch,
       data: { turbo_method: :patch }
 .c-draft
-  .c-draft__header
-    .c-draft__header__name = @draft.name
+  .c-draft__footer
+    .c-draft__footer__name = @draft.name
     - if @draft.current_selection.nil?
       strong No selection in progress
     - else
-      .c-draft__header__selection
+      .c-draft__footer__selection
         strong On the clock:
         br
         span = @draft.current_selection.user.email
-      .c-draft__header__clock
+      .c-draft__footer__clock
         - if @draft.is_started?
           .b-countdown.b-countdown--simple data-to="#{Time.current + @draft.current_selection.seconds_remaining.seconds}"
         - else
@@ -29,7 +29,7 @@ css:
           span
             | :
           span.seconds = "%02d" % clock.last
-    .c-draft__header__qr
+    .c-draft__footer__qr
       == RQRCode::QRCode.new("https://draftordie.com#{request.env['PATH_INFO']}").as_svg( \
         color: "000",
         shape_rendering: "crispEdges",
@@ -49,7 +49,7 @@ css:
     - else
       - @draft.rounds.each do |round|
         div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
-          - round.selections.each do |selection|
+          - round.ordered_selections.each do |selection|
             div id="pick_number_#{selection.pick_number}" class="#{selection_class(@draft, selection)}"
               strong Rd. #{round.number} Pick #{selection.pick_number}
               span #{selection.player_name} (#{selection.position})
@@ -59,7 +59,16 @@ javascript [data-turbo-eval="false"]:
   var minutes, seconds, checkNext;
 
   document.addEventListener('turbo:load', (evt) => {
-      if (!document.querySelector(".c-draft__board__slot--current")) { return; }
+      let currentSlot = document.
+        querySelector(".c-draft__board__slot--current");
+      if (!currentSlot) { return; }
+
+      window.scrollTo({
+        top: currentSlot.offsetTop,
+        left: currentSlot.offsetLeft,
+        behavior: "smooth",
+      });
+
     function handleSelection() {
       if (!document.querySelector(".b-countdown__minutes")) { return; }
       if (!document.querySelector(".b-countdown__seconds")) { return; }

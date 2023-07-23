@@ -83,10 +83,12 @@ group :development do
   # gem "spring"
 
   gem "letter_opener_web"
+  gem "annotate", "~> 3.2"
+  gem "dockerfile-rails", ">= 1.5"
 end
 
 gem "watir", "~> 7.2"
-
 gem "pundit", "~> 2.3"
-
-gem "dockerfile-rails", ">= 1.5", :group => :development
+gem "scenic", "~> 1.7"
+gem "sidekiq", "~> 7.1"
+gem "sidekiq-scheduler", "~> 5.0"

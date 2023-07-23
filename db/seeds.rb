@@ -9,6 +9,7 @@
 puts "Seeding users..."
 user = User.new({
   email: "kuwlade@yahoo.com",
+  # password: "password",
  "encrypted_password": "$2a$12$0v0D.DK4rxjH6gG4sWYI5eQxkvE1sKx4XG1okhILSlnM944cQhxna"
 })
 user.save(validate: false)
@@ -28,5 +29,10 @@ JSON.parse(File.read("db/seeds/2023/football.json")).each do |p|
 end
 
 puts "Seeding drafts..."
-draft = FactoryBot.create(:draft, :max, user: user)
-draft.users << User.last(16)
+4.times do
+  draft = FactoryBot.create(:draft, :max, user: user)
+  draft.users << User.last(16)
+  if [true, false].sample
+    draft.generate_board
+  end
+end

@@ -1,3 +1,29 @@
+# == Schema Information
+#
+# Table name: drafts
+#
+#  id                :bigint           not null, primary key
+#  access_code       :string
+#  ended_at          :datetime
+#  is_paused         :boolean          default(FALSE), not null
+#  name              :string           default(""), not null
+#  player_count      :integer
+#  round_count       :integer
+#  selection_seconds :integer
+#  slug              :string
+#  started_at        :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  user_id           :bigint           not null
+#
+# Indexes
+#
+#  index_drafts_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
+#
 FactoryBot.define do
   factory :draft do
     name {

@@ -29,6 +29,7 @@ module DraftOrDie
     # in config/environments, which are processed later.
     #
     config.time_zone = "America/Los_Angeles"
+    # config.time_zone = "UTC"
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.generators do |g|
@@ -41,6 +42,8 @@ module DraftOrDie
       g.system_tests false
       g.view_specs false
     end
+
+    config.active_job.queue_adapter = :sidekiq
 
     # GZip all responses
     config.middleware.use Rack::Deflater

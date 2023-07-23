@@ -1,21 +1,22 @@
 @layer components {
-  .c-draft__header {
+  .c-draft__footer {
+    @apply fixed inset-x-0;
     @apply flex flex-row justify-around items-center;
   }
-  .c-draft__header__name {
+  .c-draft__footer__name {
     @apply text-5xl font-bold;
   }
 
-  .c-draft__header__selection {
+  .c-draft__footer__selection {
     @apply text-lg;
   }
 
-  .c-draft__header__clock {
+  .c-draft__footer__clock {
     @apply text-6xl font-bold;
   }
 
   .c-draft__board {
-    @apply w-full flex flex-col;
+    @apply w-full flex flex-col-reverse;
   }
 
   .c-draft__board__round {
