@@ -8,6 +8,14 @@
     @apply flex flex-col;
     height: 100vh;
   }
+  /* .c-draft__qr-overlay { */
+  /*   @apply fixed inset-0 flex flex-col justify-center items-center; */
+  /*   z-index: 1; */
+  /*   position: fixed; */
+  /*   opacity: 0.2; */
+  /*   height: 100vh; */
+
+  /* } */
   .c-draft--paused::before {
     content: "";
     position: absolute;

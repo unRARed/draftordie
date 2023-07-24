@@ -34,5 +34,5 @@ puts "Seeding drafts..."
     :max, user: user,
     selection_seconds: [30, 60].sample
   )
-  draft.users << User.last(count)
+  draft.users << User.first(count)
 end
