@@ -5,6 +5,7 @@ class DraftsController < ApplicationController
     :destroy,
     :generate,
     :start,
+    :pause,
     :start_next_selection,
     :invite,
     :create_invite,
@@ -105,16 +106,36 @@ class DraftsController < ApplicationController
   end
 
   def start
+    # if paused, we only reset the timer
+    # for the current selection and unpause
+    if @draft.is_paused?
+      @draft.current_selection.update started_at: Time.current
+      @draft.update is_paused: false
+      flash[:notice] = "Draft has resumed!"
+    end
+
+    # guard clause to prevent restarting a draft
     return if @draft.started_at.present?
 
+    # start the draft and put the current selection
+    # on the clock
     @draft.update started_at: Time.current
     @draft.current_selection.update started_at: Time.current
     flash[:notice] = "Draft has begun!"
+  ensure
+    redirect_to draft_path(@draft)
+  end
+
+  def pause
+    return if @draft.is_paused?
+
+    @draft.update is_paused: true
+    flash[:notice] = "Draft has been paused!"
     redirect_to draft_path(@draft)
   end
 
   def start_next_selection
-    return
+    render json: @draft.current_selection.time_remaining
     # return unless @draft.is_between_selections?
     # @draft.current_selection.update! ended_at: Time.current
 

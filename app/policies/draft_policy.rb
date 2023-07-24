@@ -35,6 +35,10 @@ class DraftPolicy < ApplicationPolicy
     is_draft_owner?
   end
 
+  def pause?
+    is_draft_owner?
+  end
+
   def edit?
     is_draft_owner?
   end

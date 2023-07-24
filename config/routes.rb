@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post :generate
       post :start_next_selection
       patch :start
+      patch :pause
       get :invite
       post :invite, to: "drafts#create_invite"
       get :access

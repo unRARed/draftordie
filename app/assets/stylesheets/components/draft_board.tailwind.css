@@ -1,22 +1,70 @@
 @layer components {
+  .c-draft {
+    padding-bottom: 75px;
+    background-color: #182625;
+    /* light purple-ish */
+    color: #98b5b3;
+    position: relative;
+    @apply flex flex-col;
+    height: 100vh;
+  }
+  .c-draft--paused::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  .c-draft--paused::after {
+    content: "Draft Paused";
+    position: fixed;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 50%;
+    font-size: 5em;
+    text-align: center;
+  }
+  .c-draft__controls {
+    @apply flex flex-row justify-around items-center bottom-0 fixed inset-x-0 text-white p-2 border-b-4 border-gray-500;
+    background-color: rgba(50, 50, 50, 0.8);
+    bottom: 90px;
+    z-index: 1;
+    max-width: 50%;
+    margin-left: 50%;
+  }
   .c-draft__footer {
-    @apply fixed inset-x-0;
-    @apply flex flex-row justify-around items-center;
+    @apply flex flex-row justify-around items-center bottom-0 fixed inset-x-0 text-white p-2 border-t-4 border-gray-500;
+    background-color: #2e4846;
+    z-index: 1;
   }
   .c-draft__footer__name {
+    @apply text-3xl font-bold;
+    color: #b7fbe9;
+    text-shadow: 2px 2px 2px #000000;
+  }
+  .c-draft__footer__state {
     @apply text-5xl font-bold;
+    color: #b7fbe9;
+    text-shadow: 2px 2px 2px #000000;
   }
 
   .c-draft__footer__selection {
-    @apply text-lg;
+    @apply text-sm;
+    min-width: 15%;
   }
 
   .c-draft__footer__clock {
     @apply text-6xl font-bold;
+    color: #dece26;
   }
 
   .c-draft__board {
-    @apply w-full flex flex-col-reverse;
+    @apply w-full flex flex-col;
+    /*@apply flex-col-reverse;*/
   }
 
   .c-draft__board__round {
@@ -24,13 +72,18 @@
   }
   .c-draft__board__round--reversed {
     @apply flex-row-reverse;
+    background-color: #131e1d;
   }
 
   .c-draft__board__slot {
-    @apply flex-1 flex flex-col truncate text-xs p-1;
+    font-size: 16px;
+    @apply flex-1 flex flex-col truncate p-1;
+    border-top: 1px solid #444;
   }
   .c-draft__board__slot--current {
-    @apply bg-green-200 border-green-200;
+    @apply border-green-200;
+    background-color: #e2e2e2;
+    color: #4f4f4f;
   }
   .c-draft__board__slot--selected {
     @apply bg-gray-100 border-gray-200 text-red-800;

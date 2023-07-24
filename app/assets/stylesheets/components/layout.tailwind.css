@@ -1,13 +1,16 @@
 @layer components {
   .c-layout__main {
-    @apply bg-white;
   }
 
   .c-layout__header {
-    @apply bg-gray-100;
+    @apply flex justify-between items-center p-2;
+  }
+
+  .c-layout__header__title {
+    @apply text-2xl;
   }
 
   .c-layout__footer {
-    @apply bg-gray-100 text-center;
+    @apply text-center;
   }
 }

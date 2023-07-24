@@ -13,7 +13,7 @@ user = User.new({
  "encrypted_password": "$2a$12$0v0D.DK4rxjH6gG4sWYI5eQxkvE1sKx4XG1okhILSlnM944cQhxna"
 })
 user.save(validate: false)
-16.times{ FactoryBot.create(:user) }
+20.times{ FactoryBot.create(:user) }
 
 puts "Seeding players..."
 # generate players JSON with:
@@ -29,10 +29,10 @@ JSON.parse(File.read("db/seeds/2023/football.json")).each do |p|
 end
 
 puts "Seeding drafts..."
-4.times do
-  draft = FactoryBot.create(:draft, :max, user: user)
-  draft.users << User.last(16)
-  if [true, false].sample
-    draft.generate_board
-  end
+[8, 10, 12, 14, 16, 20].each do |count|
+  draft = FactoryBot.create(:draft,
+    :max, user: user,
+    selection_seconds: [30, 60].sample
+  )
+  draft.users << User.last(count)
 end

@@ -62,6 +62,10 @@ class Draft < ApplicationRecord
     ended_at.present? || upcoming_selections.empty?
   end
 
+  def is_running?
+    is_started? && !is_ended? && !is_paused?
+  end
+
   def selections_count
     selections.count{ |s| s.is_selected? }
   end
@@ -89,7 +93,7 @@ class Draft < ApplicationRecord
       current_pick_number = 1
       round_number = 1
       rounds.destroy_all unless rounds.empty?
-      update started_at: nil, ended_at: nil
+      update started_at: nil, ended_at: nil, is_paused: false
       round_count.times do |num|
         round = rounds.create(
           number: round_number,
@@ -124,10 +128,6 @@ class Draft < ApplicationRecord
     end
 
     generate_access_code
-  end
-
-  def self.poll
-    
   end
 
 private

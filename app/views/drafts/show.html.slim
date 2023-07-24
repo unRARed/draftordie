@@ -1,37 +1,59 @@
 css:
   .c-draft__board__slot {
     width: #{100 / [@draft.users.count, 1].max}%;
+    font-size: #{compute_text_size(@draft.users.count)}px;
   }
-- if policy(@draft).edit?
-  = link_to 'Edit', edit_draft_path(@draft)
-- if policy(@draft).start?
-  - if @draft.rounds.any? && !@draft.is_ended?
-    = link_to 'Begin Draft',
-      start_draft_path(@draft),
-      method: :patch,
-      data: { turbo_method: :patch }
-.c-draft
+div class="c-draft#{' c-draft--paused' if @draft.is_paused?}"
+  - if policy(@draft).edit?
+    .c-draft__controls
+      = link_to 'Edit', edit_draft_path(@draft)
+      - if @draft.rounds.any? && !@draft.is_ended?
+        - if @draft.is_running?
+          = link_to 'Pause Draft',
+            pause_draft_path(@draft),
+            method: :patch,
+            data: { turbo_method: :patch }
+        - else
+          = link_to "#{@draft.is_paused? ? \
+            'Resume' : 'Begin' } Draft",
+            start_draft_path(@draft),
+            method: :patch,
+            data: { turbo_method: :patch }
+  - current_selection = @draft.current_selection
   .c-draft__footer
+    .c-draft__footer__state
     .c-draft__footer__name = @draft.name
-    - if @draft.current_selection.nil?
-      strong No selection in progress
-    - else
+    - if @draft.progression&.current_pick_number
       .c-draft__footer__selection
-        strong On the clock:
+        - if @draft.progression&.prior_selection
+          .c-draft__footer__state__prior
+            .pb-1
+              strong Last pick:
+              br
+              span< #{@draft.progression.prior_selection.name}
+      .c-draft__footer__selection
+        strong Pick #{@draft.progression&.current_pick_number} on the clock:
         br
-        span = @draft.current_selection.user.email
+        span = current_selection.user.email
+        .pt-2
+          - if @draft.progression&.next_selection
+            .c-draft__footer__state__next
+              strong On deck:
+              span< #{@draft.progression.next_selection.user_email}
       .c-draft__footer__clock
-        - if @draft.is_started?
+        - if @draft.is_running?
           .b-countdown.b-countdown--simple data-to="#{Time.current + @draft.current_selection.seconds_remaining.seconds}"
         - else
           - clock = @draft.current_selection.time_remaining
-          span.minutes = "%02d" % clock.first
+          span.minutes = "%02d" % (clock[1] || 0)
           span
             | :
-          span.seconds = "%02d" % clock.last
+          span.seconds = "%02d" % (clock[2] || 0)
+    - else
+      strong No selection in progress
     .c-draft__footer__qr
       == RQRCode::QRCode.new("https://draftordie.com#{request.env['PATH_INFO']}").as_svg( \
-        color: "000",
+        color: "b7fbe9",
         shape_rendering: "crispEdges",
         module_size: 2,
         standalone: true,
@@ -45,7 +67,7 @@ css:
         method: :post,
         data: { turbo_method: :post }
     - elsif @draft.is_ended?
-      p All selections have been made.
+      h3.text-xl.text-center.pt-2 All selections have been made.
     - else
       - @draft.rounds.each do |round|
         div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
@@ -54,55 +76,55 @@ css:
               strong Rd. #{round.number} Pick #{selection.pick_number}
               span #{selection.player_name} (#{selection.position})
               span #{selection.user.email || 'Unknown User'}
+- if @draft.is_running?
+  javascript:
+    var minutes, seconds, checkNext;
 
-javascript:
-  var minutes, seconds, checkNext;
+    document.addEventListener('turbo:load', (evt) => {
+      let currentSlot = document.
+        querySelector(".c-draft__board__slot--current");
+      if (!currentSlot) { return; }
 
-  document.addEventListener('turbo:load', (evt) => {
-    let currentSlot = document.
-      querySelector(".c-draft__board__slot--current");
-    if (!currentSlot) { return; }
+      window.scrollTo({
+        top: currentSlot.offsetTop,
+        left: currentSlot.offsetLeft,
+        behavior: "smooth",
+      });
 
-    window.scrollTo({
-      top: currentSlot.offsetTop,
-      left: currentSlot.offsetLeft,
-      behavior: "smooth",
-    });
+      function handleSelection() {
+        if (!document.querySelector(".b-countdown__minutes")) { return; }
+        if (!document.querySelector(".b-countdown__seconds")) { return; }
 
-    function handleSelection() {
-      if (!document.querySelector(".b-countdown__minutes")) { return; }
-      if (!document.querySelector(".b-countdown__seconds")) { return; }
+        minutes = document.
+          querySelector(".b-countdown__minutes").
+          innerText.replace(/\s/g, "");
+        seconds = document.
+          querySelector(".b-countdown__seconds").
+          innerText.replace(/\s/g, "");
+        if (minutes === "00" && seconds === "00") {
+          console.log("time reached 00:00");
+          console.log("signaling to start next selection");
+          let xhr = new XMLHttpRequest();
+          xhr.open("POST", "#{start_next_selection_draft_path(@draft)}");
+          xhr.setRequestHeader("Accept", "application/json");
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.setRequestHeader(
+            'X-CSRF-Token', document.
+              querySelector('meta[name="csrf-token"]').content
+          )
 
-      minutes = document.
-        querySelector(".b-countdown__minutes").
-        innerText.replace(/\s/g, "");
-      seconds = document.
-        querySelector(".b-countdown__seconds").
-        innerText.replace(/\s/g, "");
-      if (minutes === "00" && seconds === "00") {
-        console.log("time reached 00:00");
-        console.log("signaling to start next selection");
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "#{start_next_selection_draft_path(@draft)}");
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.setRequestHeader(
-          'X-CSRF-Token', document.
-            querySelector('meta[name="csrf-token"]').content
-        )
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+              console.log(xhr.status);
+              console.log(xhr.responseText);
+            }
+          };
 
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            console.log(xhr.status);
-            console.log(xhr.responseText);
-          }
-        };
+          xhr.send();
 
-        xhr.send();
-
-        Turbo.visit(window.location, { action: "replace" });
-        clearInterval(checkNext);
+          clearInterval(checkNext);
+          Turbo.visit(window.location, { action: "replace" });
+        }
       }
-    }
-    checkNext = setInterval(handleSelection, 2000);
-  }, false);
+      checkNext = setTimeout(handleSelection, #{(@draft.selection_seconds * 1000) + 100});
+    }, false);

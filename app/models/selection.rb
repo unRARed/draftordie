@@ -40,7 +40,7 @@ class Selection < ApplicationRecord
 
   delegate :position, :name,
     to: :player, allow_nil: true, prefix: true
-  delegate :name, to: :user, prefix: true, allow_nil: true
+  delegate :email, to: :user, prefix: true, allow_nil: true
   delegate :name, to: :player, prefix: true, allow_nil: true
   delegate :draft_id, to: :round, allow_nil: false
 
@@ -55,7 +55,7 @@ class Selection < ApplicationRecord
     return write_in_name if write_in_name.present?
 
     return player_name if player.present?
-    ""
+    "Missed"
   end
 
   def is_selected?
@@ -75,7 +75,8 @@ class Selection < ApplicationRecord
       return minutes_and_seconds(draft.selection_seconds)
     end
     elapsed_seconds = Time.current - self.started_at
-    minutes_and_seconds(draft.selection_seconds - elapsed_seconds)
+    remaining_seconds = draft.selection_seconds - elapsed_seconds
+    [remaining_seconds] + minutes_and_seconds(remaining_seconds)
   end
 
   def seconds_remaining
