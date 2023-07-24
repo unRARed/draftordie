@@ -26,3 +26,5 @@ console_command = "/rails/bin/rails console"
   guest_path = "/rails/public"
   url_prefix = "/"
 
+[env]
+  LOG_LEVEL = "warn"

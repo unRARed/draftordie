@@ -55,19 +55,19 @@ css:
               span #{selection.player_name} (#{selection.position})
               span #{selection.user.email || 'Unknown User'}
 
-javascript [data-turbo-eval="false"]:
+javascript:
   var minutes, seconds, checkNext;
 
   document.addEventListener('turbo:load', (evt) => {
-      let currentSlot = document.
-        querySelector(".c-draft__board__slot--current");
-      if (!currentSlot) { return; }
+    let currentSlot = document.
+      querySelector(".c-draft__board__slot--current");
+    if (!currentSlot) { return; }
 
-      window.scrollTo({
-        top: currentSlot.offsetTop,
-        left: currentSlot.offsetLeft,
-        behavior: "smooth",
-      });
+    window.scrollTo({
+      top: currentSlot.offsetTop,
+      left: currentSlot.offsetLeft,
+      behavior: "smooth",
+    });
 
     function handleSelection() {
       if (!document.querySelector(".b-countdown__minutes")) { return; }
