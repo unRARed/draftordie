@@ -7,19 +7,5 @@
 @import "components/forms.tailwind";
 @import "components/draft_board.tailwind";
 @import "components/countdown.tailwind";
-
-.c-notification {
-  color: white;
-  background-color: #2399d3;
-  padding: 1em;
-  text-align: center;
-}
-
-.c-notification--info {
-  @apply border-blue-500 text-blue-700;
-  background-color: #2399d3;
-}
-
-.c-container--md {
-  @apply max-w-md mx-auto;
-}
+@import "components/panels.tailwind";
+@import "components/notifications.tailwind";

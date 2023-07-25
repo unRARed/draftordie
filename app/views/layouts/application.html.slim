@@ -18,7 +18,9 @@ html
         = link_to "Draft or Die", root_path
       .c-layout__header__session
         - if user_signed_in?
-          span> Signed in as #{current_user.email}
+          = yield :signed_in_nav
+          span<>
+            | |
           = link_to "Sign out",
             destroy_user_session_path,
             method: :delete,

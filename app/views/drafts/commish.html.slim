@@ -1,0 +1,18 @@
+= link_to 'Edit', edit_draft_path(@draft),
+  class: 'c-panel__item'
+- if @draft.rounds.any? && !@draft.is_ended?
+  - if @draft.is_running?
+    = link_to 'Pause Draft',
+      pause_draft_path(@draft),
+      method: :patch,
+      class: 'c-panel__item',
+      data: { turbo_method: :patch }
+  - else
+    = link_to "#{@draft.is_paused? ? \
+      'Resume' : 'Begin' } Draft",
+      start_draft_path(@draft),
+      method: :patch,
+      class: 'c-panel__item',
+      data: { turbo_method: :patch }
+
+div class="c-draft#{' c-draft--paused' if @draft.is_paused?}"

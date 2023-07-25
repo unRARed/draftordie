@@ -8,14 +8,18 @@ Rails.application.routes.draw do
 
   resources :drafts, param: :slug do
     member do
+      get :board
+      get :commish
       post :generate
       post :start_next_selection
+      post :join
+      delete :leave
       patch :start
       patch :pause
       get :invite
       post :invite, to: "drafts#create_invite"
       get :access
-      post :access, to: "drafts#verify_and_join"
+      post :access, to: "drafts#verify_access"
       get :member
     end
 

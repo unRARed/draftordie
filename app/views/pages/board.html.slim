@@ -38,7 +38,7 @@ css:
 .c-draft
   - @data[:round_count].times do |round_index|
     .c-draft__round
-      - @data[:player_count].times do |player_index|
+      - @data[:user_count].times do |player_index|
         - player = Player.all.sample
         div class="c-draft__slot c-draft__slot--#{player.position.downcase}"
           strong Round #{round_index + 1}, Pick #{player_index + 1}

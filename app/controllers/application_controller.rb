@@ -1,10 +1,12 @@
 class ApplicationController < ActionController::Base
+  include Pundit::Authorization
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
-  include Pundit::Authorization
-  after_action :verify_authorized
+
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
+
   skip_after_action :verify_authorized, if: :devise_controller?
   skip_after_action :verify_policy_scoped, if: :devise_controller?
 

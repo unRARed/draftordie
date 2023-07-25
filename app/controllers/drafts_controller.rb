@@ -1,22 +1,13 @@
 class DraftsController < ApplicationController
-  before_action :set_draft, only: [
-    :edit,
-    :update,
-    :destroy,
-    :generate,
-    :start,
-    :pause,
-    :start_next_selection,
-    :invite,
-    :create_invite,
-    :access,
-    :verify_and_join
-  ]
-  before_action :load_full_draft, only: [:show, :member]
+  before_action :set_draft,
+    except: [:show, :commish, :member, :board]
+  before_action :load_full_draft,
+    only: [:show, :commish, :member, :board]
   before_action :check_access_code,
-    except: [:index, :new, :create, :access, :verify_and_join]
+    except: [:index, :new, :create, :access, :verify_access]
+  before_action :authenticate_user!,
+    except: [:show, :access, :verify_access]
   skip_after_action :verify_policy_scoped, :only => :index
-
 
   def index
     redirect_to root_path
@@ -24,7 +15,7 @@ class DraftsController < ApplicationController
 
   def access; end
 
-  def verify_and_join
+  def verify_access
     access_code =
       params[:access_code].upcase
 
@@ -35,9 +26,31 @@ class DraftsController < ApplicationController
       )
     end
     session["draft_#{@draft.slug}_access_code"] = access_code
-    unless @draft.users.include?(current_user)
+    redirect_to draft_path(@draft)
+  end
+
+  def join
+    if @draft.is_running?
+      flash[:alert] = "Draft has already started."
+    elsif @draft.users.count >= @draft.user_count
+      flash[:alert] = "Draft is full."
+    elsif @draft.users.include?(current_user)
+      flash[:alert] = "You all already in this draft!"
+    else
       @draft.users << current_user
-      flash[:notice] = "You have joined the draft!"
+      flash[:notice] = "You have joined this draft!"
+    end
+    redirect_to draft_path(@draft)
+  end
+
+  def leave
+    if @draft.is_running?
+      flash[:alert] = "Draft has already started!"
+    elsif @draft.users.include?(current_user)
+      @draft.users.delete(current_user)
+      flash[:alert] = "You have been removed from this draft."
+    else
+      flash[:notice] = "You're not in this draft!"
     end
     redirect_to draft_path(@draft)
   end
@@ -64,6 +77,10 @@ class DraftsController < ApplicationController
 
     # JUST FOR NOW
     render "show"
+  end
+
+  def board
+
   end
 
   def create_invite
@@ -155,7 +172,7 @@ private
     params.require(:draft).permit(
       :name,
       :round_count,
-      :player_count,
+      :user_count,
       :selection_seconds,
       :player_ids
     )

@@ -1,5 +1,5 @@
 .grid.grid-cols-2.gap-8
-  div
+  .c-panel
     .form-group.form-group--required
       = f.label :name, "Draft Name",
         class: "c-form__label"
@@ -12,11 +12,11 @@
       = f.label :selection_seconds, "Time per Selection",
         class: "c-form__label"
       = f.number_field :selection_seconds
-  div
+  .c-panel
     .form-group.form-group--required
-      = f.label :player_count, "Number of Players",
+      = f.label :user_count, "Number of Participants",
         class: "c-form__label"
-      = f.number_field :player_count
+      = f.number_field :user_count
       p
         strong Users currently paired
       - if f.object.users.any?

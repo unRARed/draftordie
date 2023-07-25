@@ -3,14 +3,14 @@
   }
 
   .c-layout__header {
-    @apply flex justify-between items-center p-2;
+    @apply flex justify-between items-center p-1;
   }
 
   .c-layout__header__title {
-    @apply text-2xl;
+    @apply text-lg;
   }
 
   .c-layout__footer {
-    @apply text-center;
+    @apply text-center p-2;
   }
 }

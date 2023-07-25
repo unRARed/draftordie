@@ -7,11 +7,11 @@
 #  ended_at          :datetime
 #  is_paused         :boolean          default(FALSE), not null
 #  name              :string           default(""), not null
-#  player_count      :integer
 #  round_count       :integer
 #  selection_seconds :integer
 #  slug              :string
 #  started_at        :datetime
+#  user_count        :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  user_id           :bigint           not null

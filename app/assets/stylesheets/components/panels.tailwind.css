@@ -1,0 +1,10 @@
+@layer components {
+  .c-panel {
+    @apply rounded-lg p-3;
+    background-color: #2e4846;
+    color: #cad3b3;
+  }
+  .c-panel__item {
+    @apply block px-4 py-2;
+  }
+}

@@ -1,0 +1,13 @@
+@layer components {
+  .c-notification {
+    color: white;
+    background-color: #2399d3;
+    padding: 0.4em;
+    text-align: center;
+  }
+
+  .c-notification--info {
+    @apply border-blue-500 text-blue-700;
+    background-color: #2399d3;
+  }
+}

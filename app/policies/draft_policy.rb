@@ -1,79 +1,96 @@
 class DraftPolicy < ApplicationPolicy
-  # actions allowed for signed in users
-  def new?
-    create?
+  # for anyone
+  def access?
+    true
   end
 
+  def verify_access?
+    true
+  end
+
+  def board?
+    true
+  end
+
+  def show?
+    true
+  end
+
+  # for signed in users
   def create?
     user.present?
   end
 
-  def access?
+  def new?
     create?
   end
 
-  def verify_and_join?
+  def join?
     create?
   end
 
-  def show?
+  def leave?
     create?
   end
 
   # for specific attached user's view of the draft
   def member?
-    is_draft_member?
+    is_participant?
   end
 
   # actions reserved for invted drafters
   def start_next_selection?
-    is_draft_owner? || is_draft_member?
+    is_commish? || is_participant?
   end
 
   # actions reserved for the draft owner
+  def commish?
+    is_commish?
+  end
+
   def start?
-    is_draft_owner?
+    is_commish?
   end
 
   def pause?
-    is_draft_owner?
+    is_commish?
   end
 
   def edit?
-    is_draft_owner?
+    is_commish?
   end
 
   def update?
-    is_draft_owner?
+    is_commish?
   end
 
   def destroy?
-    is_draft_owner?
+    is_commish?
   end
 
   def generate?
-    is_draft_owner?
+    is_commish?
   end
 
   def start?
-    is_draft_owner?
+    is_commish?
   end
 
   def invite?
-    is_draft_owner?
+    is_commish?
   end
 
   def create_invite?
-    is_draft_owner?
+    is_commish?
   end
 
 private
 
-  def is_draft_owner?
+  def is_commish?
     user == record.user
   end
 
-  def is_draft_member?
+  def is_participant?
     record.users.include?(user)
   end
 end

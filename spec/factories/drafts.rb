@@ -7,11 +7,11 @@
 #  ended_at          :datetime
 #  is_paused         :boolean          default(FALSE), not null
 #  name              :string           default(""), not null
-#  player_count      :integer
 #  round_count       :integer
 #  selection_seconds :integer
 #  slug              :string
 #  started_at        :datetime
+#  user_count        :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  user_id           :bigint           not null
@@ -30,7 +30,7 @@ FactoryBot.define do
       Faker::Lorem.unique.words(number: 3).join(" ").titleize
     }
     round_count { 2 }
-    player_count { 4 }
+    user_count { 4 }
     selection_seconds { 5 }
     user
     # slug
@@ -38,7 +38,7 @@ FactoryBot.define do
 
   trait :max do
     round_count { 20 }
-    player_count { 16 }
+    user_count { 16 }
   end
 
   trait :fast do

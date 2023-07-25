@@ -1,4 +1,4 @@
-.c-container--md
+.c-panel
   = form_for [@selection.draft, @selection], html: { class: "c-form" } do |f|
     - if @selection.errors.any?
       = render "shared/errors", target: @selection
