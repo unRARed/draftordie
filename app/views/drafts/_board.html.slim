@@ -1,4 +1,4 @@
-.c-draft__board
+div.c-draft__board id="board_#{draft.slug}"
   - if draft.rounds.empty?
     p No rounds have been added to this draft.
     = link_to 'Generate Board',
@@ -15,3 +15,14 @@
             strong Rd. #{round.number} Pick #{selection.pick_number}
             span #{selection.player_name} (#{selection.position})
             span #{selection.user.email || 'Unknown User'}
+javascript:
+  (function () {
+    let currentSlot = document.
+      querySelector(".c-draft__board__slot--current");
+    if (!currentSlot) { return; }
+
+    window.scrollTo({
+      top: currentSlot.offsetTop-200,
+      behavior: "smooth",
+    });
+  })();

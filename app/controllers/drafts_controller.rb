@@ -1,6 +1,7 @@
 class DraftsController < ApplicationController
   before_action :set_draft,
-    except: [:show, :commish, :member, :board]
+    except: [:index, :new, :create, :show,
+      :commish, :member, :board]
   before_action :load_full_draft,
     only: [:show, :commish, :member, :board]
   before_action :check_access_code,

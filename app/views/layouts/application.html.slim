@@ -16,17 +16,8 @@ html
     header.c-layout__header
       .c-layout__header__title
         = link_to "Draft or Die", root_path
-      .c-layout__header__session
-        - if user_signed_in?
-          = yield :signed_in_nav
-          span<>
-            | |
-          = link_to "Sign out",
-            destroy_user_session_path,
-            method: :delete,
-            data: { turbo_method: :delete }
-        - else
-          = link_to "Sign in", new_user_session_path
+      .c-layout__header__navigation
+        = render "shared/navigation"
     main.c-layout__main
       - if flash.any?
         = render "shared/flash"

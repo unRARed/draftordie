@@ -1,4 +1,4 @@
-document.addEventListener('turbo:load', (evt) => {
+window.initCountdowns = function () {
   const HOUR_SECONDS = 3600;
 
   const countdowns =
@@ -65,4 +65,8 @@ document.addEventListener('turbo:load', (evt) => {
       }
     }, 250);
   });
+}
+
+document.addEventListener('turbo:load', (evt) => {
+  initCountdowns();
 }, false);

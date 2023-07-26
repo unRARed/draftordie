@@ -3,4 +3,4 @@
 :scheduler:
   :schedule:
      ProgressDraftsJob:
-       every: ['1s']
+       every: ['5s']

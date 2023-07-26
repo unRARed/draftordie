@@ -1,0 +1,6 @@
+.c-nav
+  - if user_signed_in?
+    = yield :signed_in_nav
+  - @navigation[:dynamic].each do |nav_item|
+    = link_to nav_item.text, nav_item.url,
+      { class: "c-nav__item#{' c-nav__item--active' if nav_item.is_active?}" }.merge(nav_item.options)

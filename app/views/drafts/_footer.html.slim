@@ -1,5 +1,13 @@
-- current_selection = draft.current_selection
-.c-draft__footer
+.c-draft__footer id="footer_#{draft.slug}"
+  - current_selection = draft.current_selection
+  .c-draft__footer__qr
+    == RQRCode::QRCode.new("https://draftordie.com#{request.env['PATH_INFO']}").as_svg( \
+      color: "b7fbe9",
+      shape_rendering: "crispEdges",
+      module_size: 2,
+      standalone: true,
+      use_path: true \
+    )
   .c-draft__footer__name= draft.name
   - if draft.progression&.current_pick_number
     .c-draft__footer__selection
@@ -18,22 +26,7 @@
           .c-draft__footer__state__next
             strong On deck:
             span< #{draft.progression.next_selection.user_email}
-    .c-draft__footer__clock
-      - if draft.is_running?
-        .b-countdown.b-countdown--simple data-to="#{Time.current + draft.current_selection.seconds_remaining.seconds}"
-      - else
-        - clock = draft.current_selection.time_remaining
-        span.minutes = "%02d" % (clock[1] || 0)
-        span
-          | :
-        span.seconds = "%02d" % (clock[2] || 0)
+    = render partial: "drafts/selection_clock",
+      locals: { draft: draft }
   - else
     strong No selection in progress
-  .c-draft__footer__qr
-    == RQRCode::QRCode.new("https://draftordie.com#{request.env['PATH_INFO']}").as_svg( \
-      color: "b7fbe9",
-      shape_rendering: "crispEdges",
-      module_size: 2,
-      standalone: true,
-      use_path: true \
-    )

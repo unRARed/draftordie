@@ -8,4 +8,5 @@
 @import "components/draft_board.tailwind";
 @import "components/countdown.tailwind";
 @import "components/panels.tailwind";
+@import "components/navigation.tailwind";
 @import "components/notifications.tailwind";

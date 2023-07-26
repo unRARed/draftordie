@@ -1,0 +1,9 @@
+@layer components {
+  .c-nav {
+    @apply flex justify-between items-center p-1;
+  }
+  .c-nav__item {
+    display: inline-block;
+    @apply mx-2;
+  }
+}

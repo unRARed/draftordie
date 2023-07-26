@@ -27,4 +27,6 @@ class Round < ApplicationRecord
     -> { order(pick_number: :asc)},
     dependent: :destroy,
     class_name: "Selection"
+
+  delegate :slug, to: :draft, allow_nil: false, prefix: true
 end

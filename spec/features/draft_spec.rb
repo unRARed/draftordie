@@ -41,8 +41,9 @@ RSpec.describe "Draft", type: :feature do
           @draft = Draft.last
           3.times{ @draft.users << FactoryBot.create(:user) }
           @draft.generate_board
-          visit "/drafts/#{@draft.slug}"
+          visit "/drafts/#{@draft.slug}/commish"
           click_on "Begin Draft"
+          visit "/drafts/#{@draft.slug}"
         end
 
         after(:each) do
@@ -50,26 +51,37 @@ RSpec.describe "Draft", type: :feature do
         end
 
         scenario "advances selections automatically", js: true do
-          expect(page).to have_content("On the clock")
+          expect(page).to have_content("Pick 1 on the clock")
           # 4 rounds, 3 for users, 1 for the commish
           expect(@draft.rounds.count).to eq(4)
           # 4 picks each of the 3 users and commish (4*4 = 16)
           expect(@draft.selections.count).to eq(16)
           expect(@draft.upcoming_selections.count).to eq(16)
 
-          within(".c-draft__header") do
+
+          within(".c-draft__footer__selection") do
             expect(page).to have_content(@draft.users.first.email)
           end
+          ProgressDraftsJob.perform_now
+          # job runs every 1 second checking for drafts
+          # to advance and progresses them
           expect(page).to have_selector(
             '.c-draft__board__slot--selected', count: 1)
-          within(".c-draft__header") do
+
+          within(".c-draft__footer__selection") do
             expect(page).to have_content(@draft.users.second.email)
           end
+          # job runs every 1 second checking for drafts
+          # to advance and progresses them
+          ProgressDraftsJob.perform_now
           expect(page).to have_selector(
             '.c-draft__board__slot--selected', count: 2)
-          within(".c-draft__header") do
+          within(".c-draft__footer__selection") do
             expect(page).to have_content(@draft.users.third.email)
           end
+          # job runs every 1 second checking for drafts
+          # to advance and progresses them
+          ProgressDraftsJob.perform_now
           expect(page).to have_selector(
             '.c-draft__board__slot--selected', count: 3)
 
@@ -92,7 +104,7 @@ RSpec.describe "Draft", type: :feature do
     fill_in "Name", with: "My Draft"
     fill_in "Number of Rounds", with: 4
     fill_in "Time per Selection", with: 1
-    fill_in "Number of Players", with: 4
+    fill_in "Number of Participants", with: 4
     click_on "Create Draft"
     expect(page).to have_content("Draft created successfully")
   end

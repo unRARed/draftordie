@@ -89,7 +89,7 @@
     border-top: 1px solid #444;
   }
   .c-draft__board__slot--current {
-    @apply border-green-200;
+    @apply border-green-200 animate-pulse;
     background-color: #e2e2e2;
     color: #4f4f4f;
   }

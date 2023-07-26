@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
+  before_action :build_navigation
 
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
@@ -11,6 +12,25 @@ class ApplicationController < ActionController::Base
   skip_after_action :verify_policy_scoped, if: :devise_controller?
 
 protected
+
+  def build_navigation
+    @navigation = { static: [], dynamic: [] }
+
+    if current_user
+      @navigation[:dynamic] = [
+        NavigationItem.new("My Drafts", drafts_path),
+        NavigationItem.new(
+          "Sign out",
+          destroy_user_session_path,
+          method: :delete, data: { turbo_method: :delete }
+        )
+      ]
+    else
+      @navigation[:dynamic] = [
+        NavigationItem.new("Sign in", new_user_session_path)
+      ]
+    end
+  end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.

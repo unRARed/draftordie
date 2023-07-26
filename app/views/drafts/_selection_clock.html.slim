@@ -1,0 +1,14 @@
+.c-draft__footer__clock
+  - if draft.is_running?
+    .b-countdown.b-countdown--simple data-to="#{Time.current + draft.current_selection.seconds_remaining.seconds}"
+    javascript:
+      /* initial load will not be available... */
+      if (typeof initCountdowns === 'function') {
+        initCountdowns();
+      }
+  - else
+    - clock = draft.current_selection.time_remaining
+    span.minutes = "%02d" % (clock[1] || 0)
+    span
+      | :
+    span.seconds = "%02d" % (clock[2] || 0)

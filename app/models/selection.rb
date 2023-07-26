@@ -38,11 +38,27 @@ class Selection < ApplicationRecord
 
   before_save :finalize_selection
 
+  after_update_commit -> {
+    broadcast_update_to(
+      :progression,
+      partial: "drafts/board",
+      locals: { draft: self.draft },
+      target: "board_#{self.draft.slug}"
+    )
+    broadcast_update_to(
+      :progression,
+      partial: "drafts/footer",
+      locals: { draft: self.draft },
+      target: "footer_#{self.draft.slug}"
+    )
+  }
+
   delegate :position, :name,
     to: :player, allow_nil: true, prefix: true
   delegate :email, to: :user, prefix: true, allow_nil: true
   delegate :name, to: :player, prefix: true, allow_nil: true
   delegate :draft_id, to: :round, allow_nil: false
+  delegate :draft_slug, to: :round, allow_nil: false
 
   def position
     return write_in_position if write_in_position.present?
