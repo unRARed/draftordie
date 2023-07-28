@@ -17,10 +17,11 @@
       = f.label :user_count, "Number of Participants",
         class: "c-form__label"
       = f.number_field :user_count
-      p
-        strong Users currently paired
-      - if f.object.users.any?
-        ul
-          - f.object.users.each do |user|
-            li
-              small = user.email
+      - if f.object.present?
+        p
+          strong Users currently paired
+        - if f.object.users.any?
+          ul
+            - f.object.users.each do |user|
+              li
+                small = user.email

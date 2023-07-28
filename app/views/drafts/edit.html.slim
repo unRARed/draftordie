@@ -5,12 +5,19 @@
   = f.submit "Update Draft",
     class: "c-button c-button--positive"
   - if @draft.rounds.any?
-    = link_to "View Draft", @draft,
+    = link_to "View Draft",
+      board_draft_path(@draft),
       class: "c-button c-button--secondary"
     = link_to '(Re)Generate Board',
       generate_draft_path(@draft),
       method: :post,
       data: { turbo_method: :post,
+        turbo_confirm: "Are you sure?" },
+      class: "c-button c-button--secondary"
+    = link_to 'Start Draft',
+      start_draft_path(@draft),
+      method: :patch,
+      data: { turbo_method: :patch,
         turbo_confirm: "Are you sure?" },
       class: "c-button c-button--secondary"
   - else
@@ -22,4 +29,3 @@
   = link_to "Invite Users",
     invite_draft_path(@draft),
     class: "c-button c-button--secondary"
-

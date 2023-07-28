@@ -14,21 +14,20 @@ class ApplicationController < ActionController::Base
 protected
 
   def build_navigation
-    @navigation = { static: [], dynamic: [] }
+    @navigation = Navigation.new(current_path: request.path)
 
     if current_user
-      @navigation[:dynamic] = [
-        NavigationItem.new("My Drafts", drafts_path),
-        NavigationItem.new(
+      @navigation.add_item(:dynamic, NavigationItem.new(
           "Sign out",
           destroy_user_session_path,
           method: :delete, data: { turbo_method: :delete }
         )
-      ]
+      )
     else
-      @navigation[:dynamic] = [
-        NavigationItem.new("Sign in", new_user_session_path)
-      ]
+      @navigation.add_item(:dynamic, NavigationItem.new(
+          "Sign in", new_user_session_path
+        )
+      )
     end
   end
 

@@ -1,0 +1,9 @@
+css:
+  .c-draft__board__slot {
+    width: #{100 / [@draft.users.count, 1].max}%;
+    font-size: #{compute_text_size(@draft.users.count)}px;
+  }
+= turbo_stream_from(:draft_board)
+div class="c-draft#{' c-draft--paused' if @draft.is_paused?}"
+  = render partial: "drafts/board", locals: { draft: @draft }
+  = render partial: "drafts/footer", locals: { draft: @draft }

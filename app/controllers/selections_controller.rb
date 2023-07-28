@@ -16,8 +16,10 @@ class SelectionsController < ApplicationController
   end
 
   def update
+    byebug
     if @selection.update(selection_params)
-      redirect_to member_draft_path(@selection.draft)
+      flash[:notice] = "Selection made"
+      redirect_to draft_path(@selection.draft)
     else
       render :edit
     end

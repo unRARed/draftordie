@@ -23,4 +23,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :drafts
+
+  def in_draft?(draft)
+    draft.user == self || draft.users.include?(self)
+  end
 end

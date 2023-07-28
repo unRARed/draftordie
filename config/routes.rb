@@ -17,10 +17,9 @@ Rails.application.routes.draw do
       patch :start
       patch :pause
       get :invite
-      post :invite, to: "drafts#create_invite"
+      post :invite, to: "drafts#reate_invite"
       get :access
       post :access, to: "drafts#verify_access"
-      get :member
     end
 
     resources :selections, only: [:edit, :update]

@@ -1,21 +1,14 @@
 @layer components {
   .c-draft {
+    @apply flex flex-col;
+
     padding-bottom: 75px;
     background-color: #182625;
     /* light purple-ish */
     color: #98b5b3;
     position: relative;
-    @apply flex flex-col;
-    height: 100vh;
   }
-  /* .c-draft__qr-overlay { */
-  /*   @apply fixed inset-0 flex flex-col justify-center items-center; */
-  /*   z-index: 1; */
-  /*   position: fixed; */
-  /*   opacity: 0.2; */
-  /*   height: 100vh; */
 
-  /* } */
   .c-draft--paused::before {
     content: "";
     position: absolute;
@@ -114,5 +107,18 @@
   }
   .c-draft__board__slot--dst {
     @apply bg-indigo-300 border-indigo-400 text-indigo-700;
+  }
+
+  .c-draft__pick {
+    @apply border-b-2 border-gray-500;
+    padding: 0.2em;
+  }
+  .c-draft__pick--current {
+    @apply bg-green-500;
+    @apply bg-green-500;
+  }
+  .c-draft__pick--mine {
+    background-color: #131e1d;
+    font-weight: bold;
   }
 }

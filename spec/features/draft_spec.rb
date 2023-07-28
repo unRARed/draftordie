@@ -58,7 +58,6 @@ RSpec.describe "Draft", type: :feature do
           expect(@draft.selections.count).to eq(16)
           expect(@draft.upcoming_selections.count).to eq(16)
 
-
           within(".c-draft__footer__selection") do
             expect(page).to have_content(@draft.users.first.email)
           end
@@ -74,6 +73,8 @@ RSpec.describe "Draft", type: :feature do
           # job runs every 1 second checking for drafts
           # to advance and progresses them
           ProgressDraftsJob.perform_now
+          visit "/drafts/#{@draft.slug}"
+
           expect(page).to have_selector(
             '.c-draft__board__slot--selected', count: 2)
           within(".c-draft__footer__selection") do

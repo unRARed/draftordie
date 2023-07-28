@@ -40,16 +40,22 @@ class Selection < ApplicationRecord
 
   after_update_commit -> {
     broadcast_update_to(
-      :progression,
+      :draft_board,
       partial: "drafts/board",
       locals: { draft: self.draft },
       target: "board_#{self.draft.slug}"
     )
     broadcast_update_to(
-      :progression,
+      :draft_board,
       partial: "drafts/footer",
       locals: { draft: self.draft },
       target: "footer_#{self.draft.slug}"
+    )
+    broadcast_update_to(
+      :draft_show,
+      partial: "drafts/show",
+      locals: { draft: self.draft },
+      target: "show_#{self.draft.slug}"
     )
   }
 

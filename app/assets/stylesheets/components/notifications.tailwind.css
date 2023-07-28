@@ -10,4 +10,9 @@
     @apply border-blue-500 text-blue-700;
     background-color: #2399d3;
   }
+
+  .c-notification--alert {
+    @apply border-red-500;
+    background-color: #f56565;
+  }
 }

@@ -1,13 +1,13 @@
 class DraftsController < ApplicationController
   before_action :set_draft,
-    except: [:index, :new, :create, :show,
-      :commish, :member, :board]
+    except: [:index, :new, :create, :commish, :member ]
   before_action :load_full_draft,
     only: [:show, :commish, :member, :board]
   before_action :check_access_code,
     except: [:index, :new, :create, :access, :verify_access]
   before_action :authenticate_user!,
-    except: [:show, :access, :verify_access]
+    except: [:show, :board, :access, :verify_access]
+  before_action :build_draft_navigation
   skip_after_action :verify_policy_scoped, :only => :index
 
   def index
@@ -57,27 +57,15 @@ class DraftsController < ApplicationController
   end
 
   def show
-    if @draft.user == current_user
-      # TODO: add admin view of board w/ links
-      #       to edit selections
-      return render
-    end
 
-    if @draft.users.include?(current_user)
-      return redirect_to member_draft_path(@draft)
+    unless current_user
+      flash[:alert] = "You must be signed in to view this draft."
+      return redirect_to board_draft_path(@draft)
     end
-  end
-
-  def member
-    return render 'show' unless @selection = @draft.current_selection
-    if @selection.user == current_user
-      return redirect_to(edit_draft_selection_path(
-        @selection.draft, @selection
-      ))
+    unless current_user.in_draft?(@draft)
+      flash[:alert] = "You are not in this draft."
+      return redirect_to board_draft_path(@draft)
     end
-
-    # JUST FOR NOW
-    render "show"
   end
 
   def board
@@ -168,6 +156,40 @@ class DraftsController < ApplicationController
   end
 
 private
+
+  def build_draft_navigation
+    return unless current_user
+    return unless @draft
+
+    if @draft.users.include?(current_user)
+      @navigation.add_item(:draft, NavigationItem.new(
+          'Dashboard', draft_path(@draft)
+        )
+      )
+    else
+      @navigation.add_item(:draft, NavigationItem.new(
+          'Join this Draft', join_draft_path(@draft),
+          { method: :post, data: { turbo_method: :post } }
+        )
+      )
+    end
+    @navigation.add_item(:draft, NavigationItem.new(
+        "Board", board_draft_path(@draft)
+      )
+    )
+    if policy(@draft).commish?
+      @navigation.add_item(:draft, NavigationItem.new(
+          'Setup', edit_draft_path(@draft)
+        )
+      )
+    end
+
+    if current_user.drafts.length > 1
+      @navigation.add_item(:draft, NavigationItem.new(
+        "My Drafts", drafts_path)
+      )
+    end
+  end
 
   def draft_params
     params.require(:draft).permit(
