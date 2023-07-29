@@ -20,8 +20,11 @@
       - if f.object.present?
         p
           strong Users currently paired
-        - if f.object.users.any?
+        - if f.object.pairings.any?
           ul
-            - f.object.users.each do |user|
+            - f.object.pairings.each do |pairing|
               li
-                small = user.email
+                small = pairing.user.email
+                = link_to "Remove",
+                  draft_pairing_path(f.object, pairing),
+                  method: :delete, data: { turbo_method: :delete }

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
+  before_action :set_current_user
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
   before_action :build_navigation
@@ -36,5 +37,11 @@ protected
       permit(:sign_up, keys: %i[first_name last_name terms_and_conditions])
     devise_parameter_sanitizer.
       permit(:account_update, keys: %i[first_name last_name])
+  end
+
+private
+
+  def set_current_user
+    Current.user = current_user
   end
 end

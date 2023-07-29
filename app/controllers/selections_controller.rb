@@ -4,7 +4,7 @@ class SelectionsController < ApplicationController
   def edit
     unless @selection.draft.is_started?
       @draft = Draft.preloaded.find(@selection.draft_id)
-      flash[:alert] = "Draft has not started yet"
+      flash[:aler] = "Draft has not started yet"
       return render "drafts/show"
     end
 
@@ -16,11 +16,29 @@ class SelectionsController < ApplicationController
   end
 
   def update
-    byebug
-    if @selection.update(selection_params)
-      flash[:notice] = "Selection made"
-      redirect_to draft_path(@selection.draft)
-    else
+    if !@selection.draft.is_running?
+      flash[:alert] = "The draft has not started yet"
+      return redirect_to draft_path(@selection.draft)
+    end
+    unless (@selection == @selection.
+      draft.progression&.current_selection
+    )
+      flash[:alert] = "It's not your turn to select"
+      return redirect_to draft_path(@selection.draft)
+    end
+
+    begin
+        next_selection = @selection.
+          draft.progression.next_selection
+        if @selection.update(
+          selection_params.merge(ended_at: Time.current)
+        )
+          next_selection.update_columns started_at: Time.current
+
+        flash[:notice] = "Selection made"
+      end
+    rescue
+      @draft = Draft.preloaded.find(@selection.draft_id)
       render :edit
     end
   end

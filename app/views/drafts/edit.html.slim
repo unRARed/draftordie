@@ -5,9 +5,6 @@
   = f.submit "Update Draft",
     class: "c-button c-button--positive"
   - if @draft.rounds.any?
-    = link_to "View Draft",
-      board_draft_path(@draft),
-      class: "c-button c-button--secondary"
     = link_to '(Re)Generate Board',
       generate_draft_path(@draft),
       method: :post,

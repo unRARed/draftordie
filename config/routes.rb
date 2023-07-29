@@ -23,5 +23,6 @@ Rails.application.routes.draw do
     end
 
     resources :selections, only: [:edit, :update]
+    resources :pairings, only: [:destroy]
   end
 end

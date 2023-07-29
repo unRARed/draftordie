@@ -57,13 +57,10 @@ class DraftsController < ApplicationController
   end
 
   def show
-
     unless current_user
-      flash[:alert] = "You must be signed in to view this draft."
       return redirect_to board_draft_path(@draft)
     end
     unless current_user.in_draft?(@draft)
-      flash[:alert] = "You are not in this draft."
       return redirect_to board_draft_path(@draft)
     end
   end
@@ -142,12 +139,6 @@ class DraftsController < ApplicationController
 
   def start_next_selection
     render json: @draft.current_selection.time_remaining
-    # return unless @draft.is_between_selections?
-    # @draft.current_selection.update! ended_at: Time.current
-
-    # return if @draft.current_selection.nil?
-    # @draft.current_selection.reload.
-    #   update! started_at: Time.current
   end
 
   def generate

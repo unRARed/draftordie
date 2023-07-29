@@ -1,7 +1,4 @@
 .c-panel
-  = form_for [@selection.draft, @selection], html: { class: "c-form" } do |f|
-    - if @selection.errors.any?
-      = render "shared/errors", target: @selection
-    = render "fields", f: f
-    = f.submit "Draft Selection",
-      class: "c-button c-button--positive"
+  = render partial: "selections/form",
+    locals: { draft: @selection.draft,
+      selection: @selection }

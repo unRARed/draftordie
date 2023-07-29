@@ -4,10 +4,12 @@ css:
     font-size: #{compute_text_size(@draft.users.count)}px;
   }
 = turbo_stream_from(:draft_show)
-p
-.c-draft__menu
-= render partial: "drafts/show",
-  locals: { draft: @draft }
-= link_to 'Leave Draft', leave_draft_path(@draft),
-  class: "c-button c-button--negative",
-  method: :delete, data: { turbo_method: :delete }
+div class="c-draft"
+  = render partial: "drafts/show",
+    locals: { draft: @draft, user: current_user }
+  - if !@draft.is_running? && @draft.users.include?(current_user)
+    = link_to 'Leave Draft',
+      leave_draft_path(@draft),
+      class: "c-button c-button--negative",
+      method: :delete,
+      data: { turbo_method: :delete }

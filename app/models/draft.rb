@@ -57,6 +57,19 @@ class Draft < ApplicationRecord
     eager_load(:users).eager_load(rounds: { selections: :user })
   }
 
+  def self.user_ids_for(draft)
+    joins(:users).
+      distinct.
+      where(id: draft.id).
+      pluck("drafts.user_id", "users.id").
+      flatten.uniq
+  end
+
+  def includes_user?(user)
+    Draft.user_ids_for(self).
+      include?(user.id)
+  end
+
   def is_started?
     started_at.present?
   end

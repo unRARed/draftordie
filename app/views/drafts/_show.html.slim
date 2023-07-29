@@ -1,18 +1,11 @@
-div.c-draft id="show_#{draft.slug}"
+div.c-draft__picks id="show_#{draft.slug}"
   - draft.remaining_selections.each do |selection|
-    div class="#{pick_class(selection)}"
+    div class="#{pick_class(selection, user)}"
       strong Pick #{selection.pick_number}
       span #{selection.player_name} (#{selection.position})
       span #{selection.user.email || 'Unknown User'}
-  - if draft&.current_selection&.user_id == current_user.id
+  - if draft&.current_selection&.user == user
     .c-container--md
-      = form_for( \
-        draft_selection_path(draft, draft.current_selection),
-        html: { class: "c-form" } \
-      ) do |f|
-        - if draft.current_selection.errors.any?
-          = render "shared/errors",
-            target: draft.current_selection
-        = render "selections/fields", f: f
-        = f.submit "Draft Player",
-          class: "c-button c-button--positive"
+      = render partial: "selections/form",
+        locals: { draft: draft,
+          selection: draft.current_selection }

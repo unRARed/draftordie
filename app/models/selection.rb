@@ -54,7 +54,7 @@ class Selection < ApplicationRecord
     broadcast_update_to(
       :draft_show,
       partial: "drafts/show",
-      locals: { draft: self.draft },
+      locals: { draft: self.draft, user: Current.user },
       target: "show_#{self.draft.slug}"
     )
   }
