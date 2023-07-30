@@ -1,11 +1,10 @@
-div.c-draft__picks id="show_#{draft.slug}"
-  - draft.remaining_selections.each do |selection|
-    div class="#{pick_class(selection, user)}"
-      strong Pick #{selection.pick_number}
-      span #{selection.player_name} (#{selection.position})
-      span #{selection.user.email || 'Unknown User'}
-  - if draft&.current_selection&.user == user
-    .c-container--md
-      = render partial: "selections/form",
-        locals: { draft: draft,
-          selection: draft.current_selection }
+- draft.remaining_selections.each do |selection|
+  div class="#{pick_class(selection, user)}"
+    strong Pick #{selection.pick_number}
+    span #{selection.player_name} (#{selection.position})
+    span #{selection.user.email || 'Unknown User'}
+- if draft&.current_selection&.user == user
+  .c-container--md
+    = render partial: "selections/form",
+      locals: { draft: draft,
+        selection: draft.current_selection }

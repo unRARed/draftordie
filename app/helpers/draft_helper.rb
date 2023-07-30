@@ -11,7 +11,6 @@ module DraftHelper
     if selection == selection.draft.current_selection
       classes << "c-draft__pick--current"
     end
-    # NOTE: cannot do this with turbo_streams!
     if selection.user == user
       classes << "c-draft__pick--mine"
     end

@@ -5,8 +5,9 @@ css:
   }
 = turbo_stream_from(:draft_show)
 div class="c-draft"
-  = render partial: "drafts/show",
-    locals: { draft: @draft, user: current_user }
+  div.c-draft__picks id="show_#{@draft.slug}"
+    = render partial: "drafts/show",
+      locals: { draft: @draft, user: current_user }
   - if !@draft.is_running? && @draft.users.include?(current_user)
     = link_to 'Leave Draft',
       leave_draft_path(@draft),

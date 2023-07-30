@@ -1,20 +1,19 @@
-div.c-draft__board id="board_#{draft.slug}"
-  - if draft.rounds.empty?
-    p No rounds have been added to this draft.
-    = link_to 'Generate Board',
-      generate_draft_path(draft),
-      method: :post,
-      data: { turbo_method: :post }
-  - elsif draft.is_ended?
-    h3.text-xl.text-center.pt-2 All selections have been made.
-  - else
-    - draft.rounds.each do |round|
-      div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
-        - round.ordered_selections.each do |selection|
-          div id="pick_number_#{selection.pick_number}" class="#{draft_board_slot_class(selection)}"
-            strong Rd. #{round.number} Pick #{selection.pick_number}
-            span #{selection.player_name} (#{selection.position})
-            span #{selection.user.email || 'Unknown User'}
+- if draft.rounds.empty?
+  p No rounds have been added to this draft.
+  = link_to 'Generate Board',
+    generate_draft_path(draft),
+    method: :post,
+    data: { turbo_method: :post }
+- elsif draft.is_ended?
+  h3.text-xl.text-center.pt-2 All selections have been made.
+- else
+  - draft.rounds.each do |round|
+    div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
+      - round.ordered_selections.each do |selection|
+        div id="pick_number_#{selection.pick_number}" class="#{draft_board_slot_class(selection)}"
+          strong Rd. #{round.number} Pick #{selection.pick_number}
+          span #{selection.player_name} (#{selection.position})
+          span #{selection.user.email || 'Unknown User'}
 javascript:
   (function () {
     let currentSlot = document.

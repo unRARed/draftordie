@@ -5,5 +5,7 @@ css:
   }
 = turbo_stream_from(:draft_board)
 div class="c-draft#{' c-draft--paused' if @draft.is_paused?}"
-  = render partial: "drafts/board", locals: { draft: @draft }
+  div.c-draft__board id="board_#{@draft.slug}"
+    = render partial: "drafts/board", locals: { draft: @draft }
+.c-draft__footer id="footer_#{@draft.slug}"
   = render partial: "drafts/footer", locals: { draft: @draft }
