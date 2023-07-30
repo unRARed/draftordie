@@ -104,7 +104,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_051731) do
       SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
       drafts.slug AS draft_slug,
       current_selection.pick_number AS current_pick_number,
-      ((current_selection.started_at + ((drafts.selection_seconds)::double precision * 'PT1S'::interval)) < LOCALTIMESTAMP) AS is_selected,
+      ((current_selection.player_id IS NOT NULL) OR ((current_selection.write_in_name IS NOT NULL) AND (current_selection.write_in_position IS NOT NULL)) OR ((current_selection.started_at + ((drafts.selection_seconds)::double precision * 'PT1S'::interval)) < LOCALTIMESTAMP)) AS is_selected,
       prior_selection.id AS prior_selection_id,
       current_selection.id AS current_selection_id,
       next_selection.id AS next_selection_id

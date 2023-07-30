@@ -4,7 +4,7 @@ class SelectionsController < ApplicationController
   def edit
     unless @selection.draft.is_started?
       @draft = Draft.preloaded.find(@selection.draft_id)
-      flash[:aler] = "Draft has not started yet"
+      flash[:alert] = "Draft has not started yet"
       return render "drafts/show"
     end
 
@@ -28,18 +28,13 @@ class SelectionsController < ApplicationController
     end
 
     begin
-        next_selection = @selection.
-          draft.progression.next_selection
-        if @selection.update(
-          selection_params.merge(ended_at: Time.current)
-        )
-          next_selection.update_columns started_at: Time.current
-
-        flash[:notice] = "Selection made"
-      end
-    rescue
+      next_selection = @selection.
+        draft.progression.next_selection
+      @selection.update(selection_params)
+      flash[:notice] = "Pick is in!"
+    ensure
       @draft = Draft.preloaded.find(@selection.draft_id)
-      render :edit
+      return redirect_to draft_path(@selection.draft)
     end
   end
 

@@ -36,7 +36,7 @@ class Selection < ApplicationRecord
   belongs_to :user
   belongs_to :player, optional: true
 
-  before_save :finalize_selection
+  # before_save :finalize_selection
 
   after_update_commit -> {
     broadcast_update_to(
@@ -111,10 +111,10 @@ class Selection < ApplicationRecord
 
 private
 
-  def finalize_selection
-    return if self.ended_at.present?
-    return unless self.is_selected?
+  # def finalize_selection
+  #   return if self.ended_at.present?
+  #   return unless self.is_selected?
 
-    self.set_end
-  end
+  #   self.set_end
+  # end
 end

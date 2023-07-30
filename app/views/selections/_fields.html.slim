@@ -4,7 +4,7 @@
       = f.label :name, "Player",
         class: "c-form__label"
       = f.select :player_id,
-        Player.for_selection.\
+        f.object.draft.remaining_players.\
           map { |p| ["[#{p.position}] #{p.name}", p.id] },
         { include_blank: true },
         class: "c-form__select"

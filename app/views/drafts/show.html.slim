@@ -1,13 +1,8 @@
-css:
-  .c-draft__board__slot {
-    width: #{100 / [@draft.users.count, 1].max}%;
-    font-size: #{compute_text_size(@draft.users.count)}px;
-  }
 = turbo_stream_from(:draft_show)
 div class="c-draft"
   div.c-draft__picks id="show_#{@draft.slug}"
     = render partial: "drafts/show",
-      locals: { draft: @draft, user: current_user }
+      locals: { draft: @draft, user: Current.user }
   - if !@draft.is_running? && @draft.users.include?(current_user)
     = link_to 'Leave Draft',
       leave_draft_path(@draft),

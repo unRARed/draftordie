@@ -36,7 +36,7 @@ class DraftsController < ApplicationController
     elsif @draft.users.count >= @draft.user_count
       flash[:alert] = "Draft is full."
     elsif @draft.users.include?(current_user)
-      flash[:alert] = "You all already in this draft!"
+      flash[:alert] = "You are already in this draft!"
     else
       @draft.users << current_user
       flash[:notice] = "You have joined this draft!"
@@ -143,7 +143,8 @@ class DraftsController < ApplicationController
 
   def generate
     @draft.generate_board
-    redirect_to draft_path(@draft)
+    flash[:notice] = "Draft board generated!"
+    redirect_back fallback_location: draft_path(@draft)
   end
 
 private
@@ -193,12 +194,16 @@ private
   end
 
   def set_draft
-    @draft = Draft.find_by_slug(params[:slug])
+    unless (@draft = Draft.find_by_slug(params[:slug]))
+      return redirect_back fallback_location: root_path
+    end
     authorize @draft
   end
 
   def load_full_draft
-    @draft = Draft.preloaded.find_by_slug(params[:slug])
+    unless (@draft = Draft.preloaded.find_by_slug(params[:slug]))
+      return redirect_back fallback_location: root_path
+    end
     authorize @draft
   end
 

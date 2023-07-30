@@ -15,9 +15,21 @@ SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
   current_selection.pick_number as current_pick_number,
   -- localtimestamp as now,
   -- (current_selection.started_at + (drafts.selection_seconds)::double precision * 'PT1S'::interval) as current_pick_ends,
-  (current_selection.started_at + 
-    ((drafts.selection_seconds)::double precision * 'PT1S'::interval)
-  ) < localtimestamp AS is_selected,
+  (
+    -- a player has been selected
+    (current_selection.player_id IS NOT NULL) OR
+    -- a "missing" player has been written in
+    (
+      current_selection.write_in_name IS NOT NULL AND
+      current_selection.write_in_position IS NOT NULL
+    -- time has run out
+    ) OR
+    (
+      current_selection.started_at + (
+        (drafts.selection_seconds)::double precision * 'PT1S'::interval
+      )
+    ) < localtimestamp
+  ) AS is_selected,
   prior_selection.id AS prior_selection_id,
   current_selection.id AS current_selection_id,
   next_selection.id AS next_selection_id
@@ -33,7 +45,7 @@ SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
    	prior_selection.pick_number = current_selection.pick_number - 1
    LEFT JOIN selections next_selection on
    	next_selection.draft_id = drafts.id and
-    next_selection.pick_number IS NOT NULL and 
+    next_selection.pick_number IS NOT NULL and
     next_selection.pick_number = current_selection.pick_number + 1
 WHERE drafts.started_at IS NOT NULL and
 	drafts.is_paused = false;

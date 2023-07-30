@@ -65,6 +65,13 @@ class Draft < ApplicationRecord
       flatten.uniq
   end
 
+  def remaining_players
+    Player.for_selection.where(
+      id: Player.all.pluck(:id) - self.selections.
+        pluck(:player_id).compact
+    )
+  end
+
   def includes_user?(user)
     Draft.user_ids_for(self).
       include?(user.id)
