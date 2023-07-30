@@ -6,24 +6,25 @@
           locals: { selection: selection, user: user }
     - else
       p No selections yet.
-  .c-draft__selection-form
-    .c-container--md
-      = render partial: "selections/form",
-        locals: { draft: draft, selection: selection }
-  javascript:
-    (function () {
-      var currentUserId = document.
-        querySelector("meta[name='current-user-id']").
-        getAttribute("content");
-      var form = document.
-        querySelector(".c-draft__selection-form form");
+  - if draft.is_running?
+    .c-draft__selection-form
+      .c-container--md
+        = render partial: "selections/form",
+          locals: { draft: draft, selection: selection }
+    javascript:
+      (function () {
+        var currentUserId = document.
+          querySelector("meta[name='current-user-id']").
+          getAttribute("content");
+        var form = document.
+          querySelector(".c-draft__selection-form form");
 
-      if (currentUserId !== "#{selection.user_id}") {
-        console.log("not your turn");
-        form.style.display = "none";
-        return;
-      }
-      form.addEventListener("submit", (e) => {
-        form.style.display = "none";
-      })
-    })();
+        if (currentUserId !== "#{selection.user_id}") {
+          console.log("not your turn");
+          form.style.display = "none";
+          return;
+        }
+        form.addEventListener("submit", (e) => {
+          form.style.display = "none";
+        })
+      })();
