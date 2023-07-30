@@ -19,8 +19,13 @@ class ProgressDraftsJob < ApplicationJob
     # these need to be 1 by 1 so the hook fires
     # to broadcast the draft progression
     candidates.map{|s| s[2]}.each do |selection_id|
-      Selection.find(selection_id).
-        update(started_at: Time.current)
+      selection = Selection.find(selection_id)
+      selection.update(started_at: Time.current)
+
+      # set the current selection so we can use it
+      # to find the user for turbo streams
+      # selection.draft.
+      #   update_columns(current_selection_id: selection_id)
     end
   end
 end

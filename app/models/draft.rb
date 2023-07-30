@@ -27,6 +27,9 @@
 class Draft < ApplicationRecord
   before_save :generate_slug, :generate_access_code
   belongs_to :user
+  # belongs_to :current_selection,
+  #   class_name: "Selection",
+  #   optional: true
 
   has_one :progression,
     class_name: "ViewDraftProgressionCandidate"

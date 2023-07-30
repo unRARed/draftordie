@@ -1,5 +1,6 @@
 = form_for([draft, selection],
-  html: { class: "c-form" }, method: :patch \
+  html: { class: "c-form" },
+  method: :patch \
 ) do |f|
   - if selection.errors.any?
     = render "shared/errors",

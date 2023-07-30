@@ -110,15 +110,19 @@
   }
 
   .c-draft__pick {
-    @apply border-b-2 border-gray-500;
+    @apply border-b-1 border-gray-500;
     padding: 0.2em;
   }
   .c-draft__pick--current {
     @apply bg-green-500;
-    @apply bg-green-500;
   }
   .c-draft__pick--mine {
-    background-color: #131e1d;
+    @apply border-l-2 border-gray-500;
     font-weight: bold;
+    background-color: #2e4846;
+  }
+  .c-draft__pick--missed {
+    color: #c45b5b;
+    background-color: #460e18;
   }
 }

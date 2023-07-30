@@ -39,22 +39,26 @@ class Selection < ApplicationRecord
   # before_save :finalize_selection
 
   after_update_commit -> {
-    broadcast_update_to(
+    broadcast_update_later_to(
       :draft_board,
       partial: "drafts/board",
       locals: { draft: self.draft },
       target: "board_#{self.draft.slug}"
     )
-    broadcast_update_to(
+    broadcast_update_later_to(
       :draft_board,
       partial: "drafts/footer",
       locals: { draft: self.draft },
       target: "footer_#{self.draft.slug}"
     )
-    broadcast_update_to(
+    broadcast_update_later_to(
       :draft_show,
       partial: "drafts/show",
-      locals: { draft: self.draft, user: Current.user },
+      locals: {
+        draft: self.draft,
+        user: self.draft.progression.current_selection.user,
+        selection: self
+      },
       target: "show_#{self.draft.slug}"
     )
   }
@@ -65,6 +69,10 @@ class Selection < ApplicationRecord
   delegate :name, to: :player, prefix: true, allow_nil: true
   delegate :draft_id, to: :round, allow_nil: false
   delegate :draft_slug, to: :round, allow_nil: false
+
+  def is_missed?
+    ended_at.present? && player.blank? && write_in_name.blank?
+  end
 
   def position
     return write_in_position if write_in_position.present?
