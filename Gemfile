@@ -70,6 +70,7 @@ end
 group :test do
   gem "capybara"
   gem "webdrivers"
+  gem "capybara-screenshot"
 end
 
 group :development do

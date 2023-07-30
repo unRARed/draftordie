@@ -19,7 +19,7 @@ module RequestSpecHelper
     JSON.parse(response.body).with_indifferent_access
   end
 
-  private
+private
 
   def warden_scope(resource)
     resource.class.name.underscore.to_sym
