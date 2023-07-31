@@ -3,5 +3,5 @@ div class="#{pick_class(selection, user)}"
   - if selection.is_missed?
     span< Missed Pick
   - else
-    span< #{selection.player_name} (#{selection.position})
+    span< #{selection.name} (#{selection.position})
   span.text-xs< #{selection.user.email || 'Unknown User'}
