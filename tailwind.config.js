@@ -1,7 +1,4 @@
 module.exports = {
-  purge: {
-    './app/**/*.html.slim',
-  },
   darkMode: true,
   content: [
     './app/views/**/*.html.erb',
