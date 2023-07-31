@@ -10,4 +10,8 @@ namespace :fly do
   task :dbconsole do
     sh 'fly ssh console --pty -C "/rails/bin/rails dbconsole"'
   end
+
+  task :dbseed do
+    sh 'fly ssh console --pty -C "/rails/bin/rails db:seed"'
+  end
 end
