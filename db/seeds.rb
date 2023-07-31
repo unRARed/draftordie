@@ -18,15 +18,7 @@ user.save(validate: false)
 puts "Seeding players..."
 # generate players JSON with:
 # RefreshPlayerPoolJob.perform_now
-JSON.parse(File.read("db/seeds/2023/football.json")).each do |p|
-  Player.create!(
-    name: p["name"],
-    team: p["team"],
-    position: p["position"],
-    bye_week: p["bye_week"],
-    scraped_at: p["scraped_at"],
-  )
-end
+Player.import_json("db/seeds/2023/football.json")
 
 puts "Seeding drafts..."
 [8, 10, 12, 14, 16, 20].each do |count|
