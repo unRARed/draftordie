@@ -37,14 +37,12 @@ class Draft < ApplicationRecord
   has_many :selections,
     -> { order(pick_number: :asc)},
     through: :rounds
-  has_many :remaining_selections,
+  has_many :prior_selections,
     -> { where.not(ended_at: nil).order(pick_number: :desc) },
     class_name: "Selection"
-  has_many :upcoming_selections, -> {
-      where(ended_at: nil)
-    },
-    through: :rounds,
-    source: :selections
+  has_many :upcoming_selections,
+    -> { where(ended_at: nil).order(pick_number: :asc) },
+    class_name: "Selection"
   has_many :pairings, as: :pairable
   has_many :users, through: :pairings
 

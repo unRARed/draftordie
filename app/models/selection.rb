@@ -30,6 +30,8 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Selection < ApplicationRecord
+  BUFFER_SECONDS = 1
+
   include DraftHelper
   belongs_to :draft
   belongs_to :round
@@ -104,9 +106,7 @@ class Selection < ApplicationRecord
     unless self.started_at.present? && draft.started_at.present?
       return minutes_and_seconds(draft.selection_seconds)
     end
-    elapsed_seconds = Time.current - self.started_at
-    remaining_seconds = draft.selection_seconds - elapsed_seconds
-    [remaining_seconds] + minutes_and_seconds(remaining_seconds)
+    [remaining_seconds] + minutes_and_seconds(seconds_remaining)
   end
 
   def seconds_remaining
@@ -114,7 +114,7 @@ class Selection < ApplicationRecord
       return draft.selection_seconds
     end
     elapsed_seconds = Time.current - self.started_at
-    draft.selection_seconds - elapsed_seconds
+    (draft.selection_seconds - elapsed_seconds) + BUFFER_SECONDS
   end
 
 private

@@ -1,6 +1,5 @@
 @layer components {
-  .c-layout__main {
-  }
+  .c-layout__main { }
 
   .c-layout__header {
     @apply flex justify-between items-center p-1;

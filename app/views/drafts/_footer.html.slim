@@ -8,7 +8,7 @@
       standalone: true,
       use_path: true \
     )
-  .c-draft__footer__name= draft.name
+  h2.c-draft__footer__name= draft.name
   - if draft.progression&.current_pick_number
     .c-draft__footer__selection
       - if draft.progression&.prior_selection
@@ -17,7 +17,7 @@
             strong Last pick:
             br
             span< #{draft.progression.prior_selection.name}
-    .c-draft__footer__selection
+    h3.c-draft__footer__selection
       strong Pick #{draft.progression&.current_pick_number} on the clock:
       br
       span = current_selection.user.email

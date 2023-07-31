@@ -51,5 +51,8 @@ private
   def set_selection
     @selection = Selection.find(params[:id])
     authorize @selection
+  rescue Pundit::NotAuthorizedError
+    flash[:alert] = "It's not your turn to select"
+    redirect_to draft_path(@selection.draft)
   end
 end

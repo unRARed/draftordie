@@ -1,11 +1,4 @@
-.grid.grid-cols-2.gap-8
-  .c-draft__selections
-    - if draft.remaining_selections.any?
-      - draft.remaining_selections.each do |selection|
-        = render partial: "selections/selection",
-          locals: { selection: selection, user: user }
-    - else
-      p No selections yet.
+.grid.grid-cols-1.gap-8.md:grid-cols-2
   - if draft.is_running?
     .c-draft__selection-form
       .c-container--md
@@ -28,3 +21,18 @@
           form.style.display = "none";
         })
       })();
+  .c-draft__selections.grid.grid-cols-2
+    - if draft.upcoming_selections.any?
+      .c-draft__selections__upcoming
+        h3 Upcoming Selections
+        - draft.upcoming_selections.each do |selection|
+          = render partial: "selections/selection",
+            locals: { selection: selection, user: user }
+      - if draft.prior_selections.any?
+        .c-draft__selections__upcoming
+          h3 Prior Selections
+          - draft.prior_selections.each do |selection|
+            = render partial: "selections/selection",
+              locals: { selection: selection, user: user }
+    - else
+      p No selections yet.
