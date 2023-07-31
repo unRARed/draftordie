@@ -3,7 +3,7 @@
 div class="c-draft"
   div.c-draft__picks id="show_#{@draft.slug}"
     = render partial: "drafts/show",
-      locals: { draft: @draft, user: Current.user,
+      locals: { draft: @draft, user: current_user,
         selection: @draft.current_selection }
   - if !@draft.is_running? && @draft.users.include?(current_user)
     = link_to 'Leave Draft',
