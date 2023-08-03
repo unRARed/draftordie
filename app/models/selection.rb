@@ -38,7 +38,7 @@ class Selection < ApplicationRecord
   belongs_to :user
   belongs_to :player, optional: true
 
-  # before_save :finalize_selection
+  before_save :finalize_selection
 
   after_update_commit -> {
     broadcast_update_later_to(
@@ -74,6 +74,11 @@ class Selection < ApplicationRecord
 
   def is_missed?
     ended_at.present? && player.blank? && write_in_name.blank?
+  end
+
+  def time_expired?
+    ended_at.nil? && Time.current >
+      (started_at + draft.selection_seconds.seconds)
   end
 
   def position
@@ -119,10 +124,10 @@ class Selection < ApplicationRecord
 
 private
 
-  # def finalize_selection
-  #   return if self.ended_at.present?
-  #   return unless self.is_selected?
+  def finalize_selection
+    return if self.ended_at.present?
+    return unless self.is_selected?
 
-  #   self.set_end
-  # end
+    self.set_end
+  end
 end

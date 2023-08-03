@@ -2,6 +2,7 @@ class ProgressDraftsJob < ApplicationJob
   queue_as :default
 
   def perform(*args)
+    puts args
     candidates = ViewDraftProgressionCandidate.all.
       where(is_selected: true).
       pluck(

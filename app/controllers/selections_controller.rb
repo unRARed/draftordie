@@ -32,6 +32,8 @@ class SelectionsController < ApplicationController
         draft.progression.next_selection
       @selection.update(selection_params)
       flash[:notice] = "Pick is in!"
+      ProgressDraftJob.
+        perform_later(slug: @selection.draft.slug)
     ensure
       @draft = Draft.preloaded.find(@selection.draft_id)
       return redirect_to draft_path(@selection.draft)

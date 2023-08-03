@@ -1,3 +1,5 @@
+= content_for :draft_slug
+  meta name="draft-slug" content="#{@draft.slug}"
 css:
   .c-draft__board__slot {
     width: #{100 / [@draft.users.count, 1].max}%;
