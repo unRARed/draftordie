@@ -42,26 +42,26 @@ class Selection < ApplicationRecord
 
   after_update_commit -> {
     broadcast_update_later_to(
-      :draft_board,
+      "#{self.draft}_global",
+      channel: "DraftChannel",
       partial: "drafts/board",
-      locals: { draft: self.draft },
-      target: "board_#{self.draft.slug}"
+      locals: { draft: self.draft }
     )
     broadcast_update_later_to(
-      :draft_board,
+      self.draft,
+      channel: "DraftChannel",
       partial: "drafts/footer",
-      locals: { draft: self.draft },
-      target: "footer_#{self.draft.slug}"
+      locals: { draft: self.draft }
     )
     broadcast_update_later_to(
-      :draft_show,
+      self.draft,
+      channel: "DraftChannel",
       partial: "drafts/show",
       locals: {
         draft: self.draft,
         user: self.draft.progression.current_selection.user,
         selection: self
-      },
-      target: "show_#{self.draft.slug}"
+      }
     )
   }
 

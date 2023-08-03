@@ -7,37 +7,54 @@ const draftSlug = document.
   getAttribute("content");
 
 const draftChannel = consumer.subscriptions.create(
-  { channel: "DraftChannel" },
+  { channel: "DraftChannel", slug: draftSlug },
   {
     // Called once when the subscription is created.
-    initialized() {
+    // initialized() {
       //this.update = this.update.bind(this)
-    },
+    // },
     // Called when the subscription is ready for use.
-    connected() { },
+    // connected() { },
     // Called when the WebSocket connection is closed.
-    disconnected() { },
+    // disconnected() { },
     // Called when the subscription is rejected by the server.
-    rejected() { },
-    update() { },
-    appear() { },
+    // rejected() { },
+    // update() { },
+    // appear() { },
+    received(data) {
+      console.log("received data");
+      if (!data.command) { return; }
+      if (!data.payload) { return; }
+
+      switch (data.command) {
+        case "poll_current_selection":
+          if (data.payload.is_time_expired) {
+            draftChannel.advanceSelection();
+          }
+          break;
+        default:
+          console.log("unknown action");
+          break;
+      }
+    },
 
     advanceSelection() {
-      this.perform("advance_selection", { slug: draftSlug });
+      console.log("advancing selection");
+      this.perform(
+        "advance_selection", { slug: draftSlug }
+      );
+      clearInterval(poll);
     },
 
-    isBetweenSelections() {
-      this.perform("is_between_selections", { slug: draftSlug });
+    pollCurrentSelection() {
+      console.log("polling selection");
+      return this.perform(
+        "poll_current_selection", { slug: draftSlug }
+      );
     },
   }
 );
 
 let poll = setInterval(() => {
-  console.log(draftChannel.isBetweenSelections());
-  if (!draftChannel.isBetweenSelections()) { return; }
-
-  console.log("advancing selection");
-
-  draftChannel.advanceSelection();
-  clearInterval(poll);
+  if (!draftChannel.pollCurrentSelection()) { return; }
 }, 1000)

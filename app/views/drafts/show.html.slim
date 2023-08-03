@@ -1,9 +1,3 @@
-= content_for :draft_slug
-  meta name="draft-slug" content="#{@draft.slug}"
-= turbo_stream_from(:draft_show,
-  channel: "DraftChannel", data: { slug: @draft.slug })
-= turbo_stream_from(:draft_board,
-  channel: "DraftChannel", data: { slug: @draft.slug })
 div class="c-draft"
   - if !@draft.is_ended?
     div.c-draft__picks id="show_#{@draft.slug}"

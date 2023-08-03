@@ -28,9 +28,9 @@ class SelectionsController < ApplicationController
     end
 
     begin
-      next_selection = @selection.
-        draft.progression.next_selection
-      @selection.update(selection_params)
+      # next_selection = @selection.
+      #   draft.progression.next_selection
+      # @selection.update(selection_params)
       flash[:notice] = "Pick is in!"
       ProgressDraftJob.
         perform_later(slug: @selection.draft.slug)

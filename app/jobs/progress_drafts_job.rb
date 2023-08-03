@@ -2,9 +2,13 @@ class ProgressDraftsJob < ApplicationJob
   queue_as :default
 
   def perform(*args)
-    puts args
+    puts "ProgressDraftsJob running!"
     candidates = ViewDraftProgressionCandidate.all.
-      where(is_selected: true).
+      where(is_selected: true)
+    if args[0].present?
+      candidates = candidates.where(draft_slug: args[0][:slug])
+    end
+    candidates = candidates.
       pluck(
         :draft_slug,
         :current_selection_id,
@@ -21,12 +25,15 @@ class ProgressDraftsJob < ApplicationJob
     # to broadcast the draft progression
     candidates.map{|s| s[2]}.each do |selection_id|
       selection = Selection.find(selection_id)
-      selection.update(started_at: Time.current)
+      puts "SELECTION: #{selection.inspect}"
 
-      # set the current selection so we can use it
-      # to find the user for turbo streams
-      # selection.draft.
-      #   update_columns(current_selection_id: selection_id)
+      unless (selection = Selection.find(selection_id))
+        # we just ended the last selection, so
+        # we need to end the draft now
+        selection.draft.update(ended_at: Time.current)
+      end
+
+      selection.update(started_at: Time.current)
     end
   end
 end

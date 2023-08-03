@@ -1,11 +1,8 @@
-= content_for :draft_slug
-  meta name="draft-slug" content="#{@draft.slug}"
 css:
   .c-draft__board__slot {
     width: #{100 / [@draft.users.count, 1].max}%;
     font-size: #{compute_text_size(@draft.users.count)}px;
   }
-= turbo_stream_from(:draft_board)
 div class="c-draft#{' c-draft--paused' if @draft.is_paused?}"
   div.c-draft__board id="board_#{@draft.slug}"
     = render partial: "drafts/board", locals: { draft: @draft }

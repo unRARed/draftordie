@@ -14,7 +14,10 @@ html
       "data-turbo-track": "reload", defer: true
     - if current_user
       meta name="current-user-id" content="#{current_user.id}"
-    = yield :draft_slug
+    - if controller.controller_name == "drafts" && @draft
+      meta name="draft-slug" content="#{@draft.slug}"
+      = turbo_stream_from("#{dom_id(@draft)}_global",
+        channel: "DraftChannel", data: { slug: @draft.slug })
   body.c-layout
     header.c-layout__header
       .c-layout__header__title
