@@ -73,6 +73,7 @@ group :test do
   gem "capybara"
   gem "webdrivers"
   gem "capybara-screenshot"
+  gem "mock_redis"
 end
 
 group :development do

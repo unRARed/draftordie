@@ -1,13 +1,19 @@
 - current_selection = draft.current_selection
 .c-draft__footer__qr
-  == RQRCode::QRCode.new("https://draftordie.com#{request.env['PATH_INFO']}").as_svg( \
+  == RQRCode::QRCode.new( \
+    "https://draftordie.com#{request.env['PATH_INFO']}" \
+    ).as_svg( \
     color: "b7fbe9",
     shape_rendering: "crispEdges",
     module_size: 2,
     standalone: true,
     use_path: true \
   )
-h2.c-draft__footer__name= draft.name
+  br
+  strong Access Code
+  br
+  span = draft.access_code
+h2.c-draft__footer__name = draft.name
 - if draft.progression&.current_pick_number
   .c-draft__footer__selection
     - if draft.progression&.prior_selection

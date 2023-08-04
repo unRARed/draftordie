@@ -122,8 +122,11 @@ class DraftsController < ApplicationController
 
     # start the draft and put the current selection
     # on the clock
-    @draft.update started_at: Time.current
-    @draft.current_selection.update started_at: Time.current
+    Draft.transaction do
+      @draft.upcoming_selections.first.
+        update started_at: Time.current
+      @draft.update_columns started_at: Time.current
+    end
     flash[:notice] = "Draft has begun!"
   ensure
     redirect_to draft_path(@draft)
@@ -135,10 +138,6 @@ class DraftsController < ApplicationController
     @draft.update is_paused: true
     flash[:notice] = "Draft has been paused!"
     redirect_to draft_path(@draft)
-  end
-
-  def start_next_selection
-    render json: @draft.current_selection.time_remaining
   end
 
   def generate
@@ -171,7 +170,7 @@ private
     )
     if policy(@draft).commish?
       @navigation.add_item(:draft, NavigationItem.new(
-          'Setup', edit_draft_path(@draft)
+          'Setup', edit_draft_path(@draft), data: { turbo: false }
         )
       )
     end

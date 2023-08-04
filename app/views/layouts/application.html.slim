@@ -17,7 +17,7 @@ html
     - if controller.controller_name == "drafts" && @draft
       meta name="draft-slug" content="#{@draft.slug}"
   body.c-layout
-    - if controller.controller_name == "drafts" && @draft
+    - if is_turbo_draft?
       = turbo_stream_from @draft
     header.c-layout__header
       .c-layout__header__title

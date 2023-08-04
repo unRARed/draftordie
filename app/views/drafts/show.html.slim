@@ -1,17 +1,20 @@
 div class="c-draft"
   - if !@draft.is_ended?
-    div.c-draft__picks id="show_#{@draft.slug}"
-      = render partial: "drafts/show",
-        locals: { draft: @draft, user: current_user,
-          selection: @draft.current_selection }
+    .grid.grid-cols-1.gap-8.md:grid-cols-2
+      div.c-draft__selection-form id="show_form_#{@draft.slug}"
+        = render partial: "selections/form",
+          locals: { draft: @draft,
+            selection: @draft.current_selection }
+      div.c-draft__picks id="show_picks_#{@draft.slug}"
+        = render partial: "show_picks", locals: { draft: @draft }
     - if !@draft.is_running? && @draft.users.include?(current_user)
       = link_to 'Leave Draft',
         leave_draft_path(@draft),
         class: "c-button c-button--negative",
         method: :delete,
         data: { turbo_method: :delete }
-    .c-draft__footer id="footer_#{@draft.slug}"
-      = render partial: "drafts/footer",
-        locals: { draft: @draft }
   - else
     p The draft has ended.
+  .c-draft__footer id="footer_#{@draft.slug}"
+    = render partial: "drafts/footer",
+      locals: { draft: @draft }

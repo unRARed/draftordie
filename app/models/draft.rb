@@ -95,7 +95,11 @@ class Draft < ApplicationRecord
   end
 
   def current_selection
-    upcoming_selections.first
+    progression&.current_selection
+  end
+
+  def next_selection
+    progression&.next_selection
   end
 
   # To determine if the draft is between selections,

@@ -45,23 +45,29 @@ class Selection < ApplicationRecord
       self.draft,
       partial: "drafts/board",
       target: "board_#{self.draft.slug}",
-      locals: { draft: self.draft }
+      locals: {
+        draft: self.draft,
+        user: self.draft&.current_selection&.user,
+        selection: draft.current_selection
+      }
     )
+    broadcast_update_later_to(
+      self.draft,
+      partial: "drafts/show_picks",
+      target: "show_picks_#{self.draft.slug}",
+      locals: {
+        draft: self.draft,
+        user: self.draft&.current_selection&.user,
+        selection: draft&.current_selection
+      }
+    )
+
+    # Shared
     broadcast_update_later_to(
       self.draft,
       partial: "drafts/footer",
       target: "footer_#{self.draft.slug}",
       locals: { draft: self.draft }
-    )
-    broadcast_update_later_to(
-      self.draft,
-      partial: "drafts/show",
-      target: "show_#{self.draft.slug}",
-      locals: {
-        draft: self.draft,
-        user: self.draft.progression.current_selection.user,
-        selection: self
-      }
     )
   }
 
@@ -75,10 +81,10 @@ class Selection < ApplicationRecord
   def update_and_advance(attributes)
     attributes = { ended_at: Time.current }.merge(attributes)
 
-    self.Transaction do
+    self.transaction do
+      self.update(attributes)
       self.draft.progression.next_selection.
         update_columns(started_at: Time.current)
-      self.update(attributes)
     end
   end
 

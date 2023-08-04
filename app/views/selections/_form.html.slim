@@ -1,10 +1,11 @@
-= form_for([draft, selection],
-  html: { class: "c-form" },
-  method: :patch \
-) do |f|
-  - if selection.errors.any?
-    = render "shared/errors",
-      target: selection
-  = render "selections/fields", f: f
-  = f.submit "Draft Player",
-    class: "c-button c-button--positive"
+.c-container--md
+  = form_for([draft, selection],
+    html: { class: "c-form" },
+    method: :patch \
+  ) do |f|
+    - if selection.errors.any?
+      = render "shared/errors",
+        target: selection
+    = render "selections/fields", f: f
+    = f.submit "Draft Player",
+      class: "c-button c-button--positive"

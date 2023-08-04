@@ -19,7 +19,7 @@ RSpec.describe "Draft Progression", type: :feature do
       create_and_start_draft(user)
 
       fill_in "Name", with: "Russell Wilson"
-      fill_in "Position", with: "QB"
+      select "QB", from: "Position"
       click_on "Draft Player"
 
       pending "need to figure out how to test this"

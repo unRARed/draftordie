@@ -1,0 +1,19 @@
+.c-draft__selections.grid.grid-cols-2
+  - if draft.upcoming_selections.any?
+    .c-draft__selections__upcoming
+      h3 Upcoming Selections
+      - draft.upcoming_selections.each do |selection|
+        = render partial: "selections/selection",
+          locals: { selection: selection,
+            is_upcoming: true,
+            user: selection.user }
+    - if draft.prior_selections.any?
+      .c-draft__selections__upcoming
+        h3 Prior Selections
+        - draft.prior_selections.each do |selection|
+          = render partial: "selections/selection",
+            locals: { selection: selection,
+              is_upcoming: false,
+              user: selection.user }
+  - else
+    p No selections yet.

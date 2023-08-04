@@ -25,9 +25,14 @@ class DraftChannel < ApplicationCable::Channel
   end
 
   def poll_current_selection(data)
-    puts data
     @draft = Draft.eager_load(:progression).
       where(slug: data["slug"]).first
+    if @draft.is_ended?
+      DraftChannel.broadcast_to(
+        @draft, { command: "draft_ended", payload: {} }
+      )
+    end
+
     result = @draft.current_selection.time_expired?
     puts "RESULT: #{result}"
 

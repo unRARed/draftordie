@@ -20,6 +20,10 @@ class Player < ApplicationRecord
 
   delegate :name, to: :team, prefix: true
 
+  POSITIONS = {
+    football: %w[QB RB WR TE DST K],
+  }
+
   scope :for_selection, -> {
     order(
       Arel.sql("position = 'QB' DESC"),

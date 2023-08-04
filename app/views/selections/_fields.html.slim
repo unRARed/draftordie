@@ -16,4 +16,7 @@
     .form-group.form-group--required
       = f.label :write_in_position, "Position",
         class: "c-form__label"
-      = f.text_field :write_in_position
+      = f.select :write_in_position,
+        Player::POSITIONS[:football].map { |p| [p, p] },
+        { include_blank: true },
+        class: "c-form__select"

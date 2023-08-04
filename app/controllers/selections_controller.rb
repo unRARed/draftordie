@@ -28,8 +28,9 @@ class SelectionsController < ApplicationController
     end
 
     begin
-      @selection.update_and_advance(selection_params)
-      flash[:notice] = "Pick is in!"
+      if @selection.update_and_advance(selection_params)
+        flash[:notice] = "You selected #{selection.name}"
+      end
     ensure
       @draft = Draft.preloaded.find(@selection.draft_id)
       return redirect_to draft_path(@selection.draft)

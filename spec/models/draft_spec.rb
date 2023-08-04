@@ -32,14 +32,15 @@ RSpec.describe Draft, type: :model do
     let!(:round) { FactoryBot.create(:round, draft: draft) }
 
     describe :upcoming_sections do
-      let!(:selection) { FactoryBot.create(:selection, round: round) }
       let!(:made_selection) { FactoryBot.create(:selection, :made, round: round) }
 
+      let!(:selection) { FactoryBot.create(:selection, round: round) }
       it "returns selections that have not started" do
         expect(draft.upcoming_selections).
-          to include(selection)
-        expect(draft.upcoming_selections).
           not_to include(made_selection)
+
+        expect(draft.upcoming_selections).
+          to include(selection)
       end
     end
   end
