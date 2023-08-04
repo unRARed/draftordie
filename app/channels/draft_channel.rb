@@ -1,6 +1,5 @@
 class DraftChannel < ApplicationCable::Channel
   def subscribed
-    puts params
     @draft = Draft.eager_load(:progression).
       where(slug: params[:slug]).first
     puts "SUBSCRIBED TO DraftChannel!"
@@ -17,6 +16,9 @@ class DraftChannel < ApplicationCable::Channel
         puts "TIME EXPIRED"
         advance_selection(data)
       end
+    when "progressed_draft"
+      puts "PROGRESSED DRAFT"
+
     else
       puts "COMMAND NOT RECOGNIZED"
     end
@@ -44,15 +46,6 @@ class DraftChannel < ApplicationCable::Channel
     return unless @draft.progression.
       current_selection.time_expired?
 
-    ProgressDraftsJob.perform_later(slug: @draft.slug)
-    # @draft.progression.current_selection.
-    #   update(ended_at: Time.current)
-    # next_selection.update(started_at: Time.current)
-  end
-
-  def selected
-    @draft = Draft.eager_load(:progression).
-      where(slug: params[:slug]).first
+    ProgressDraftsJob.perform_later
   end
 end
-

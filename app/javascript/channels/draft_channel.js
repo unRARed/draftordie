@@ -9,18 +9,6 @@ const draftSlug = document.
 const draftChannel = consumer.subscriptions.create(
   { channel: "DraftChannel", slug: draftSlug },
   {
-    // Called once when the subscription is created.
-    // initialized() {
-      //this.update = this.update.bind(this)
-    // },
-    // Called when the subscription is ready for use.
-    // connected() { },
-    // Called when the WebSocket connection is closed.
-    // disconnected() { },
-    // Called when the subscription is rejected by the server.
-    // rejected() { },
-    // update() { },
-    // appear() { },
     received(data) {
       console.log("received data");
       if (!data.command) { return; }
@@ -43,7 +31,6 @@ const draftChannel = consumer.subscriptions.create(
       this.perform(
         "advance_selection", { slug: draftSlug }
       );
-      clearInterval(poll);
     },
 
     pollCurrentSelection() {
@@ -57,4 +44,4 @@ const draftChannel = consumer.subscriptions.create(
 
 let poll = setInterval(() => {
   if (!draftChannel.pollCurrentSelection()) { return; }
-}, 1000)
+}, 2000)

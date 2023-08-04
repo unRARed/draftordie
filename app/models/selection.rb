@@ -42,21 +42,21 @@ class Selection < ApplicationRecord
 
   after_update_commit -> {
     broadcast_update_later_to(
-      "#{self.draft}_global",
-      channel: "DraftChannel",
+      self.draft,
       partial: "drafts/board",
+      target: "board_#{self.draft.slug}",
       locals: { draft: self.draft }
     )
     broadcast_update_later_to(
       self.draft,
-      channel: "DraftChannel",
       partial: "drafts/footer",
+      target: "footer_#{self.draft.slug}",
       locals: { draft: self.draft }
     )
     broadcast_update_later_to(
       self.draft,
-      channel: "DraftChannel",
       partial: "drafts/show",
+      target: "show_#{self.draft.slug}",
       locals: {
         draft: self.draft,
         user: self.draft.progression.current_selection.user,
@@ -71,6 +71,16 @@ class Selection < ApplicationRecord
   delegate :name, to: :player, prefix: true, allow_nil: true
   delegate :draft_id, to: :round, allow_nil: false
   delegate :draft_slug, to: :round, allow_nil: false
+
+  def update_and_advance(attributes)
+    attributes = { ended_at: Time.current }.merge(attributes)
+
+    self.Transaction do
+      self.draft.progression.next_selection.
+        update_columns(started_at: Time.current)
+      self.update(attributes)
+    end
+  end
 
   def is_missed?
     ended_at.present? && player.blank? && write_in_name.blank?
