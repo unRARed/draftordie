@@ -1,8 +1,6 @@
 @layer components {
   .c-draft {
     @apply flex flex-col;
-
-    padding-bottom: 75px;
     background-color: #182625;
     /* light purple-ish */
     color: #98b5b3;
@@ -37,10 +35,15 @@
     max-width: 50%;
     margin-left: 50%;
   }
+
+  .c-draft__branding { @apply text-center; }
+  .c-draft__access { @apply text-xl; }
+
   .c-draft__footer {
     @apply flex flex-row justify-around items-center bottom-0 fixed inset-x-0 text-white p-2 border-t-4 border-gray-500;
     background-color: #2e4846;
     z-index: 1;
+    text-align: center;
   }
   .c-draft__footer__name {
     @apply text-3xl font-bold;
@@ -53,7 +56,7 @@
     text-shadow: 2px 2px 2px #000000;
   }
 
-  .c-draft__footer__selection {
+  .c-draft__deck {
     @apply text-sm;
     min-width: 15%;
   }
@@ -61,6 +64,7 @@
   .c-draft__footer__clock {
     @apply text-6xl font-bold;
     color: #dece26;
+    min-width: 30%;
   }
 
   .c-draft__board {
@@ -109,20 +113,45 @@
     @apply bg-indigo-300 border-indigo-400 text-indigo-700;
   }
 
+  .c-draft__selections {
+    @apply flex flex-col grid grid-cols-2 pb-3;
+  }
+  .c-draft__selections-list {
+    @apply overflow-y-scroll;
+    max-height: 70vh;
+    border: 2px solid #222;
+  }
+
   .c-draft__pick {
-    @apply border-b-2 border-gray-500;
+    @apply border-b-2 border-gray-300;
     padding: 0.2em;
   }
   .c-draft__pick--current {
     @apply bg-green-500;
-  }
-  .c-draft__pick--mine {
-    @apply border-l-2 border-gray-500;
+    color: #4f4f4f;
     font-weight: bold;
-    background-color: #2e4846;
   }
   .c-draft__pick--missed {
     color: #c45b5b;
     background-color: #460e18;
   }
+  .c-draft__pick--mine {
+    @apply border-l-4 border-gray-300;
+    font-weight: bold;
+    background-color: #dece26;
+    color: #222;
+  }
+
+  .c-draft__selection-prior {
+    @apply p-7;
+  }
+
+  @media (max-width: 768px) {
+    .c-draft__qr,
+    .c-draft__deck,
+    .c-draft__selection-prior {
+      display: none;
+    }
+  }
+
 }

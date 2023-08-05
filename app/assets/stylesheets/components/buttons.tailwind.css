@@ -11,4 +11,16 @@
   a.c-button.c-button--positive, .c-button.c-button--positive {
     @apply bg-green-600 border-green-500 hover:bg-green-500 focus:border-green-700 active:bg-green-700 text-white;
   }
+
+  a.c-button.c-button--negative, .c-button.c-button--negative {
+    @apply bg-red-600 border-red-500 hover:bg-red-500 focus:border-red-700 active:bg-red-700 text-white;
+  }
+
+  a.c-button--small {
+    @apply px-2 py-1 text-xs;
+  }
+
+  a.c-button + .c-button {
+    margin-top: 0.5rem;
+  }
 }

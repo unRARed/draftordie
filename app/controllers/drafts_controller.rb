@@ -1,10 +1,14 @@
 class DraftsController < ApplicationController
-  before_action :set_draft,
-    except: [:index, :new, :create, :commish, :member ]
+  before_action :set_draft, except: [
+    :index, :new, :create, :commish,
+    :member
+  ]
   before_action :load_full_draft,
     only: [:show, :commish, :member, :board]
-  before_action :check_access_code,
-    except: [:index, :new, :create, :access, :verify_access]
+  before_action :check_access_code, except: [
+    :index, :new, :create, :access,
+    :verify_access, :create_pairing
+  ]
   before_action :authenticate_user!,
     except: [:show, :board, :access, :verify_access]
   before_action :build_draft_navigation
@@ -14,6 +18,10 @@ class DraftsController < ApplicationController
   def access; end
   def invite; end
   def edit; end
+
+  def join
+    @pairing = @draft.pairings.build
+  end
 
   def index
     redirect_to root_path
@@ -33,7 +41,7 @@ class DraftsController < ApplicationController
     redirect_to draft_path(@draft)
   end
 
-  def join
+  def create_pairing
     if @draft.is_running?
       flash[:alert] = "Draft has already started."
     elsif @draft.users.count >= @draft.user_count
@@ -41,7 +49,10 @@ class DraftsController < ApplicationController
     elsif @draft.users.include?(current_user)
       flash[:alert] = "You are already in this draft!"
     else
-      @draft.users << current_user
+      @draft.pairings.create!({
+          user: current_user,
+          context: "Draft Team Name",
+        }.merge(pairing_params))
       flash[:notice] = "You have joined this draft!"
     end
     redirect_to draft_path(@draft)
@@ -156,8 +167,7 @@ private
       )
     else
       @navigation.add_item(:draft, NavigationItem.new(
-          'Join this Draft', join_draft_path(@draft),
-          { method: :post, data: { turbo_method: :post } }
+          'Join this Draft', join_draft_path(@draft)
         )
       )
     end
@@ -187,6 +197,10 @@ private
       :selection_seconds,
       :player_ids
     )
+  end
+
+  def pairing_params
+    params.require(:pairing).permit(:context_value)
   end
 
   def set_draft

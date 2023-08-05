@@ -40,6 +40,17 @@ class Selection < ApplicationRecord
   belongs_to :round
   belongs_to :user
   belongs_to :player, optional: true
+  has_many :pairings,
+    through: :draft
+
+  has_one :pairing, -> (record) {
+      where(pairable_type: "Draft").
+      where(pairable_id: record.draft_id)
+    },
+    class_name: "Pairing",
+    foreign_key: :user_id,
+    primary_key: :user_id
+
 
   before_save :finalize_selection
 
@@ -60,6 +71,16 @@ class Selection < ApplicationRecord
       self.draft,
       partial: "drafts/show_picks",
       target: "show_picks_#{self.draft.slug}",
+      locals: {
+        draft: self.draft,
+        user: self.selecting_user,
+        selection: draft&.current_selection
+      }
+    )
+    broadcast_update_later_to(
+      self.draft,
+      partial: "drafts/show_info",
+      target: "show_info_#{self.draft.slug}",
       locals: {
         draft: self.draft,
         user: self.selecting_user,

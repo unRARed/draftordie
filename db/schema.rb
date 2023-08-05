@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_30_163620) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_05_023213) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -37,6 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_30_163620) do
     t.bigint "pairable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "context_value"
     t.index ["pairable_type", "pairable_id"], name: "index_pairings_on_pairable"
     t.index ["user_id"], name: "index_pairings_on_user_id"
   end

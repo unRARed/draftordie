@@ -21,10 +21,11 @@
         p
           strong Users currently paired
         - if f.object.pairings.any?
-          ul
-            - f.object.pairings.each do |pairing|
-              li
-                small = pairing.user.email
-                = link_to "Remove",
-                  draft_pairing_path(f.object, pairing),
-                  method: :delete, data: { turbo_method: :delete }
+          - f.object.pairings.each do |pairing|
+            = link_to "Remove #{pairing.context_value}",
+              draft_pairing_path(f.object, pairing),
+              class: "c-button c-button--negative " \
+                "c-button--small",
+              method: :delete, data: { \
+                turbo_method: :delete,
+                turbo_confirm: "Are you sure?" }

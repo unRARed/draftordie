@@ -24,6 +24,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :drafts
+  has_many :pairings,
+    inverse_of: :user,
+    dependent: :destroy
 
   def in_draft?(draft)
     draft.user == self || draft.users.include?(self)

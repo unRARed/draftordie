@@ -54,6 +54,8 @@ class Draft < ApplicationRecord
   validates :user_count,
     numericality: { less_than_or_equal_to: 20 }
 
+  accepts_nested_attributes_for :pairings
+
   scope :preloaded, -> {
     eager_load(:users).eager_load(rounds: { selections: :user })
   }

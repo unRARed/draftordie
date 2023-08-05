@@ -1,37 +1,18 @@
-- current_selection = draft.current_selection
-.c-draft__footer__qr
-  == RQRCode::QRCode.new( \
-    "https://draftordie.com#{request.env['PATH_INFO']}" \
-    ).as_svg( \
-    color: "b7fbe9",
-    shape_rendering: "crispEdges",
-    module_size: 2,
-    standalone: true,
-    use_path: true \
-  )
-  br
-  strong Access Code
-  br
-  span = draft.access_code
-h2.c-draft__footer__name = draft.name
-- if draft.progression&.current_pick_number
-  .c-draft__footer__selection
-    - if draft.progression&.prior_selection
-      .c-draft__footer__state__prior
-        .pb-1
-          strong Last pick:
-          br
-          span< #{draft.progression.prior_selection.name}
-  h3.c-draft__footer__selection
-    strong Pick #{draft.progression&.current_pick_number} on the clock:
-    br
-    span = current_selection.user.email
-    .pt-2
-      - if draft.progression&.next_selection
-        .c-draft__footer__state__next
-          strong On deck:
-          span< #{draft.progression.next_selection.user_email}
-  = render partial: "drafts/selection_clock",
-    locals: { draft: draft }
-- else
-  strong No selection in progress
+.grid.grid-cols-1.gap-8.md:grid-cols-3.lg:grid-cols-9
+  .col-span-3
+    .c-draft__branding
+      h2.c-draft__name = draft.name
+      .c-draft__access
+        span Access Code
+        strong< = draft.access_code
+  - if draft.progression&.current_pick_number
+    div.col-span-3
+      = render partial: "drafts/selection_clock",
+        locals: { draft: draft }
+      = render partial: "draft_deck", locals: { draft: draft }
+    div.col-span-2
+      = render partial: "draft_prior_selection",
+        locals: { draft: draft }
+  - else
+    strong No selection in progress
+  = render partial: "draft_qrcode", locals: { draft: draft }

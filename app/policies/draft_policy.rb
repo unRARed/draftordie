@@ -33,6 +33,10 @@ class DraftPolicy < ApplicationPolicy
     create?
   end
 
+  def create_pairing?
+    create?
+  end
+
   # for specific attached user's view of the draft
   def member?
     is_participant?

@@ -4,6 +4,7 @@
 #
 #  id            :bigint           not null, primary key
 #  context       :text
+#  context_value :string
 #  pairable_type :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null

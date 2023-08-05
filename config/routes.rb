@@ -12,7 +12,8 @@ Rails.application.routes.draw do
       get :commish
       post :generate
       post :start_next_selection
-      post :join
+      get :join
+      post :join, to: "drafts#create_pairing"
       delete :leave
       patch :start
       patch :pause

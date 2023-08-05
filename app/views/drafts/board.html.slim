@@ -8,3 +8,11 @@ div class="c-draft#{' c-draft--paused' if @draft.is_paused?}"
     = render partial: "drafts/board", locals: { draft: @draft }
 .c-draft__footer id="footer_#{@draft.slug}"
   = render partial: "drafts/footer", locals: { draft: @draft }
+javascript:
+  let header = document.querySelector(".c-layout__header");
+  let board = document.querySelector(".c-draft__board");
+  let footer = document.querySelector(".c-draft__footer");
+  let headerHeight = header.offsetHeight;
+  let footerHeight = footer.offsetHeight;
+  board.style.marginBottom =
+    (footerHeight - headerHeight) + "px";

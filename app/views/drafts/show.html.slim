@@ -1,11 +1,10 @@
 div class="c-draft"
-  - if !@draft.is_ended?
+  - if @draft.is_running? && !@draft.is_ended?
     .grid.grid-cols-1.gap-8.md:grid-cols-2
-      = turbo_frame_tag dom_id(@draft.current_selection) do
-        - if current_user == @draft.current_selection.user
-          = render partial: "selections/form",
-            locals: { selection: @draft.current_selection }
-      div.c-draft__picks id="show_picks_#{@draft.slug}"
+      .c-draft__info id="show_info_#{@draft.slug}"
+        = render partial: "show_info",
+          locals: { draft: @draft }
+      .c-draft__picks id="show_picks_#{@draft.slug}"
         = render partial: "show_picks", locals: { draft: @draft }
     - if (!@draft.is_running? && \
         @draft.users.include?(current_user) \
@@ -17,6 +16,3 @@ div class="c-draft"
         data: { turbo_method: :delete }
   - else
     p The draft has ended.
-  .c-draft__footer id="footer_#{@draft.slug}"
-    = render partial: "drafts/footer",
-      locals: { draft: @draft }

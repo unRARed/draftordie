@@ -11,7 +11,7 @@ module DraftHelper
     if selection == selection.draft.current_selection
       classes << "c-draft__pick--current"
     end
-    classes << "c-draft__pick--mine" if selection.user == user
+    # classes << "c-draft__pick--mine" if selection.user == user
     classes << "c-draft__pick--missed" if selection.is_missed?
     classes.join(" ")
   end
@@ -25,7 +25,7 @@ module DraftHelper
     if selection.is_selected?
       classes << "c-draft__board__slot--selected"
     end
-    if selection.draft.current_selection == selection
+    if selection.draft.current_selection.user == selection
       classes << "c-draft__board__slot--current"
     end
     classes.join(" ")
