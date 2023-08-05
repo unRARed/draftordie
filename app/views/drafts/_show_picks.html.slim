@@ -1,13 +1,5 @@
 .c-draft__selections
   - if draft.upcoming_selections.any?
-    div
-      h3 Upcoming Selections
-      .c-draft__selections-list
-        - draft.upcoming_selections.each do |selection|
-          = render partial: "selections/selection",
-            locals: { selection: selection,
-              is_upcoming: true,
-              user: selection.user }
     - if draft.prior_selections.any?
       div
         h3 Prior Selections
@@ -17,5 +9,13 @@
               locals: { selection: selection,
                 is_upcoming: false,
                 user: selection.user }
+    div
+      h3 Upcoming Selections
+      .c-draft__selections-list
+        - draft.upcoming_selections.each do |selection|
+          = render partial: "selections/selection",
+            locals: { selection: selection,
+              is_upcoming: true,
+              user: selection.user }
   - else
     p No selections yet.
