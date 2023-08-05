@@ -87,17 +87,6 @@ class Selection < ApplicationRecord
         selection: draft&.current_selection
       }
     )
-    # broadcast_update_later_to(
-    #   self.draft,
-    #   partial: "selections/form",
-    #   target: "show_selection_#{self.draft.slug}",
-    #   locals: {
-    #     draft: self.draft,
-    #     user: self.selecting_user,
-    #     selection: draft&.current_selection
-    #   }
-    # )
-
     # Shared
     broadcast_update_later_to(
       self.draft,

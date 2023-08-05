@@ -2,7 +2,3 @@
   h2.c-draft__name = draft.name
   = render partial: "drafts/selection_clock",
     locals: { draft: draft }
-= turbo_frame_tag dom_id(draft.current_selection) do
-  - if current_user == draft.current_selection.user
-    = render partial: "selections/form",
-      locals: { selection: draft.current_selection }
