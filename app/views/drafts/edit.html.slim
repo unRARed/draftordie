@@ -11,12 +11,6 @@
       data: { turbo_method: :post,
         turbo_confirm: "Are you sure?" },
       class: "c-button c-button--secondary"
-    = link_to 'Start Draft',
-      start_draft_path(@draft),
-      method: :patch,
-      data: { turbo_method: :patch,
-        turbo_confirm: "Are you sure?" },
-      class: "c-button c-button--secondary"
   - else
     = link_to 'Generate Board',
       generate_draft_path(@draft),
@@ -29,6 +23,13 @@
       method: :patch,
       data: { turbo_method: :patch,
         turbo_frame: "_top",
+        turbo_confirm: "Are you sure?" },
+      class: "c-button c-button--secondary"
+  - else
+    = link_to 'Start Draft',
+      start_draft_path(@draft),
+      method: :patch,
+      data: { turbo_method: :patch,
         turbo_confirm: "Are you sure?" },
       class: "c-button c-button--secondary"
   - if @draft.is_paused?
