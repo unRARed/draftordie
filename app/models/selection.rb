@@ -33,12 +33,17 @@ class Selection < ApplicationRecord
   BUFFER_SECONDS = 1
 
   include DraftHelper
+
+  attr_accessor :selecting_user
+
   belongs_to :draft
   belongs_to :round
   belongs_to :user
   belongs_to :player, optional: true
 
   before_save :finalize_selection
+
+  validate :both_write_in_values_mutually_present
 
   after_update_commit -> {
     broadcast_update_later_to(
@@ -47,8 +52,8 @@ class Selection < ApplicationRecord
       target: "board_#{self.draft.slug}",
       locals: {
         draft: self.draft,
-        user: self.draft&.current_selection&.user,
-        selection: draft.current_selection
+        user: self.selecting_user,
+        selection: draft&.current_selection
       }
     )
     broadcast_update_later_to(
@@ -57,10 +62,20 @@ class Selection < ApplicationRecord
       target: "show_picks_#{self.draft.slug}",
       locals: {
         draft: self.draft,
-        user: self.draft&.current_selection&.user,
+        user: self.selecting_user,
         selection: draft&.current_selection
       }
     )
+    # broadcast_update_later_to(
+    #   self.draft,
+    #   partial: "selections/form",
+    #   target: "show_selection_#{self.draft.slug}",
+    #   locals: {
+    #     draft: self.draft,
+    #     user: self.selecting_user,
+    #     selection: draft&.current_selection
+    #   }
+    # )
 
     # Shared
     broadcast_update_later_to(
@@ -145,5 +160,12 @@ private
     return unless self.is_selected?
 
     self.set_end
+  end
+
+  def both_write_in_values_mutually_present
+    return if write_in_name.blank? && write_in_position.blank?
+    return if write_in_name.present? && write_in_position.present?
+
+    errors.add(:base, "Both write-in values must be present")
   end
 end

@@ -1,6 +1,9 @@
 .c-container--md
-  = form_for([draft, selection],
+  = form_for([selection.draft, selection],
     html: { class: "c-form" },
+    data: { turbo_method: :patch,
+      turbo_temporary: true,
+      turbo_action: :replace },
     method: :patch \
   ) do |f|
     - if selection.errors.any?
@@ -8,4 +11,5 @@
         target: selection
     = render "selections/fields", f: f
     = f.submit "Draft Player",
-      class: "c-button c-button--positive"
+      class: "c-button c-button--positive",
+      data: { turbo_frame: "_top" }

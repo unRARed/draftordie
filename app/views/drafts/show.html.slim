@@ -1,13 +1,15 @@
 div class="c-draft"
   - if !@draft.is_ended?
     .grid.grid-cols-1.gap-8.md:grid-cols-2
-      div.c-draft__selection-form id="show_form_#{@draft.slug}"
-        = render partial: "selections/form",
-          locals: { draft: @draft,
-            selection: @draft.current_selection }
+      = turbo_frame_tag dom_id(@draft.current_selection) do
+        - if current_user == @draft.current_selection.user
+          = render partial: "selections/form",
+            locals: { selection: @draft.current_selection }
       div.c-draft__picks id="show_picks_#{@draft.slug}"
         = render partial: "show_picks", locals: { draft: @draft }
-    - if !@draft.is_running? && @draft.users.include?(current_user)
+    - if (!@draft.is_running? && \
+        @draft.users.include?(current_user) \
+    )
       = link_to 'Leave Draft',
         leave_draft_path(@draft),
         class: "c-button c-button--negative",

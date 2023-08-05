@@ -9,14 +9,15 @@
         { include_blank: true },
         class: "c-form__select"
     h3 Or Write-in...
-    .form-group.form-group--required
-      = f.label :write_in_name, "Name",
-        class: "c-form__label"
-      = f.text_field :write_in_name
-    .form-group.form-group--required
-      = f.label :write_in_position, "Position",
-        class: "c-form__label"
-      = f.select :write_in_position,
-        Player::POSITIONS[:football].map { |p| [p, p] },
-        { include_blank: true },
-        class: "c-form__select"
+    .grid.grid-cols-5.gap-8
+      .form-group.form-group--required.col-span-3
+        = f.label :write_in_name, "Name",
+          class: "c-form__label"
+        = f.text_field :write_in_name
+      .form-group.form-group--required.col-span-2
+        = f.label :write_in_position, "Position",
+          class: "c-form__label"
+        = f.select :write_in_position,
+          Player::POSITIONS[:football].map { |p| [p, p] },
+          { include_blank: true },
+          class: "c-form__select"

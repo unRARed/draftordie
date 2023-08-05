@@ -10,11 +10,14 @@ class DraftsController < ApplicationController
   before_action :build_draft_navigation
   skip_after_action :verify_policy_scoped, :only => :index
 
+  def board; end
+  def access; end
+  def invite; end
+  def edit; end
+
   def index
     redirect_to root_path
   end
-
-  def access; end
 
   def verify_access
     access_code =
@@ -65,10 +68,6 @@ class DraftsController < ApplicationController
     end
   end
 
-  def board
-
-  end
-
   def create_invite
     # send email to user inviting to draft
     DraftMailer.
@@ -78,8 +77,6 @@ class DraftsController < ApplicationController
     redirect_to invite_draft_path(@draft)
   end
 
-  def invite; end
-  def edit; end
   def new
     @draft = Draft.new
     authorize @draft

@@ -27,8 +27,13 @@ class SelectionsController < ApplicationController
       return redirect_to draft_path(@selection.draft)
     end
 
+    @selection.validate
+    return render :edit unless @selection.errors.empty?
+
     begin
-      if @selection.update_and_advance(selection_params)
+      if @selection.update_and_advance(
+        { selecting_user: current_user }.merge(selection_params)
+      )
         flash[:notice] = "You selected #{selection.name}"
       end
     ensure

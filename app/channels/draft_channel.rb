@@ -6,25 +6,7 @@ class DraftChannel < ApplicationCable::Channel
     stream_for @draft
   end
 
-  def receive(data)
-    puts "RECEIVED DATA"
-    payload = data["payload"]
-
-    case data["command"]
-    when "poll_current_selection"
-      if payload["is_time_expired"]
-        puts "TIME EXPIRED"
-        advance_selection(data)
-      end
-    when "progressed_draft"
-      puts "PROGRESSED DRAFT"
-
-    else
-      puts "COMMAND NOT RECOGNIZED"
-    end
-  end
-
-  def poll_current_selection(data)
+  def requested_selection_state(data)
     @draft = Draft.eager_load(:progression).
       where(slug: data["slug"]).first
     if @draft.is_ended?
@@ -37,20 +19,39 @@ class DraftChannel < ApplicationCable::Channel
     puts "RESULT: #{result}"
 
     DraftChannel.broadcast_to(@draft, {
-      command: "poll_current_selection",
+      command: "selection_state",
       payload: {
         is_time_expired: @draft.current_selection.time_expired?
       }
     })
   end
 
-  def advance_selection(data)
+  def requested_selection_advance(data)
     puts "ADVANCING SELECTION"
     @draft = Draft.eager_load(:progression).
       where(slug: data["slug"]).first
     return unless @draft.progression.
       current_selection.time_expired?
 
-    ProgressDraftsJob.perform_later
+    next_selection = @draft.next_selection
+
+    ProgressDraftsJob.perform_later(
+      user: current_user, draft: @draft
+    )
+
+    return unless current_user == next_selection.selecting_user
+
+    DraftChannel.broadcast_to(@draft, {
+      command: "reload",
+      payload: { selection_id: @draft.current_selection.id }
+    })
+  end
+
+  def requested_reload(data)
+    return unless current_user
+
+    DraftChannel.broadcast_to(@draft, {
+      command: "reload", payload: {}
+    })
   end
 end

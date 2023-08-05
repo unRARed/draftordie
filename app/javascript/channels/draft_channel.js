@@ -16,10 +16,20 @@ document.addEventListener('turbo:load', () => {
         if (!data.payload) { return; }
 
         switch (data.command) {
-          case "poll_current_selection":
+          case "selection_state":
             if (data.payload.is_time_expired) {
               draftChannel.advanceSelection();
             }
+            break;
+          case "reload":
+            console.log("reloading");
+            clearInterval(poll);
+            Turbo.visit(
+              `/drafts/${draftSlug}`,
+              { action: "replace",
+                frame: data.payload.current_selection_id
+              }
+            )
             break;
           case "draft_ended":
             console.log("ending draft");
@@ -34,14 +44,14 @@ document.addEventListener('turbo:load', () => {
       advanceSelection() {
         console.log("advancing selection");
         this.perform(
-          "advance_selection", { slug: draftSlug }
+          "requested_selection_advance", { slug: draftSlug }
         );
       },
 
       pollCurrentSelection() {
         console.log("polling selection");
         return this.perform(
-          "poll_current_selection", { slug: draftSlug }
+          "requested_selection_state", { slug: draftSlug }
         );
       },
     }

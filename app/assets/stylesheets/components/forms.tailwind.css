@@ -6,4 +6,8 @@
   .c-form__label {
     @apply block text-sm font-bold;
   }
+
+  .c-form__select {
+    @apply max-w-full;
+  }
 }
