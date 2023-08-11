@@ -3,8 +3,12 @@
     @apply rounded-lg p-3;
     background-color: #2e4846;
     color: #cad3b3;
+    box-shadow: 3px 3px 5px #333;
   }
-  .c-panel__item {
-    @apply block px-4 py-2;
+  .c-panel__focus {
+    max-width: 80%;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
   }
 }

@@ -12,18 +12,22 @@ html
       "data-turbo-track": "reload"
     = javascript_include_tag "application",
       "data-turbo-track": "reload", defer: true
+    - if current_user
+      meta name="current-user-id" content="#{current_user.id}"
+    - if controller.controller_name == "drafts" && @draft
+      meta name="draft-slug" content="#{@draft.slug}"
     = yield :meta
   body.c-layout
     - if is_turbo_draft?
       = turbo_stream_from @draft
-    header.c-layout__header
-      .c-layout__header__title
+    header.c-layout-header
+      .c-layout__header-title
         = link_to "Draft or Die", root_path
-      .c-layout__header__navigation
+      .c-layout__header-navigation
         = render "shared/navigation"
-    main.c-layout__main
-      - if flash.any?
-        = render "shared/flash"
+    - if flash.any?
+      = render "shared/flash"
+    main.c-layout-main
       = yield
-    footer.c-layout__footer
+    footer.c-layout-footer
         span &copy; #{Time.current.year} Draft or Die

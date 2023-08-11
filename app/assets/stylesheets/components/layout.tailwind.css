@@ -1,15 +1,26 @@
 @layer components {
-  .c-layout__main { }
+  .c-layout-main { }
 
-  .c-layout__header {
+  .c-layout-header {
     @apply flex justify-between items-center p-1;
   }
 
-  .c-layout__header__title {
+  .c-layout-header__title {
     @apply text-lg;
   }
 
-  .c-layout__footer {
+  .c-layout-footer {
     @apply text-center p-2;
+    position: sticky;
+    top: 100vh;
+  }
+
+  .c-layout__focus {
+    @apply max-w-xl mx-auto;
+  }
+
+  [class^="c-layout-"] {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }

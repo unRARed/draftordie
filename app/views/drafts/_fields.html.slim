@@ -1,31 +1,39 @@
-.grid.grid-cols-2.gap-8
+.grid.grid-cols-1.gap-8.md:grid-cols-2
   .c-panel
+    h3.text-center Setup Draft
     .form-group.form-group--required
       = f.label :name, "Draft Name",
         class: "c-form__label"
-      = f.text_field :name
+      = f.text_field :name, class: "c-field"
     .form-group.form-group--required
       = f.label :round_count, "Number of Rounds",
         class: "c-form__label"
-      = f.number_field :round_count
+      = f.number_field :round_count, class: "c-field"
     .form-group.form-group--required
       = f.label :selection_seconds, "Time per Selection",
         class: "c-form__label"
-      = f.number_field :selection_seconds
-  .c-panel
+      = f.number_field :selection_seconds, class: "c-field"
     .form-group.form-group--required
       = f.label :user_count, "Number of Participants",
         class: "c-form__label"
-      = f.number_field :user_count
-      - if f.object.present?
-        p
-          strong Users currently paired
+      = f.number_field :user_count, class: "c-field"
+    = f.submit "Update Draft",
+      class: "c-button c-button--positive"
+  .c-panel
+    - if f.object.present?
+      .form-group.form-group--required
+        h3.text-center Participants
         - if f.object.pairings.any?
-          - f.object.pairings.each do |pairing|
-            = link_to "Remove #{pairing.context_value}",
-              draft_pairing_path(f.object, pairing),
-              class: "c-button c-button--negative " \
-                "c-button--small",
-              method: :delete, data: { \
-                turbo_method: :delete,
-                turbo_confirm: "Are you sure?" }
+          .c-button-stack
+            - f.object.pairings.each do |pairing|
+              = link_to "Remove #{pairing.context_value}",
+                draft_pairing_path(f.object, pairing),
+                class: "c-button c-button--negative " \
+                  "c-button--small",
+                method: :delete, data: { \
+                  turbo_method: :delete,
+                  turbo_confirm: "Are you sure?" }
+    .mt-4.text-center
+      = link_to "Invite a Participant",
+        invite_draft_path(@draft),
+        class: "c-button c-button--secondary"

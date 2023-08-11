@@ -1,5 +1,16 @@
 @layer components {
+  .c-draft-cards {
+    display: flex;
+    gap: 1%;
+    row-gap: 2%;
+    column-gap: 1%;
+    flex-wrap: wrap;
+  }
   .c-draft-card {
-    @apply relative flex flex-col items-center justify-center w-full h-full p-2 bg-white border border-gray-200 rounded-lg shadow-sm;
+    @apply relative flex items-center justify-center h-full p-1 border border-gray-200 rounded-lg shadow-sm;
+    width: 24%;
+    min-height: 8rem;
+    margin-bottom: 1%;
+    background-color: teal;
   }
 }

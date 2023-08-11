@@ -1,26 +1,66 @@
 @layer components {
-  a.c-button, .c-button {
-    @apply inline-block px-4 py-2 text-sm font-medium leading-5 text-center text-white transition duration-150 ease-in-out bg-blue-600 border rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:border-blue-400 active:bg-blue-700 cursor-pointer;
+  .c-button,
+  a.c-button,
+  input.c-button,
+  button.c-button {
+    @apply inline-block px-4 py-2 text-sm font-medium leading-5 text-center text-white transition duration-150 ease-in-out rounded-md shadow-sm cursor-pointer;
+    @apply bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white;
     color: #fff !important;
+    box-shadow: 2px 2px 4px #333;
   }
 
-  a.c-button.c-button--secondary, .c-button.c-button--secondary {
-    @apply bg-purple-600 border-purple-500 hover:bg-purple-500 focus:border-purple-700 active:bg-purple-700 text-white;
+  .c-button.c-button--secondary,
+  a.c-button.c-button--secondary,
+  input.c-button.c-button--secondary,
+  button.c-button.c-button--secondary {
+    @apply bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white;
   }
 
-  a.c-button.c-button--positive, .c-button.c-button--positive {
-    @apply bg-green-600 border-green-500 hover:bg-green-500 focus:border-green-700 active:bg-green-700 text-white;
+  .c-button.c-button--positive,
+  a.c-button.c-button--positive,
+  input.c-button.c-button--positive,
+  button.c-button.c-button--positive {
+    @apply bg-green-600 border-green-500 hover:bg-green-500 active:bg-green-700 text-white;
   }
 
-  a.c-button.c-button--negative, .c-button.c-button--negative {
-    @apply bg-red-600 border-red-500 hover:bg-red-500 focus:border-red-700 active:bg-red-700 text-white;
+  .c-button.c-button--negative,
+  a.c-button.c-button--negative,
+  input.c-button.c-button--negative,
+  button.c-button.c-button--negative {
+    @apply bg-red-600 hover:bg-red-500 active:bg-red-700 text-white;
   }
 
-  a.c-button--small {
-    @apply px-2 py-1 text-xs;
+  .c-button--small,
+  a.c-button--small,
+  input.c-button--small,
+  button.c-button--small {
+    @apply text-xs;
   }
 
-  a.c-button + .c-button {
+  .c-button--hero,
+  a.c-button--hero,
+  input.c-button--hero,
+  button.c-button--hero {
+    @apply text-xl;
+    padding: 1rem 2rem;
+  }
+
+  .c-button + .c-button,
+  a.c-button + .c-button,
+  input.c-button + .c-button,
+  button.c-button + .c-button {
     margin-top: 0.5rem;
+    margin-left: 0.5rem;
+  }
+
+  .c-button-stack {
+    @apply flex flex-col;
+
+    .c-button,
+    a.c-button,
+    input.c-button,
+    button.c-button {
+      margin-left: unset;
+    }
   }
 }

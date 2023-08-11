@@ -1,3 +1,12 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html, body { height: 100%;}
+
 body {
   font-size: 0.8em;
   background-color: #383f3e;
@@ -20,7 +29,34 @@ h2 { @apply text-3xl; margin-bottom: 12px; }
 
 h3 { @apply text-2xl; margin-bottom: 12px; }
 
+ul {
+  @apply list-disc list-inside text-lg;
+  line-height: 1.45rem;
+}
+
+p + p,
+p + h1,
+p + h2,
+p + h3,
+p + h4,
+p + h5,
+p + h6 { margin-top: 1.45rem; }
+
 .turbo-progress-bar {
   height: 5px;
   background-color: #b7fbe9;
+}
+
+#error_explanation {
+  color: #b94a48;
+  background-color: #f2dede;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.field_with_errors {
+  display: inline;
+  font-weight: bold;
+  color: pink;
 }
