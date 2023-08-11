@@ -1,0 +1,16 @@
+= content_for :meta do
+  meta name="draft-slug" content="#{@draft.slug}"
+  - if current_user
+    meta name="current-user-id" content="#{current_user.id}"
+  - if session[:is_sound_enabled]
+    meta name="is-sound-enabled" content="true"
+  - if @draft.is_ended?
+    meta name="is-draft-ended" content="true"
+.fucking-draft
+  = yield
+= audio_tag(Dir.glob("#{Rails.root}/app/assets/sounds/disses/*.mp3").map{|p| p.split("/sounds/").last }, controls: false, id: "disses")
+= audio_tag(Dir.glob("#{Rails.root}/app/assets/sounds/compliments/*.mp3").map{|p| p.split("/sounds/").last }, controls: false, id: "compliments")
+- Dir.glob("#{Rails.root}/app/assets/sounds/core/*.mp3").map{|p| p.split("/sounds/").last }.each do |asset_path|
+  = audio_tag(asset_path, controls: false, id: asset_path. \
+    split("/").last.split(".").first)
+- parent_layout "application"

@@ -9,10 +9,12 @@
     div.col-span-3
       = render partial: "drafts/selection_clock",
         locals: { draft: draft }
-      = render partial: "draft_deck", locals: { draft: draft }
+      = render partial: "drafts/draft_deck",
+        locals: { draft: draft }
     div.col-span-2
-      = render partial: "draft_prior_selection",
+      = render partial: "drafts/draft_prior_selection",
         locals: { draft: draft }
   - else
     strong No selection in progress
-  = render partial: "draft_qrcode", locals: { draft: draft }
+  = render partial: "drafts/draft_qrcode",
+    locals: { draft: draft }

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       post :invite, to: "drafts#create_invite"
       get :access
       post :access, to: "drafts#verify_access"
+      get :toggle_sound
     end
 
     resources :selections, only: [:edit, :update]

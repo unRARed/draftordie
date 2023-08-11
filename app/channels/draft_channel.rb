@@ -7,6 +7,7 @@ class DraftChannel < ApplicationCable::Channel
   end
 
   def requested_selection_state(data)
+    puts "REQUESTED SELECTION STATE"
     @draft = Draft.eager_load(:progression).
       where(slug: data["slug"]).first
     if @draft.is_ended?

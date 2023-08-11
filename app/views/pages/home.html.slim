@@ -1,9 +1,10 @@
 p Welcome to "Draft or Die"... your free Fantasy Sports drafting tool! Growing tired of auto-drafters scooping up the value picks? You won't find rankings here! Draft or Die helps turn your draft day into a party. Shame the friend who shows up with the Fantasy Magazine and drafts THAT player... you know, the one who's going to miss the entire season. If something comes up during the draft, your League Commissioner can strategically pause, ensuring that all participants have a fair and equal chance to make their picks. Embrace the true spirit of Fantasy Sports as you rely on your expertise and knowledge to assemble your team. Join us now and embrace the challenge to draft, compete, and conquer like never before! It's time to Draft... or Die!
 - if user_signed_in?
   - if current_user.drafts.any?
-    - current_user.drafts.each do |draft|
-      = link_to "Load #{draft.name}",
-        draft_path(draft), class: "c-button"
+    .flex.flex--wrap
+      = render partial: "drafts/draft_card",
+        collection: current_user.drafts,
+        as: :draft
   = link_to "Start a Draft",
     new_draft_path,
     class: "c-button#{' c-button--secondary' if current_user.drafts.any?}"

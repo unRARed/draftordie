@@ -68,6 +68,10 @@ class Draft < ApplicationRecord
       flatten.uniq
   end
 
+  def allocation
+    "#{users.count} / #{user_count}"
+  end
+
   def remaining_players
     Player.for_selection.where(
       id: Player.all.pluck(:id) - self.selections.

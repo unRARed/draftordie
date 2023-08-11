@@ -1,0 +1,8 @@
+.c-draft-card
+  .c-draft-card__header
+    .c-draft-card__header__title
+      = link_to draft.name, draft_path(draft)
+    .c-draft-card__body
+      span #{draft.allocation} Allocated
+    .c-draft-card__header__meta
+      = draft.created_at.strftime("%B %d, %Y")

@@ -12,10 +12,7 @@ html
       "data-turbo-track": "reload"
     = javascript_include_tag "application",
       "data-turbo-track": "reload", defer: true
-    - if current_user
-      meta name="current-user-id" content="#{current_user.id}"
-    - if controller.controller_name == "drafts" && @draft
-      meta name="draft-slug" content="#{@draft.slug}"
+    = yield :meta
   body.c-layout
     - if is_turbo_draft?
       = turbo_stream_from @draft

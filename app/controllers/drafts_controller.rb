@@ -1,4 +1,6 @@
 class DraftsController < ApplicationController
+  layout "draft", except: [:index, :new, :create]
+
   before_action :set_draft, except: [
     :index, :new, :create, :commish,
     :member
@@ -154,12 +156,28 @@ class DraftsController < ApplicationController
     redirect_back fallback_location: draft_path(@draft)
   end
 
+  def toggle_sound
+    session[:is_sound_enabled] = !session[:is_sound_enabled]
+    flash[:notice] =
+      session[:is_sound_enabled] ?
+        "Sound enabled!" : "Sound disabled!"
+
+    redirect_to draft_path(@draft)
+  end
+
 private
 
   def build_draft_navigation
     return unless current_user
     return unless @draft
 
+    @navigation.add_item(:draft, NavigationItem.new(
+        session[:is_sound_enabled] ?
+          'Disable Sound' : 'Enable Sound',
+        toggle_sound_draft_path(@draft),
+        data: { turbo: false }
+      )
+    )
     if @draft.users.include?(current_user)
       @navigation.add_item(:draft, NavigationItem.new(
           'Dashboard', draft_path(@draft)

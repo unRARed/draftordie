@@ -16,6 +16,12 @@ class DraftPolicy < ApplicationPolicy
     true
   end
 
+  # controls sound for the current session, draft board
+  # likely not to be displayed by a logged-in user
+  def toggle_sound?
+    true
+  end
+
   # for signed in users
   def create?
     user.present?

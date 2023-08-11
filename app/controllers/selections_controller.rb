@@ -36,6 +36,9 @@ class SelectionsController < ApplicationController
       )
         flash[:notice] = "You selected #{selection.name}"
       end
+      DraftChannel.broadcast_to(@draft, {
+        command: "selection_made", payload: {}
+      })
     ensure
       @draft = Draft.preloaded.find(@selection.draft_id)
       return redirect_to draft_path(@selection.draft)
