@@ -25,7 +25,7 @@ module DraftHelper
     if selection.is_selected?
       classes << "c-draft__board__slot--selected"
     end
-    if selection.draft.current_selection.user == selection
+    if selection.draft.current_selection&.user == selection
       classes << "c-draft__board__slot--current"
     end
     classes.join(" ")
