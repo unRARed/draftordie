@@ -21,4 +21,11 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
+
+  .c-form--bulk {
+    .c-form__label { display: none; }
+    .c-field {
+      font-size: 0.75rem;
+    }
+  }
 }

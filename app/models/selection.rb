@@ -54,7 +54,8 @@ class Selection < ApplicationRecord
 
   before_save :finalize_selection
 
-  validate :both_write_in_values_mutually_present
+  validate :write_in_values_mutually_present
+  validate :xor_player_or_write_in
 
   after_update_commit -> {
     broadcast_update_later_to(
@@ -102,6 +103,7 @@ class Selection < ApplicationRecord
   delegate :name, to: :player, prefix: true, allow_nil: true
   delegate :draft_id, to: :round, allow_nil: false
   delegate :draft_slug, to: :round, allow_nil: false
+  delegate :number, to: :round, prefix: true, allow_nil: false
 
   def update_and_advance(attributes)
     attributes = { ended_at: Time.current }.merge(attributes)
@@ -132,7 +134,7 @@ class Selection < ApplicationRecord
   def name
     return write_in_name if write_in_name.present?
 
-    return player_name if player.present?
+    return player.formatted_name if player.present?
     "Missed"
   end
 
@@ -172,10 +174,16 @@ private
     self.set_end
   end
 
-  def both_write_in_values_mutually_present
+  def write_in_values_mutually_present
     return if write_in_name.blank? && write_in_position.blank?
     return if write_in_name.present? && write_in_position.present?
 
     errors.add(:base, "Both write-in values must be present")
+  end
+
+  def xor_player_or_write_in
+    return if player.present? ^ write_in_name.present?
+
+    errors.add(:base, "Must either select a player or write-in")
   end
 end

@@ -36,6 +36,10 @@ class Player < ApplicationRecord
     )
   }
 
+  def formatted_name
+    "(#{position}) #{name}"
+  end
+
   # NOTE: re-generate football JSON player-list with:
   # RefreshPlayerPoolJob.perform_now
   def self.import_json(path_to_json)

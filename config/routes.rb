@@ -24,7 +24,11 @@ Rails.application.routes.draw do
       get :toggle_sound
     end
 
-    resources :selections, only: [:edit, :update]
+    resources :selections, only: [:edit, :update] do
+      collection do
+        get :bulk_edit
+      end
+    end
     resources :pairings, only: [:destroy]
   end
 end

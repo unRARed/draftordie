@@ -33,7 +33,9 @@ class Draft < ApplicationRecord
 
   has_one :progression,
     class_name: "ViewDraftProgressionCandidate"
-  has_many :rounds, dependent: :destroy
+  has_many :rounds,
+    -> { order(number: :asc) },
+    dependent: :destroy
   has_many :selections,
     -> { order(pick_number: :asc)},
     through: :rounds

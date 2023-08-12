@@ -1,0 +1,22 @@
+.c-selection.pb-4
+  .c-selection__identifier
+    .c-selection__identifier__team
+      span #{selection.pairing.context_value}
+    .c-selection__identifier__pick-in-round
+      span Pick ##{selection.round_number}.#{selection.pick_number}
+  = form_for([selection.draft, selection],
+    html: { class: "c-form c-form--bulk" },
+    data: { turbo_method: :patch,
+      turbo_temporary: true,
+      turbo_action: :replace },
+    method: :patch \
+  ) do |f|
+    - if selection.errors.any?
+      = render "shared/errors",
+        target: selection
+    .m-auto
+      = render partial: "selections/fields",
+        locals: { f: f, is_bulk: true }
+    = f.submit "Update Pick# #{selection.pick_number}",
+      class: "c-button c-button--positive",
+      data: { turbo_frame: "_top" }

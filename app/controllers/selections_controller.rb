@@ -1,5 +1,17 @@
 class SelectionsController < ApplicationController
-  before_action :set_selection
+  include DraftHelper
+  layout "draft"
+
+  before_action :set_selection, except: [:bulk_edit]
+
+  before_action :build_draft_navigation
+
+  def bulk_edit
+    @draft = Draft.preloaded.
+      find_by(slug: params[:draft_slug])
+    authorize @draft.selections.first
+    @rounds = @draft.rounds
+  end
 
   def edit
     unless @selection.draft.is_started?
@@ -16,17 +28,24 @@ class SelectionsController < ApplicationController
   end
 
   def update
-    if !@selection.draft.is_running?
-      flash[:alert] = "The draft has not started yet"
-      return redirect_to draft_path(@selection.draft)
-    end
-    unless (@selection == @selection.
-      draft.progression&.current_selection
-    )
-      flash[:alert] = "It's not your turn to select"
-      return redirect_to draft_path(@selection.draft)
+    unless policy(@selection).bulk_edit?
+      return update_for_participant
     end
 
+    # commish actions
+    if @selection.update(selection_params)
+      flash[:notice] = "Selection updated"
+    else
+      flash[:alert] = @selection.errors.full_messages.join(", ")
+    end
+    return redirect_back(
+      fallback_location: draft_path(@selection.draft)
+    )
+  end
+
+private
+
+  def update_for_participant
     @selection.validate
     return render :edit unless @selection.errors.empty?
 
@@ -44,8 +63,6 @@ class SelectionsController < ApplicationController
       return redirect_to draft_path(@selection.draft)
     end
   end
-
-private
 
   def selection_params
     params.require(:selection).permit(

@@ -1,23 +1,30 @@
-.grid.grid-cols-2.gap-8
-  div
-    .form-group.form-group--required
-      = f.label :name, "Player",
-        class: "c-form__label"
-      = f.select :player_id,
-        f.object.draft.remaining_players.\
-          map { |p| ["[#{p.position}] #{p.name}", p.id] },
-        { include_blank: true },
-        class: "c-form__select"
+div
+  .form-group.form-group--required
+    = f.label :name, "Player",
+      class: "c-form__label"
+    - select_list = f.object.draft.remaining_players.\
+      map{|p| [p.formatted_name, p.id]}
+    - if local_assigns[:is_bulk] && f.object.player.present?
+      - select_list << [f.object.player.formatted_name, \
+        f.object.player_id]
+    = f.select :player_id, select_list,
+      { include_blank: " - Select Player - " },
+      selected: f.object.player_id,
+      class: "c-field"
+  - unless local_assigns[:is_bulk]
     h3 Or Write-in...
-    .grid.grid-cols-5.gap-8
-      .form-group.form-group--required.col-span-3
-        = f.label :write_in_name, "Name",
-          class: "c-form__label"
-        = f.text_field :write_in_name
-      .form-group.form-group--required.col-span-2
-        = f.label :write_in_position, "Position",
-          class: "c-form__label"
-        = f.select :write_in_position,
-          Player::POSITIONS[:football].map { |p| [p, p] },
-          { include_blank: true },
-          class: "c-form__select"
+  .grid.grid-cols-5.gap-2
+    .form-group.form-group--required.col-span-3
+      = f.label :write_in_name, "Name",
+        class: "c-form__label"
+      = f.text_field :write_in_name,
+        placeholder: local_assigns[:is_bulk] ? \
+          "Write-in Name (optional)" : "",
+        class: "c-field"
+    .form-group.form-group--required.col-span-2
+      = f.label :write_in_position, "Position",
+        class: "c-form__label"
+      = f.select :write_in_position,
+        Player::POSITIONS[:football].map { |p| [p, p] },
+        { include_blank: " - Select Position - " },
+        class: "c-field"

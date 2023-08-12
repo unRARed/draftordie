@@ -43,4 +43,50 @@ module DraftHelper
       20
     end
   end
+
+  def build_draft_navigation
+    return unless current_user
+    return unless draft = @draft || @selection&.draft
+
+    @navigation.add_item(:draft, NavigationItem.new(
+        session[:is_sound_enabled] ?
+          'Disable Sound' : 'Enable Sound',
+        toggle_sound_draft_path(draft),
+        data: { turbo: false }
+      )
+    )
+    if draft.users.include?(current_user)
+      @navigation.add_item(:draft, NavigationItem.new(
+          'Dashboard', draft_path(draft)
+        )
+      )
+    else
+      @navigation.add_item(:draft, NavigationItem.new(
+          'Join this Draft', join_draft_path(draft)
+        )
+      )
+    end
+    @navigation.add_item(:draft, NavigationItem.new(
+        "Board", board_draft_path(draft)
+      )
+    )
+    if policy(draft).commish?
+      @navigation.add_item(:draft, NavigationItem.new(
+          'Setup', edit_draft_path(draft), data: { turbo: false }
+        )
+      )
+      @navigation.add_item(:draft, NavigationItem.new(
+          'Edit Selections',
+          bulk_edit_draft_selections_path(draft),
+          data: { turbo: false }
+        )
+      )
+    end
+
+    if current_user.drafts.length > 1
+      @navigation.add_item(:draft, NavigationItem.new(
+        "My Drafts", drafts_path)
+      )
+    end
+  end
 end
