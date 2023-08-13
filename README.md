@@ -1,24 +1,16 @@
-# README
+Draft or Die
+============
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Fantasy Sports tooling... with true grit.
 
-Things you may want to cover:
+Fly.io
+------
 
-* Ruby version
+- Connect to `rails console` on the remote server:
+  `rails fly:console`
 
-* System dependencies
+Other Commands
+--------------
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- Generate a SQL view/model:
+  `rails generate scenic:model data_selections_for_bulk_edit`

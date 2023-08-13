@@ -7,10 +7,23 @@ class SelectionsController < ApplicationController
   before_action :build_draft_navigation
 
   def bulk_edit
-    @draft = Draft.preloaded.
-      find_by(slug: params[:draft_slug])
+    @draft = Draft.find_by(slug: params[:draft_slug])
+    unless @draft.selections.any?
+      skip_authorization
+      flash[:alert] = "Draft board must be generated first"
+      return redirect_back fallback_location: draft_path(@draft)
+    end
     authorize @draft.selections.first
-    @rounds = @draft.rounds
+    @rounds = @draft.
+      selections_for_display.to_a.group_by(&:round_number)
+    @players = {
+      remaining: @draft.remaining_players.
+        where(is_selected: false).
+        map{|p| [p.player_data, p.player_id]},
+      selected: @draft.remaining_players.
+        where(is_selected: true).
+        map{|p| [p.player_data, p.player_id]}
+    }
   end
 
   def edit
@@ -67,6 +80,7 @@ private
   def selection_params
     params.require(:selection).permit(
       :write_in_name,
+      :write_in_team,
       :write_in_position,
       :player_id
     )

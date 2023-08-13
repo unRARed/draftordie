@@ -8,6 +8,7 @@
 #  started_at        :datetime
 #  write_in_name     :string
 #  write_in_position :string
+#  write_in_team     :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  draft_id          :bigint           not null
@@ -51,8 +52,14 @@ class Selection < ApplicationRecord
     foreign_key: :user_id,
     primary_key: :user_id
 
-
   before_save :finalize_selection
+
+  validates :player_id,
+    uniqueness: {
+      scope: :draft_id,
+      message: "has already been selected in this draft",
+      allow_nil: true
+    }
 
   validate :write_in_values_mutually_present
   validate :xor_player_or_write_in
@@ -175,15 +182,23 @@ private
   end
 
   def write_in_values_mutually_present
-    return if write_in_name.blank? && write_in_position.blank?
-    return if write_in_name.present? && write_in_position.present?
+    return if write_in_name.blank? &&
+      write_in_position.blank? &&
+      write_in_team.blank?
+    return if write_in_name.present? &&
+      write_in_position.present? &&
+      write_in_team.present?
 
-    errors.add(:base, "Both write-in values must be present")
+    errors.add(:base,
+      "Team, Position and Player Name required for write-ins.")
   end
 
   def xor_player_or_write_in
-    return if player.present? ^ write_in_name.present?
+    return if player.nil? && write_in_name.blank?
+    return if player.nil? && !write_in_name.blank?
+    return if !player.nil? && write_in_name.blank?
 
-    errors.add(:base, "Must either select a player or write-in")
+    errors.add(:base,
+      "Either select a player or write one in, not both.")
   end
 end

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: view_draft_progression_candidates
+# Table name: data_state_for_draft_boards
 #
 #  current_pick_number  :integer
 #  draft_slug           :string
@@ -10,7 +10,7 @@
 #  next_selection_id    :bigint
 #  prior_selection_id   :bigint
 #
-class ViewDraftProgressionCandidate < ApplicationRecord
+class DataStateForDraftBoard < ApplicationRecord
   belongs_to :draft
 
   belongs_to :current_selection,

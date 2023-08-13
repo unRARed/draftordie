@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_05_023213) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_13_182100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -75,6 +75,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_023213) do
     t.datetime "started_at"
     t.datetime "ended_at"
     t.bigint "draft_id", null: false
+    t.string "write_in_team"
     t.index ["draft_id"], name: "index_selections_on_draft_id"
     t.index ["player_id"], name: "index_selections_on_player_id"
     t.index ["round_id"], name: "index_selections_on_round_id"
@@ -102,7 +103,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_023213) do
   add_foreign_key "selections", "rounds"
   add_foreign_key "selections", "users"
 
-  create_view "view_draft_progression_candidates", sql_definition: <<-SQL
+  create_view "data_selections_for_bulk_edits", sql_definition: <<-SQL
+      SELECT DISTINCT ON (s.pick_number) d.id AS draft_id,
+      r.number AS round_number,
+      s.pick_number,
+      s.write_in_team,
+      s.write_in_position,
+      s.write_in_name,
+      p.context_value AS team_name,
+      s.player_id,
+          CASE
+              WHEN ((pl.name IS NOT NULL) AND ((pl.name)::text <> ''::text)) THEN concat('(', pl."position", ', ', pl.team, ') ', pl.name)
+              WHEN ((s.write_in_name IS NOT NULL) AND ((s.write_in_name)::text <> ''::text)) THEN concat('(', s.write_in_position, ', ', s.write_in_team, ') ', s.write_in_name)
+              ELSE NULL::text
+          END AS player_data
+     FROM ((((drafts d
+       JOIN rounds r ON ((r.draft_id = d.id)))
+       JOIN selections s ON ((s.round_id = r.id)))
+       JOIN pairings p ON (((p.pairable_id = d.id) AND ((p.pairable_type)::text = 'Draft'::text) AND (p.context = 'Draft Team Name'::text))))
+       LEFT JOIN players pl ON ((pl.id = s.player_id)))
+    ORDER BY s.pick_number;
+  SQL
+  create_view "data_state_for_draft_boards", sql_definition: <<-SQL
       SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
       drafts.slug AS draft_slug,
       current_selection.pick_number AS current_pick_number,
@@ -116,5 +138,45 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_05_023213) do
        LEFT JOIN selections prior_selection ON (((prior_selection.draft_id = drafts.id) AND (prior_selection.pick_number IS NOT NULL) AND (prior_selection.pick_number = (current_selection.pick_number - 1)))))
        LEFT JOIN selections next_selection ON (((next_selection.draft_id = drafts.id) AND (next_selection.pick_number IS NOT NULL) AND (next_selection.pick_number = (current_selection.pick_number + 1)))))
     WHERE ((drafts.started_at IS NOT NULL) AND (drafts.is_paused = false));
+  SQL
+  create_view "data_selections_for_displays", sql_definition: <<-SQL
+      SELECT DISTINCT ON (d.id, s.pick_number) s.id AS selection_id,
+      d.id AS draft_id,
+      r.number AS round_number,
+      s.pick_number,
+      s.write_in_team,
+      s.write_in_position,
+      s.write_in_name,
+      p.context_value AS team_name,
+      s.player_id,
+          CASE
+              WHEN ((pl.name IS NOT NULL) AND ((pl.name)::text <> ''::text)) THEN concat('(', pl."position", ', ', pl.team, ') ', pl.name)
+              WHEN ((s.write_in_name IS NOT NULL) AND ((s.write_in_name)::text <> ''::text)) THEN concat('(', s.write_in_position, ', ', s.write_in_team, ') ', s.write_in_name)
+              ELSE NULL::text
+          END AS player_data
+     FROM ((((drafts d
+       JOIN rounds r ON ((r.draft_id = d.id)))
+       JOIN selections s ON ((s.round_id = r.id)))
+       JOIN pairings p ON (((p.pairable_id = d.id) AND ((p.pairable_type)::text = 'Draft'::text) AND (p.context = 'Draft Team Name'::text))))
+       LEFT JOIN players pl ON ((pl.id = s.player_id)))
+    ORDER BY d.id, s.pick_number, r.number;
+  SQL
+  create_view "data_players_remaining_for_drafts", sql_definition: <<-SQL
+      SELECT DISTINCT ON (d.id, (concat(pl."position", ' ', pl.team, ' ', pl.name))) d.id AS draft_id,
+      pl.id AS player_id,
+      concat(pl.name, ' (', pl."position", ', ', pl.team, ')') AS player_data,
+      concat(pl."position", ' ', pl.team, ' ', pl.name) AS value_for_sort,
+      (selected_players.draft_id IS NOT NULL) AS is_selected
+     FROM ((((players pl
+       CROSS JOIN drafts d)
+       JOIN rounds r ON ((r.draft_id = d.id)))
+       JOIN selections s ON ((s.round_id = r.id)))
+       LEFT JOIN ( SELECT pl_1.id AS selected_player_id,
+              d_1.id AS draft_id
+             FROM (((players pl_1
+               JOIN selections s_1 ON ((s_1.player_id = pl_1.id)))
+               JOIN rounds r_1 ON ((r_1.id = s_1.round_id)))
+               JOIN drafts d_1 ON ((d_1.id = r_1.draft_id)))) selected_players ON (((pl.id = selected_players.selected_player_id) AND (selected_players.draft_id = d.id))))
+    ORDER BY d.id, (concat(pl."position", ' ', pl.team, ' ', pl.name)) DESC, ((pl."position")::text = 'QB'::text) DESC, ((pl."position")::text = 'RB'::text) DESC, ((pl."position")::text = 'WR'::text) DESC, ((pl."position")::text = 'TE'::text) DESC, ((pl."position")::text = 'DST'::text) DESC, ((pl."position")::text = 'K'::text) DESC, pl.team, pl.name;
   SQL
 end

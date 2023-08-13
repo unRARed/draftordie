@@ -24,6 +24,14 @@ class Player < ApplicationRecord
     football: %w[QB RB WR TE DST K],
   }
 
+  TEAMS = {
+    football: %w[
+      ARI ATL BAL BUF CAR CHI CIN CLE DAL DEN DET
+      GB HOU IND JAX KC LAC LAR LV MIA MIN NE NO
+      NYG NYJ PHI PIT SEA SF TB TEN WAS
+    ],
+  }
+
   scope :for_selection, -> {
     order(
       Arel.sql("position = 'QB' DESC"),

@@ -31,8 +31,12 @@ class Draft < ApplicationRecord
   #   class_name: "Selection",
   #   optional: true
 
+  has_many :remaining_players,
+    class_name: "DataPlayersRemainingForDraft"
   has_one :progression,
-    class_name: "ViewDraftProgressionCandidate"
+    class_name: "DataStateForDraftBoard"
+  has_many :selections_for_display,
+    class_name: "DataSelectionsForDisplay"
   has_many :rounds,
     -> { order(number: :asc) },
     dependent: :destroy
@@ -74,12 +78,12 @@ class Draft < ApplicationRecord
     "#{users.count} / #{user_count}"
   end
 
-  def remaining_players
-    Player.for_selection.where(
-      id: Player.all.pluck(:id) - self.selections.
-        pluck(:player_id).compact
-    )
-  end
+  # def remaining_players
+  #   Player.for_selection.where(
+  #     id: Player.all.pluck(:id) - self.selections.
+  #       pluck(:player_id).compact
+  #   )
+  # end
 
   def includes_user?(user)
     Draft.user_ids_for(self).
@@ -131,7 +135,7 @@ class Draft < ApplicationRecord
       rounds.destroy_all unless rounds.empty?
       update started_at: nil, ended_at: nil, is_paused: false
       round_count.times do |num|
-        round = rounds.create(
+        round = rounds.create!(
           number: round_number,
           is_reversed: is_reversed
         )
@@ -141,7 +145,7 @@ class Draft < ApplicationRecord
         ordered_users = is_reversed ?
           self.users.reverse : self.users
         ordered_users.each do |ordered_user|
-          round.selections.create(
+          round.selections.create!(
             user: ordered_user,
             pick_number: current_pick_number,
             draft: self

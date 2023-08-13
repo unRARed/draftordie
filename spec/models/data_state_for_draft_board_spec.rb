@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: view_draft_progression_candidates
+# Table name: data_state_for_draft_boards
 #
 #  current_pick_number  :integer
 #  draft_slug           :string
@@ -12,6 +12,6 @@
 #
 require 'rails_helper'
 
-RSpec.describe ViewDraftProgressionCandidate, type: :model do
+RSpec.describe DataStateForDraftBoard, type: :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end

@@ -8,6 +8,7 @@
 #  started_at        :datetime
 #  write_in_name     :string
 #  write_in_position :string
+#  write_in_team     :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  draft_id          :bigint           not null
