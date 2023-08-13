@@ -3,10 +3,10 @@
     .form-group.form-group--required.pb-2
       = f.label :name, "Player",
         class: "c-form__label"
-      - select_list = @players[:remaining]
+      - select_list = @draft.players_for_select[:remaining]
       - if local_assigns[:is_bulk] && f.object.player.present?
-        - select_list << @players[:selected].find { |p| \
-          p[1] == f.object.player_id }
+        - select_list << @draft.players_for_select[:selected]. \
+          find { |p| p[1] == f.object.player_id }
       = f.select :player_id, select_list,
         { include_blank: " - Select Player - " },
         selected: f.object.player_id,

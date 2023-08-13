@@ -1,11 +1,11 @@
 .c-nav
   - if user_signed_in?
     = yield :signed_in_nav
-  - @navigation.draft_items.each do |nav_item|
-    = link_to nav_item.text, nav_item.url,
-      { class: "c-nav__item#{' c-nav__item--active' if nav_item.is_active?}" }.merge(nav_item.options)
-  - if @navigation.draft.any?
-    | |
-  - @navigation.dynamic.each do |nav_item|
-    = link_to nav_item.text, nav_item.url,
-      { class: "c-nav__item#{' c-nav__item--active' if nav_item.is_active?}" }.merge(nav_item.options)
+  div class="#{'c-nav__nav-draft' if @navigation.draft_items.any?}"
+    - @navigation.draft_items.each do |nav_item|
+      = link_to nav_item.text, nav_item.url,
+        { class: "c-nav__item#{' c-nav__item--active' if nav_item.is_active?}" }.merge(nav_item.options)
+  .c-nav__nav-dynamic
+    - @navigation.dynamic.each do |nav_item|
+      = link_to nav_item.text, nav_item.url,
+        { class: "c-nav__item#{' c-nav__item--active' if nav_item.is_active?}" }.merge(nav_item.options)

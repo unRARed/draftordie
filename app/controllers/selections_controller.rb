@@ -4,8 +4,6 @@ class SelectionsController < ApplicationController
 
   before_action :set_selection, except: [:bulk_edit]
 
-  before_action :build_draft_navigation
-
   def bulk_edit
     @draft = Draft.find_by(slug: params[:draft_slug])
     unless @draft.selections.any?
@@ -14,16 +12,10 @@ class SelectionsController < ApplicationController
       return redirect_back fallback_location: draft_path(@draft)
     end
     authorize @draft.selections.first
+
+    build_draft_navigation
     @rounds = @draft.
       selections_for_display.to_a.group_by(&:round_number)
-    @players = {
-      remaining: @draft.remaining_players.
-        where(is_selected: false).
-        map{|p| [p.player_data, p.player_id]},
-      selected: @draft.remaining_players.
-        where(is_selected: true).
-        map{|p| [p.player_data, p.player_id]}
-    }
   end
 
   def edit

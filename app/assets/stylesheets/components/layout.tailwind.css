@@ -19,7 +19,12 @@
     @apply max-w-xl mx-auto;
   }
 
-  [class^="c-layout-"] {
+  /* [class^="c-layout-"] { */
+  /*   padding-left: 0.5rem; */
+  /*   padding-right: 0.5rem; */
+  /* } */
+
+  .c-layout__scoped {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }

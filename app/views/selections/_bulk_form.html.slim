@@ -1,20 +1,23 @@
-.c-selection.pb-4
-  .c-selection__identifier
-    .c-selection__identifier__team
-      span #{display_data.player_data}
-    .c-selection__identifier__pick-in-round
-      span Pick ##{display_data.round_number}.#{display_data.pick_number}
-  = form_for([display_data.draft, display_data.selection],
-    html: { class: "c-form c-form--bulk" },
-    data: { turbo_method: :patch,
-      turbo_temporary: true,
-      turbo_action: :replace },
-    method: :patch \
-  ) do |f|
-    - # handle errors with flash, otherwise, N+1
-    .m-auto
-      = render partial: "selections/fields",
-        locals: { f: f, is_bulk: true }
-    = f.submit "Update Pick# #{display_data.pick_number}",
-      class: "c-button c-button--positive",
-      data: { turbo_frame: "_top" }
+.c-panel
+  .c-selection
+    .c-selection__identifier
+      .c-selection__identifier__team
+        span #{display_data.team_name}
+      span.c-selection__identifier__round
+        span Round #{display_data.round_number}
+      span.c-selection__identifier__pick<
+        span Pick ##{display_data.pick_number}
+    = form_for([display_data.draft, display_data.selection],
+      html: { class: "c-form c-form--bulk" },
+      data: { turbo_method: :patch,
+        turbo_temporary: true,
+        turbo_action: :replace },
+      method: :patch \
+    ) do |f|
+      - # handle errors with flash, otherwise, N+1
+      .m-auto
+        = render partial: "selections/fields",
+          locals: { f: f, is_bulk: true }
+      = f.submit "Update Pick# #{display_data.pick_number}",
+        class: "c-button c-button--positive",
+        data: { turbo_frame: "_top" }

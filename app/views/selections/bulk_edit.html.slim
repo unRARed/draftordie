@@ -1,8 +1,9 @@
-h2.text-center Bulk Edit Selections
-.grid.grid-cols-1.gap-2.md:grid-cols-3
-  - @rounds.each do |round, display_data|
-    .c-panel
-      h3 Round #{round}
-      = render partial: "selections/bulk_form",
-        collection: display_data,
-        as: :display_data
+.c-layout__scoped
+  h2.text-center Bulk Edit Selections
+  .grid.grid-cols-1.gap-2.md:grid-cols-3
+    - @rounds.each do |round, display_data|
+      div
+        h3 Round #{round}
+        = render partial: "selections/bulk_form",
+          collection: display_data,
+          as: :display_data

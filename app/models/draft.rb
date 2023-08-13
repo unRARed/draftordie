@@ -78,6 +78,17 @@ class Draft < ApplicationRecord
     "#{users.count} / #{user_count}"
   end
 
+  def players_for_select
+    @players_for_select ||=
+      {
+        remaining: self.remaining_players.
+          where(is_selected: false).
+          map{|p| [p.player_data, p.player_id]},
+        selected: self.remaining_players.
+          where(is_selected: true).
+          map{|p| [p.player_data, p.player_id]}
+      }
+  end
   # def remaining_players
   #   Player.for_selection.where(
   #     id: Player.all.pluck(:id) - self.selections.
@@ -107,11 +118,18 @@ class Draft < ApplicationRecord
   end
 
   def current_selection
-    progression&.current_selection
+    progression&.current_selection ||
+      remaining_selections.first
   end
 
   def next_selection
     progression&.next_selection
+  end
+
+  def remaining_selections
+    selections.
+      where(ended_at: nil).
+      order(:pick_number)
   end
 
   # To determine if the draft is between selections,

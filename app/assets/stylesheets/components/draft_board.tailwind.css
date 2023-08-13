@@ -5,6 +5,8 @@
     /* light purple-ish */
     color: #98b5b3;
     position: relative;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 
   .c-draft--paused::before {

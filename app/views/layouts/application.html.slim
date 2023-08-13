@@ -20,14 +20,16 @@ html
   body.c-layout
     - if is_turbo_draft?
       = turbo_stream_from @draft
-    header.c-layout-header
-      .c-layout__header-title
-        = link_to "Draft or Die", root_path
-      .c-layout__header-navigation
-        = render "shared/navigation"
+    .c-layout__scoped
+      header.c-layout-header
+        .c-layout__header-title
+          = link_to "Draft or Die", root_path
+        .c-layout__header-navigation
+          = render "shared/navigation"
     - if flash.any?
       = render "shared/flash"
     main.c-layout-main
       = yield
     footer.c-layout-footer
+      .c-layout__scoped
         span &copy; #{Time.current.year} Draft or Die

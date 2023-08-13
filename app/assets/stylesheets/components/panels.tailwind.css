@@ -4,6 +4,10 @@
     background-color: #2e4846;
     color: #cad3b3;
     box-shadow: 3px 3px 5px #333;
+
+    + .c-panel {
+      margin-top: 0.5rem;
+    }
   }
   .c-panel__focus {
     max-width: 80%;

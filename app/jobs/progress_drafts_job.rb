@@ -8,7 +8,7 @@ class ProgressDraftsJob < ApplicationJob
     end
     puts "arguments: #{args.to_s}"
     puts "ProgressDraftsJob running!"
-    candidates = ViewDraftProgressionCandidate.all.
+    candidates = DataStateForDraftBoard.all.
       where(is_selected: true)
     if !draft.nil?
       candidates = candidates.where(draft_slug: draft.slug)
