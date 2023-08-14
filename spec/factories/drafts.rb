@@ -44,4 +44,8 @@ FactoryBot.define do
   trait :fast do
     selection_seconds { 1 }
   end
+
+  trait :started do
+    started_at { 1.second.ago }
+  end
 end
