@@ -9,8 +9,9 @@
         = render partial: "drafts/board_selection",
           locals: { selection: selection }
 javascript:
+  // scroll to the current selection
   (function () {
-    let currentSlot = document.
+    var currentSlot = document.
       querySelector(".c-draft__board__slot--current");
     if (!currentSlot) { return; }
 

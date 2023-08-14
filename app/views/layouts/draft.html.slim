@@ -6,7 +6,7 @@
     meta name="is-sound-enabled" content="true"
   - if @draft.is_ended?
     meta name="is-draft-ended" content="true"
-.c-draft
+div class="c-draft#{' c-draft--paused' if @draft.is_paused?}"
   = yield
 = audio_tag(Dir.glob("#{Rails.root}/app/assets/sounds/disses/*.mp3").map{|p| p.split("/sounds/").last }, controls: false, id: "disses")
 = audio_tag(Dir.glob("#{Rails.root}/app/assets/sounds/compliments/*.mp3").map{|p| p.split("/sounds/").last }, controls: false, id: "compliments")

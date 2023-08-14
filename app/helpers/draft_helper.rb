@@ -25,7 +25,7 @@ module DraftHelper
     if selection.is_selected?
       classes << "c-draft__board__slot--selected"
     end
-    if selection.draft.current_selection&.user == selection
+    if selection.draft.current_selection == selection
       classes << "c-draft__board__slot--current"
     end
     classes.join(" ")
@@ -34,13 +34,13 @@ module DraftHelper
   def compute_text_size(user_count)
     case user_count
     when 15..20
-      8
+      7
     when 11..14
-      10
+      9
     when 7..10
-      14
+      12
     else
-      20
+      16
     end
   end
 
