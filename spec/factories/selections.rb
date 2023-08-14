@@ -51,5 +51,6 @@ FactoryBot.define do
   trait :wrote_in do
     write_in_name { "Joe Montana" }
     write_in_position { "QB" }
+    write_in_team { "SF" }
   end
 end

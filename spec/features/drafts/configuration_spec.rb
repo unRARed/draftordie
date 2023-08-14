@@ -10,12 +10,13 @@ RSpec.describe "Draft", type: :feature do
     sign_in user
     setup_draft
     @draft = Draft.last
+    @draft.generate_board
   end
 
   describe "sends invitations to participants", js: true do
     it "creates pairing records" do
       expect(@draft.pairings.count).to eq(1)
-      click_on "Invite Users"
+      click_on "Invite"
       fill_in "Email", with: second_user.email
       click_on "Send Invite"
       expect(page).to have_content("Invite sent!")
@@ -28,11 +29,17 @@ RSpec.describe "Draft", type: :feature do
       fill_in "Access Code", with: @draft.access_code
       click_on "Let me in!"
       expect(@draft.users).not_to include(second_user)
-
       click_on "Join"
+
+      # Arrive at page to set team name
+      expect(page).to have_content("Team Name")
+      fill_in "Team Name", with: "My Team"
+      click_on "Join Draft"
+
       page.find(".c-notification--notice")
+      expect(page).
+        to have_content("You have joined this draft!")
       expect(@draft.reload.users).to include(second_user)
-      expect(page).to have_content("You have joined this draft!")
       expect(@draft.pairings.count).to eq(2)
     end
   end

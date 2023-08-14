@@ -74,6 +74,7 @@ group :test do
   gem "webdrivers"
   gem "capybara-screenshot"
   gem "mock_redis"
+  gem 'simplecov', require: false
 end
 
 group :development do

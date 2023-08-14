@@ -106,6 +106,7 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.5.0)
+    docile (1.4.0)
     dockerfile-rails (1.5.1)
       rails
     erubi (1.12.0)
@@ -276,6 +277,12 @@ GEM
       rufus-scheduler (~> 3.2)
       sidekiq (>= 6, < 8)
       tilt (>= 1.4.0)
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.12.3)
+    simplecov_json_formatter (0.1.4)
     slim (5.1.1)
       temple (~> 0.10.0)
       tilt (>= 2.1.0)
@@ -356,6 +363,7 @@ DEPENDENCIES
   scenic (~> 1.7)
   sidekiq (~> 7.1)
   sidekiq-scheduler (~> 5.0)
+  simplecov
   slim-rails
   sprockets-rails
   stimulus-rails

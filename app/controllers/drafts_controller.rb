@@ -40,6 +40,7 @@ class DraftsController < ApplicationController
         params: { access_code: access_code}
       )
     end
+    flash.keep
     session["draft_#{@draft.slug}_access_code"] = access_code
     redirect_to draft_path(@draft)
   end
@@ -75,9 +76,7 @@ class DraftsController < ApplicationController
 
   def show
     unless current_user
-      return redirect_to board_draft_path(@draft)
-    end
-    unless current_user.in_draft?(@draft)
+      flash.keep
       return redirect_to board_draft_path(@draft)
     end
   end

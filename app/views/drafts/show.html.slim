@@ -20,4 +20,7 @@
         method: :delete,
         data: { turbo_method: :delete }
   - else
-    p The draft has ended.
+    - if @draft.is_started?
+      p The draft has ended.
+    - else
+      p.c-draft__waiting The draft has not started, yet.

@@ -43,9 +43,14 @@ RSpec.describe "Draft Progression", type: :feature do
 
       fill_in "Access Code", with: draft.access_code
       click_button "Let me in"
-      page.find('.c-draft__board', visible: true)
+      # page.find('.c-draft__board', visible: true)
 
-      expect(page).to have_content("Join this Draft")
+      click_on "Join"
+      expect(page).to have_content("Team Name")
+      fill_in "Team Name", with: "My Team"
+      click_on "Join Draft"
+
+      visit board_draft_path(draft)
       expect(page).
         to have_selector('.c-draft__board__slot--current')
       expect(page).

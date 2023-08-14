@@ -34,6 +34,7 @@
                   turbo_method: :delete,
                   turbo_confirm: "Are you sure?" }
     .mt-4.text-center
-      = link_to "Invite a Participant",
-        invite_draft_path(@draft),
-        class: "c-button c-button--secondary"
+      - if @draft&.slug&.present?
+        = link_to "Invite a Participant",
+          invite_draft_path(@draft),
+          class: "c-button c-button--secondary"

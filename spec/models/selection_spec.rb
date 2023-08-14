@@ -33,5 +33,16 @@
 require 'rails_helper'
 
 RSpec.describe Selection, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "instance methods" do
+    it "update_and_advance"
+    it "is_missed?"
+    it "is_time_expired?"
+    it "position"
+    it "name"
+    it "is_selected?"
+    it "set_start"
+    it "set_end"
+    it "time_remaining"
+    it "seconds_remaining"
+  end
 end
