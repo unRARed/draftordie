@@ -6,8 +6,7 @@ h2.c-draft__footer__clock
       if (typeof initCountdowns === 'function') {
         initCountdowns();
       }
-  - else
-    - clock = draft.current_selection.time_remaining
+  - elsif clock = draft.current_selection.time_remaining
     span.minutes = "%02d" % (clock[1] || 0)
     span
       | :

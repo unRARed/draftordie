@@ -64,17 +64,18 @@ gem "factory_bot_rails"
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
-  gem "rspec-rails"
   gem "byebug"
   gem "faker"
 end
 
 group :test do
+  gem "rspec-rails"
   gem "capybara"
   gem "webdrivers"
   gem "capybara-screenshot"
   gem "mock_redis"
   gem 'simplecov', require: false
+  gem 'timecop'
 end
 
 group :development do

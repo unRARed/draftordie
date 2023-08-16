@@ -25,4 +25,14 @@ FactoryBot.define do
     context { "MyText" }
     pairable { nil }
   end
+
+  trait :team_context do
+    context { "Draft Team Name" }
+    context_value { Faker::Team.name }
+    pairable { FactoryBot.create(:draft) }
+  end
+
+  trait :draft do
+    pairable { FactoryBot.create(:draft) }
+  end
 end

@@ -60,12 +60,8 @@ document.addEventListener('turbo:load', () => {
           case "reload":
             console.log("reloading");
             clearInterval(poll);
-            Turbo.visit(
-              `/drafts/${draftSlug}`,
-              { action: "replace",
-                frame: data.payload.current_selection_id
-              }
-            )
+            location.reload();
+            // Turbo.visit(`/drafts/${draftSlug}`)
             break;
           case "draft_ended":
             console.log("ending draft");

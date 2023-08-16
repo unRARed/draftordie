@@ -19,38 +19,23 @@ class SelectionsController < ApplicationController
   end
 
   def edit
+    @draft = Draft.preloaded.find(@selection.draft_id)
     unless @selection.draft.is_started?
-      @draft = Draft.preloaded.find(@selection.draft_id)
       flash[:alert] = "Draft has not started yet"
       return render "drafts/show"
     end
 
     unless @selection.draft.current_selection == @selection
-      @draft = Draft.preloaded.find(@selection.draft_id)
       flash[:alert] = "It's not your turn to select"
       return render "drafts/show"
     end
   end
 
-  def update
-    unless policy(@selection).bulk_edit?
-      return update_for_participant
-    end
+  def edit_player_data
 
-    # commish actions
-    if @selection.update(selection_params)
-      flash[:notice] = "Selection updated"
-    else
-      flash[:alert] = @selection.errors.full_messages.join(", ")
-    end
-    return redirect_back(
-      fallback_location: draft_path(@selection.draft)
-    )
   end
 
-private
-
-  def update_for_participant
+  def update_player_data
     @selection.validate
     return render :edit unless @selection.errors.empty?
 
@@ -69,6 +54,22 @@ private
     end
   end
 
+  def update
+    # commish actions
+    if @selection.update(
+      { selecting_user: current_user }.merge(selection_params)
+    )
+      flash[:notice] = "Selection updated"
+    else
+      flash[:alert] = @selection.errors.full_messages.join(", ")
+    end
+    return redirect_back(
+      fallback_location: draft_path(@selection.draft)
+    )
+  end
+
+private
+
   def selection_params
     params.require(:selection).permit(
       :write_in_name,
@@ -81,6 +82,7 @@ private
   def set_selection
     @selection = Selection.find(params[:id])
     authorize @selection
+    @draft = Draft.preloaded.find(@selection.draft_id)
   rescue Pundit::NotAuthorizedError
     flash[:alert] = "It's not your turn to select"
     redirect_to draft_path(@selection.draft)

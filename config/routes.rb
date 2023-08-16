@@ -28,6 +28,11 @@ Rails.application.routes.draw do
       collection do
         get :bulk_edit
       end
+
+      member do
+        get :player_data, to: "selections#edit_player_data"
+        patch :player_data, to: "selections#update_player_data"
+      end
     end
     resources :pairings, only: [:destroy]
   end

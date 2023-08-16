@@ -1,0 +1,21 @@
+.c-container--md.m-auto
+  = form_for([selection.draft, selection],
+    url: player_data_draft_selection_path( \
+      selection.draft, selection),
+    html: { class: "c-form" },
+    data: { turbo_method: :patch,
+      turbo_temporary: true,
+      turbo_action: :replace },
+    method: :patch \
+  ) do |f|
+    - if selection.errors.any?
+      = render "shared/errors",
+        target: selection
+    .m-auto
+      = render "selections/fields", f: f
+    - data = { turbo_frame: "_top" }
+    - if local_assigns[:is_bulk]
+      - data = data.merge(turbo: false)
+    = f.submit "Draft Player",
+      class: "c-button c-button--positive",
+      data: data

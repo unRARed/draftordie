@@ -1,5 +1,5 @@
 = turbo_frame_tag @draft.current_selection
   - if policy(@draft).edit?
-    = render partial: "selections/form",
+    = render partial: "selections/participant_form",
       locals: { draft: @draft,
         selection: @draft.current_selection }

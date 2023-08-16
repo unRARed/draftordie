@@ -16,6 +16,7 @@ class DraftChannel < ApplicationCable::Channel
       )
     end
 
+    puts @draft.current_selection
     result = @draft.current_selection.time_expired?
     puts "RESULT: #{result}"
 
@@ -39,8 +40,6 @@ class DraftChannel < ApplicationCable::Channel
     ProgressDraftsJob.perform_later(
       user: current_user, draft: @draft
     )
-
-    return unless current_user == next_selection.selecting_user
 
     DraftChannel.broadcast_to(@draft, {
       command: "reload",
