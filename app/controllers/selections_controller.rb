@@ -54,7 +54,7 @@ class SelectionsController < ApplicationController
             })
           end
         end
-        head :no_content
+        head :ok
       end
     end
   end

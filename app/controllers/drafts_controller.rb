@@ -15,6 +15,7 @@ class DraftsController < ApplicationController
   before_action :authenticate_user!,
     except: [:show, :board, :access, :verify_access]
   before_action :build_draft_navigation
+  before_action :put_user_on_clock, only: [:board, :edit]
   skip_after_action :verify_policy_scoped, :only => :index
 
   def board; end
@@ -205,6 +206,14 @@ private
       return redirect_back fallback_location: root_path
     end
     authorize @draft
+  end
+
+  def put_user_on_clock
+    return unless @draft&.is_running?
+    if current_user == @draft&.current_selection&.user
+      flash[:warning] = "You're on the clock!"
+      return redirect_to(draft_path(@draft))
+    end
   end
 
   def check_access_code

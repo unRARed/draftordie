@@ -9,7 +9,7 @@ document.addEventListener('turbo:load', () => {
     { channel: "DraftChannel", slug: draftSlug },
     {
       refresh() {
-        Turbo.visit(`/drafts/${draftSlug}`)
+        Turbo.visit(location.href, { action: "replace" })
       },
       // reacting to action cable commands sent from the server
       received(data) {
@@ -18,7 +18,7 @@ document.addEventListener('turbo:load', () => {
 
         switch (data.command) {
           case "refresh":
-            console.log("Advancing Selection");
+            //console.log("State changed");
             draftChannel.refresh();
             break;
           default:
