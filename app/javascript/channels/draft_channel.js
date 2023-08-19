@@ -2,10 +2,10 @@ import consumer from "./consumer"
 
 document.addEventListener('turbo:load', () => {
   // Only load once
-  if (typeof poll !== "undefined") { return; }
+  if (typeof window.isDraftEnded !== "undefined") { return; }
 
   // No need to keep polling if the draft is over
-  let isDraftEnded = document.
+  window.isDraftEnded = document.
     querySelector("meta[name='is-draft-ended']")?.
     getAttribute("content") === "true";
   //console.log(`isDraftEnded: ${isDraftEnded}`);
@@ -17,7 +17,9 @@ document.addEventListener('turbo:load', () => {
     "core_draft_ended": document.
       getElementById("core_draft_ended"),
     "core_draft_selection_time_expired": document.
-      getElementById("core_draft_selection_time_expired")
+      getElementById("core_draft_selection_time_expired"),
+    "core_draft_selection_made": document.
+      getElementById("core_draft_selection_made"),
   };
 
   let isSoundEnabled = document.
@@ -26,8 +28,10 @@ document.addEventListener('turbo:load', () => {
   //console.log(`isSoundEnabled: ${isSoundEnabled}`);
 
   const draftSlug = document.
-    querySelector("meta[name='draft-slug']").
+    querySelector("meta[name='draft-slug']")?.
     getAttribute("content");
+
+  if (!draftSlug) { return; }
 
   const draftChannel = consumer.subscriptions.create(
     { channel: "DraftChannel", slug: draftSlug },
@@ -41,27 +45,28 @@ document.addEventListener('turbo:load', () => {
             if (data?.payload?.is_time_expired) {
               console.log("time expired");
               if (isSoundEnabled) {
-                audioMap["core_draft_selection_time_expired"].
-                  play();
+                // audioMap["core_draft_selection_time_expired"].
+                //   play();
               }
               draftChannel.advanceSelection();
             }
             break;
           case "selection_made":
-            if (data?.payload?.is_time_expired) {
-              console.log("time expired");
-              if (isSoundEnabled) {
-                audioMap["core_draft_selection_made"].
-                  play();
-              }
-              draftChannel.advanceSelection();
+            console.log("selection made");
+            if (isSoundEnabled) {
+              // results in:
+              //  Uncaught (in promise) DOMException: play()
+              //  failed because the user didn't interact with
+              //  the document first.
+              //audioMap["core_draft_selection_made"].
+              //  play();
             }
             break;
           case "reload":
             console.log("reloading");
             clearInterval(poll);
             location.reload();
-            // Turbo.visit(`/drafts/${draftSlug}`)
+            //Turbo.visit(`/drafts/${draftSlug}`)
             break;
           case "draft_ended":
             console.log("ending draft");

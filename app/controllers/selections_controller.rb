@@ -55,10 +55,9 @@ class SelectionsController < ApplicationController
   end
 
   def update
-    # commish actions
-    if @selection.update(
-      { selecting_user: current_user }.merge(selection_params)
-    )
+    # commish actions - need to go around hooks to
+    # avoid setting ended_at - maybe refactor
+    if @selection.update_columns(selection_params)
       flash[:notice] = "Selection updated"
     else
       flash[:alert] = @selection.errors.full_messages.join(", ")

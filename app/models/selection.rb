@@ -116,7 +116,8 @@ class Selection < ApplicationRecord
     attributes = { ended_at: Time.current }.merge(attributes)
 
     self.transaction do
-      next_selection = self.draft.progression.next_selection
+      next_selection = self.
+        draft.progression.next_selection
       self.update(attributes)
       next_selection.update_columns(started_at: Time.current)
     end

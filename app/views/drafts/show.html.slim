@@ -3,7 +3,6 @@
     .grid.grid-cols-1.gap-8.md:grid-cols-2
       div
         = turbo_frame_tag dom_id(@draft.current_selection),
-          loading: :lazy,
           src: player_data_draft_selection_path(@draft,
             @draft.current_selection)
         .c-draft__info id="show_info_#{@draft.slug}"

@@ -1,0 +1,14 @@
+sequenceDiagram
+  actor Client
+  loop Every 2 seconds
+    DraftChannel.js->>DraftChannel.rb: pollCurrentSelection()
+    DraftChannel.rb-->>DraftChannel.js: CMD->selection_state
+    opt is_time_expired?
+      DraftChannel.js->>DraftChannel.rb: advanceSelection()
+      DraftChannel.rb->>ProgressDraftsJob: perform
+      ProgressDraftsJob->>Database: end current and start next selection
+      DraftChannel.rb-->>DraftChannel.js: CMD->reload
+      DraftChannel.js-->>Client: clear interval and reload page
+      Database-->>Client: update UI per broadcast hooks
+    end
+  end

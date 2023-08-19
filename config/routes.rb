@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "pages#home"
 
+  if Rails.env.development?
+    get :docs, to: "pages#docs"
+  end
+
   devise_for :users
 
   resources :drafts, param: :slug do

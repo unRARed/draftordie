@@ -32,8 +32,7 @@ class DraftChannel < ApplicationCable::Channel
     puts "ADVANCING SELECTION"
     @draft = Draft.eager_load(:progression).
       where(slug: data["slug"]).first
-    return unless @draft.progression.
-      current_selection.time_expired?
+    return unless @draft.current_selection.time_expired?
 
     next_selection = @draft.next_selection
 

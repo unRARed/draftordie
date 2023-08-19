@@ -4,4 +4,8 @@ class PagesController < ApplicationController
   def home
     authorize :page
   end
+
+  def docs
+    authorize :page
+  end
 end

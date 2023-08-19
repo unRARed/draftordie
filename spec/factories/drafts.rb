@@ -34,6 +34,7 @@ FactoryBot.define do
     selection_seconds { 5 }
     user
     # slug
+
   end
 
   trait :max do
@@ -47,5 +48,24 @@ FactoryBot.define do
 
   trait :started do
     started_at { 1.second.ago }
+  end
+
+  trait :complete_and_ready_to_start do
+    user_count { 4 }
+
+    after(:create) do |draft, evaluator|
+      draft.pairings << create(:pairing,
+        :team_context, user: draft.user,
+        context_value: "Commish's Team")
+      target_users = []
+      3.times{ target_users << create(:user) }
+
+      target_users.each do |user|
+        draft.pairings << create(:pairing,
+          :team_context, user: user)
+      end
+
+      draft.generate_board
+    end
   end
 end

@@ -78,6 +78,10 @@ class Draft < ApplicationRecord
     "#{users.count} / #{user_count}"
   end
 
+  def needs_progression?
+
+  end
+
   def players_for_select
     @players_for_select ||=
       {
@@ -135,7 +139,7 @@ class Draft < ApplicationRecord
   # To determine if the draft is between selections,
   # so we know whether to start the next selection
   def is_between_selections?
-    return false if upcoming_selections.empty?
+    return false unless is_running?
     return false unless !current_selection.nil?
 
     current_selection.time_remaining == [0, 0]
