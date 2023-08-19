@@ -1,7 +1,5 @@
 - if draft.rounds.empty?
   p Draft Board has not been setup yet.
-- elsif draft.is_ended?
-  h3.text-xl.text-center.pt-2 All selections have been made.
 - else
   - draft.rounds.each do |round|
     div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"

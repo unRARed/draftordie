@@ -35,22 +35,27 @@ class SelectionsController < ApplicationController
 
   end
 
+  # For updating a selection a participant
+  # has made during the draft
   def update_player_data
-    @selection.validate
-    return render :edit unless @selection.errors.empty?
+    respond_to do |format|
+      format.turbo_stream do
+        @selection.validate
+        return render :edit unless @selection.errors.empty?
 
-    begin
-      if @selection.update_and_advance(
-        { selecting_user: current_user }.merge(selection_params)
-      )
-        flash[:notice] = "You selected #{selection.name}"
+        begin
+          if @selection.update_and_advance(
+            { selecting_user: current_user }.
+              merge(selection_params)
+          )
+            flash[:notice] = "You selected #{@selection.name}"
+            DraftChannel.broadcast_to(@selection.draft, {
+              command: "refresh", payload: {}
+            })
+          end
+        end
+        head :no_content
       end
-      DraftChannel.broadcast_to(@draft, {
-        command: "selection_made", payload: {}
-      })
-    ensure
-      @draft = Draft.preloaded.find(@selection.draft_id)
-      return redirect_to draft_path(@selection.draft)
     end
   end
 

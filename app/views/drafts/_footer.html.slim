@@ -1,20 +1,25 @@
-.grid.grid-cols-1.gap-8.md:grid-cols-3.lg:grid-cols-9
-  .col-span-3
-    .c-draft__branding
-      h2.c-draft__name = draft.name
-      .c-draft__access
-        span Access Code
-        strong< = draft.access_code
-  - if draft.progression&.current_pick_number
-    div.col-span-3
-      = render partial: "drafts/selection_clock",
-        locals: { draft: draft }
-      = render partial: "drafts/draft_deck",
-        locals: { draft: draft }
-    div.col-span-2
-      = render partial: "drafts/draft_prior_selection",
-        locals: { draft: draft }
-  - else
-    strong No selection in progress
-  = render partial: "drafts/draft_qrcode",
-    locals: { draft: draft }
+- if draft.is_ended?
+  .c-draft__branding
+    h2.c-draft__name = draft.name
+    p.text-center.pt-1 The Draft has Ended
+- else
+  .grid.grid-cols-1.gap-8.md:grid-cols-3.lg:grid-cols-9
+    .col-span-3
+      .c-draft__branding
+        h2.c-draft__name = draft.name
+        .c-draft__access
+          span Access Code
+          strong< = draft.access_code
+    - if draft.progression&.current_pick_number
+      div.col-span-3
+        = render partial: "drafts/selection_clock",
+          locals: { draft: draft }
+        = render partial: "drafts/draft_deck",
+          locals: { draft: draft }
+      div.col-span-2
+        = render partial: "drafts/draft_prior_selection",
+          locals: { draft: draft }
+    - else
+      strong No selection in progress
+    = render partial: "drafts/draft_qrcode",
+      locals: { draft: draft }

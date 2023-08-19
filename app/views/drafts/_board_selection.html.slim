@@ -4,5 +4,4 @@ div id="pick_number_#{selection.pick_number}" class="#{draft_board_slot_class(se
     span< Missed Pick
   - if selection.is_selected? && !selection.is_missed?
     span< #{selection.name} (#{selection.position})
-  span Team:
-  span< = selection&.pairing&.team_name || "Team Name Missing"
+  span Team: #{selection&.pairing&.team_name || "Team Name Missing"}

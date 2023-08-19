@@ -103,27 +103,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_13_182100) do
   add_foreign_key "selections", "rounds"
   add_foreign_key "selections", "users"
 
-  create_view "data_selections_for_bulk_edits", sql_definition: <<-SQL
-      SELECT DISTINCT ON (s.pick_number) d.id AS draft_id,
-      r.number AS round_number,
-      s.pick_number,
-      s.write_in_team,
-      s.write_in_position,
-      s.write_in_name,
-      p.context_value AS team_name,
-      s.player_id,
-          CASE
-              WHEN ((pl.name IS NOT NULL) AND ((pl.name)::text <> ''::text)) THEN concat('(', pl."position", ', ', pl.team, ') ', pl.name)
-              WHEN ((s.write_in_name IS NOT NULL) AND ((s.write_in_name)::text <> ''::text)) THEN concat('(', s.write_in_position, ', ', s.write_in_team, ') ', s.write_in_name)
-              ELSE NULL::text
-          END AS player_data
-     FROM ((((drafts d
-       JOIN rounds r ON ((r.draft_id = d.id)))
-       JOIN selections s ON ((s.round_id = r.id)))
-       JOIN pairings p ON (((p.pairable_id = d.id) AND ((p.pairable_type)::text = 'Draft'::text) AND (p.context = 'Draft Team Name'::text))))
-       LEFT JOIN players pl ON ((pl.id = s.player_id)))
-    ORDER BY s.pick_number;
-  SQL
   create_view "data_state_for_draft_boards", sql_definition: <<-SQL
       SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
       drafts.slug AS draft_slug,

@@ -1,10 +1,11 @@
-.c-layout__scoped
+.c-layout__scoped.c-draft__dashboard
   - if @draft.is_running? && !@draft.is_ended?
     .grid.grid-cols-1.gap-8.md:grid-cols-2
       div
-        = turbo_frame_tag dom_id(@draft.current_selection),
-          src: player_data_draft_selection_path(@draft,
-            @draft.current_selection)
+        - if policy(@draft.current_selection).edit_player_data?
+          = render partial: "selections/participant_form",
+            locals: { draft: @draft,
+              selection: @draft.current_selection }
         .c-draft__info id="show_info_#{@draft.slug}"
           = render partial: "drafts/show_info",
             locals: { draft: @draft }
@@ -23,4 +24,4 @@
     - if @draft.is_started?
       p The draft has ended.
     - else
-      p.c-draft__waiting The draft has not started, yet.
+      p.c-draft__waiting The draft is waiting to start.

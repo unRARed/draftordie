@@ -79,6 +79,9 @@ class DraftsController < ApplicationController
       flash.keep
       return redirect_to board_draft_path(@draft)
     end
+    return redirect_to(
+      board_draft_path(@draft)
+    ) if !@draft.is_running?
   end
 
   def create_invite
@@ -125,6 +128,9 @@ class DraftsController < ApplicationController
       @draft.current_selection.update started_at: Time.current
       @draft.update is_paused: false
       flash[:notice] = "Draft has resumed!"
+      DraftChannel.broadcast_to(@draft, {
+        command: "refresh", payload: {}
+      })
     end
 
     # guard clause to prevent restarting a draft
@@ -138,6 +144,9 @@ class DraftsController < ApplicationController
       @draft.update_columns started_at: Time.current
     end
     flash[:notice] = "Draft has begun!"
+    DraftChannel.broadcast_to(@draft, {
+      command: "refresh", payload: {}
+    })
   ensure
     redirect_to draft_path(@draft)
   end
@@ -147,7 +156,10 @@ class DraftsController < ApplicationController
 
     @draft.update is_paused: true
     flash[:notice] = "Draft has been paused!"
-    redirect_to draft_path(@draft)
+    DraftChannel.broadcast_to(@draft, {
+      command: "refresh", payload: {}
+    })
+    head :ok
   end
 
   def generate

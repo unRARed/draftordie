@@ -1,7 +1,6 @@
 @layer components {
   .c-draft {
     @apply flex flex-col;
-    background-color: #182625;
     /* light purple-ish */
     color: #98b5b3;
     position: relative;
@@ -72,6 +71,8 @@
 
   .c-draft__board {
     @apply w-full flex flex-col;
+    background-color: #182625;
+    height: 100vw;
     /*@apply flex-col-reverse;*/
   }
 
@@ -149,6 +150,10 @@
     @apply p-7;
   }
 
+  .c-draft__dashboard {
+    background-color: #182625;
+  }
+
   @media (max-width: 768px) {
     .c-draft__qr,
     .c-draft__deck,
@@ -156,5 +161,4 @@
       display: none;
     }
   }
-
 }

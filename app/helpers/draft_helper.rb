@@ -56,10 +56,12 @@ module DraftHelper
       )
     )
     if draft.users.include?(current_user)
-      @navigation.add_item(:draft, NavigationItem.new(
-          'Dashboard', draft_path(draft)
+      if draft.is_running?
+        @navigation.add_item(:draft, NavigationItem.new(
+            'Dashboard', draft_path(draft)
+          )
         )
-      )
+      end
     else
       @navigation.add_item(:draft, NavigationItem.new(
           'Join this Draft', join_draft_path(draft)
