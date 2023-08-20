@@ -64,45 +64,45 @@ class Selection < ApplicationRecord
   validate :write_in_values_mutually_present
   validate :xor_player_or_write_in
 
-  after_update_commit -> {
-    broadcast_update_later_to(
-      self.draft,
-      partial: "drafts/board",
-      target: "board_#{self.draft.slug}",
-      locals: {
-        draft: self.draft,
-        user: self.selecting_user,
-        selection: draft&.current_selection
-      }
-    )
-    broadcast_update_later_to(
-      self.draft,
-      partial: "drafts/show_picks",
-      target: "show_picks_#{self.draft.slug}",
-      locals: {
-        draft: self.draft,
-        user: self.selecting_user,
-        selection: draft&.current_selection
-      }
-    )
-    broadcast_update_later_to(
-      self.draft,
-      partial: "drafts/show_info",
-      target: "show_info_#{self.draft.slug}",
-      locals: {
-        draft: self.draft,
-        user: self.selecting_user,
-        selection: draft&.current_selection
-      }
-    )
-    # Shared
-    broadcast_update_later_to(
-      self.draft,
-      partial: "drafts/footer",
-      target: "footer_#{self.draft.slug}",
-      locals: { draft: self.draft }
-    )
-  }
+  # after_update_commit -> {
+  #   broadcast_update_later_to(
+  #     self.draft,
+  #     partial: "drafts/board",
+  #     target: "board_#{self.draft.slug}",
+  #     locals: {
+  #       draft: self.draft,
+  #       user: self.selecting_user,
+  #       selection: draft&.current_selection
+  #     }
+  #   )
+  #   broadcast_update_later_to(
+  #     self.draft,
+  #     partial: "drafts/show_picks",
+  #     target: "show_picks_#{self.draft.slug}",
+  #     locals: {
+  #       draft: self.draft,
+  #       user: self.selecting_user,
+  #       selection: draft&.current_selection
+  #     }
+  #   )
+  #   broadcast_update_later_to(
+  #     self.draft,
+  #     partial: "drafts/show_info",
+  #     target: "show_info_#{self.draft.slug}",
+  #     locals: {
+  #       draft: self.draft,
+  #       user: self.selecting_user,
+  #       selection: draft&.current_selection
+  #     }
+  #   )
+  #   # Shared
+  #   broadcast_update_later_to(
+  #     self.draft,
+  #     partial: "drafts/footer",
+  #     target: "footer_#{self.draft.slug}",
+  #     locals: { draft: self.draft }
+  #   )
+  # }
 
   delegate :position, :name,
     to: :player, allow_nil: true, prefix: true
@@ -119,7 +119,12 @@ class Selection < ApplicationRecord
       next_selection = self.
         draft.progression.next_selection
       self.update(attributes)
-      next_selection.update_columns(started_at: Time.current)
+      if next_selection.nil?
+        # this was the final selection, end the draft
+        draft.update_columns(ended_at: Time.current)
+      else
+        next_selection.update_columns(started_at: Time.current)
+      end
     end
   end
 

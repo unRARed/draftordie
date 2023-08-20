@@ -128,6 +128,9 @@ GEM
       activesupport (>= 5.0)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    inline_svg (1.9.0)
+      activesupport (>= 3.0)
+      nokogiri (>= 1.6)
     io-console (0.6.0)
     irb (1.7.4)
       reline (>= 0.3.6)
@@ -349,6 +352,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   foreman (~> 0.87.2)
+  inline_svg
   jsbundling-rails
   letter_opener_web
   mock_redis

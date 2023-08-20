@@ -25,7 +25,7 @@ module DraftHelper
     if selection.is_selected?
       classes << "c-draft__board__slot--selected"
     end
-    if selection.draft.current_selection == selection
+    if selection.draft.is_running? && selection.draft.current_selection == selection
       classes << "c-draft__board__slot--current"
     end
     classes.join(" ")
@@ -36,11 +36,11 @@ module DraftHelper
     when 15..20
       7
     when 11..14
-      9
+      8
     when 7..10
-      12
+      10
     else
-      16
+      14
     end
   end
 
@@ -48,18 +48,20 @@ module DraftHelper
     return unless current_user
     return unless draft = @draft || @selection&.draft
 
-    @navigation.add_item(:draft, NavigationItem.new(
-        session[:is_sound_enabled] ?
-          'Disable Sound' : 'Enable Sound',
-        toggle_sound_draft_path(draft),
-        data: { turbo: false }
-      )
-    )
+    # @navigation.add_item(:draft, NavigationItem.new(
+    #     session[:is_sound_enabled] ?
+    #       'Disable Sound' : 'Enable Sound',
+    #     toggle_sound_draft_path(draft),
+    #     data: { turbo: false }
+    #   )
+    # )
     if draft.users.include?(current_user)
-      @navigation.add_item(:draft, NavigationItem.new(
-          'Dashboard', draft_path(draft)
+      if draft.is_running?
+        @navigation.add_item(:draft, NavigationItem.new(
+            'Dashboard', draft_path(draft)
+          )
         )
-      )
+      end
     else
       @navigation.add_item(:draft, NavigationItem.new(
           'Join this Draft', join_draft_path(draft)

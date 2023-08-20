@@ -15,6 +15,7 @@ class DraftsController < ApplicationController
   before_action :authenticate_user!,
     except: [:show, :board, :access, :verify_access]
   before_action :build_draft_navigation
+  before_action :put_user_on_clock, only: [:board, :edit]
   skip_after_action :verify_policy_scoped, :only => :index
 
   def board; end
@@ -79,6 +80,9 @@ class DraftsController < ApplicationController
       flash.keep
       return redirect_to board_draft_path(@draft)
     end
+    return redirect_to(
+      board_draft_path(@draft)
+    ) if !@draft.is_running?
   end
 
   def create_invite
@@ -125,6 +129,9 @@ class DraftsController < ApplicationController
       @draft.current_selection.update started_at: Time.current
       @draft.update is_paused: false
       flash[:notice] = "Draft has resumed!"
+      DraftChannel.broadcast_to(@draft, {
+        command: "refresh", payload: {}
+      })
     end
 
     # guard clause to prevent restarting a draft
@@ -138,6 +145,9 @@ class DraftsController < ApplicationController
       @draft.update_columns started_at: Time.current
     end
     flash[:notice] = "Draft has begun!"
+    DraftChannel.broadcast_to(@draft, {
+      command: "refresh", payload: {}
+    })
   ensure
     redirect_to draft_path(@draft)
   end
@@ -147,7 +157,10 @@ class DraftsController < ApplicationController
 
     @draft.update is_paused: true
     flash[:notice] = "Draft has been paused!"
-    redirect_to draft_path(@draft)
+    DraftChannel.broadcast_to(@draft, {
+      command: "refresh", payload: {}
+    })
+    head :ok
   end
 
   def generate
@@ -193,6 +206,14 @@ private
       return redirect_back fallback_location: root_path
     end
     authorize @draft
+  end
+
+  def put_user_on_clock
+    return unless @draft&.is_running?
+    if current_user == @draft&.current_selection&.user
+      flash[:warning] = "You're on the clock!"
+      return redirect_to(draft_path(@draft))
+    end
   end
 
   def check_access_code

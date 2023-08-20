@@ -1,7 +1,5 @@
 - if draft.rounds.empty?
   p Draft Board has not been setup yet.
-- elsif draft.is_ended?
-  h3.text-xl.text-center.pt-2 All selections have been made.
 - else
   - draft.rounds.each do |round|
     div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
@@ -10,7 +8,7 @@
           locals: { selection: selection }
 javascript:
   // scroll to the current selection
-  (function () {
+  document.addEventListener('turbo:load', () => {
     var currentSlot = document.
       querySelector(".c-draft__board__slot--current");
     if (!currentSlot) { return; }
@@ -19,4 +17,4 @@ javascript:
       top: currentSlot.offsetTop-20,
       behavior: "smooth",
     });
-  })();
+  });

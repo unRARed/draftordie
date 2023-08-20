@@ -8,6 +8,7 @@
 @import "components/buttons.tailwind";
 @import "components/forms.tailwind";
 @import "components/draft_board.tailwind";
+@import "components/draft_meta.tailwind";
 @import "components/draft_card.tailwind";
 @import "components/countdown.tailwind";
 @import "components/panels.tailwind";

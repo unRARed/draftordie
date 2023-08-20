@@ -22,7 +22,8 @@ class ProgressDraftsJob < ApplicationJob
         :next_selection_id
       )
 
-    logger.info "Progressing drafts: #{candidates.map{|s| s[0]}}"
+    draft_slugs = candidates.map{|s| s[0]}
+    logger.info "Progressing drafts: #{draft_slugs}"
 
     # Start the clock for All the next selections
     Selection.where(id: candidates.map{|s| s[2]}).
@@ -36,6 +37,12 @@ class ProgressDraftsJob < ApplicationJob
     candidates.map{|s| s[1]}.each do |s|
       selection = Selection.find(s)
       Selection.find(s).update(attributes)
+    end
+    draft_slugs.each do |slug|
+      draft_to_advance = Draft.find_by(slug: slug)
+      DraftChannel.broadcast_to(draft_to_advance, {
+        command: "refresh", payload: {}
+      })
     end
   end
 end

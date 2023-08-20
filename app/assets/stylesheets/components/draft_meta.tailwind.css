@@ -1,0 +1,20 @@
+@layer components {
+  .c-draft__footer {
+    @apply flex flex-row justify-around items-center bottom-0 fixed inset-x-0 text-white p-1 border-t-4 border-gray-500;
+    background-color: #2e4846;
+    z-index: 1;
+    text-align: center;
+  }
+  .c-draft__name {
+    font-size: 1.5rem;
+    color: #b7fbe9;
+    text-shadow: 2px 2px 2px #000000;
+    margin: 0;
+    padding: 0;
+  }
+
+  .c-draft__clock {
+    color: #dece26;
+    min-width: 30%;
+  }
+}
