@@ -3,6 +3,7 @@ import "@hotwired/turbo-rails"
 import "./channels"
 import "./controllers"
 import "./countdown"
+import "./modules/nav"
 import mermaid from "mermaid"
 
 let config = {

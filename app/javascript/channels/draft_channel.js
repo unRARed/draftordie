@@ -18,7 +18,6 @@ document.addEventListener('turbo:load', () => {
 
         switch (data.command) {
           case "refresh":
-            //console.log("State changed");
             draftChannel.refresh();
             break;
           default:

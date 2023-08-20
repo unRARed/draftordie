@@ -48,13 +48,13 @@ module DraftHelper
     return unless current_user
     return unless draft = @draft || @selection&.draft
 
-    @navigation.add_item(:draft, NavigationItem.new(
-        session[:is_sound_enabled] ?
-          'Disable Sound' : 'Enable Sound',
-        toggle_sound_draft_path(draft),
-        data: { turbo: false }
-      )
-    )
+    # @navigation.add_item(:draft, NavigationItem.new(
+    #     session[:is_sound_enabled] ?
+    #       'Disable Sound' : 'Enable Sound',
+    #     toggle_sound_draft_path(draft),
+    #     data: { turbo: false }
+    #   )
+    # )
     if draft.users.include?(current_user)
       if draft.is_running?
         @navigation.add_item(:draft, NavigationItem.new(

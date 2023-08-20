@@ -1,164 +1,134 @@
 @layer components {
   .c-draft {
-    /* light purple-ish */
     color: #98b5b3;
     position: relative;
   }
-  .c-draft--padded {
-    @apply pt-4 pb-4;
+  .c-draft--paused {
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    &:after {
+      content: "Draft Paused";
+      position: fixed;
+      width: 100%;
+      top: 50%;
+      left: 0;
+      right: 0;
+      bottom: 50%;
+      font-size: 5em;
+      text-align: center;
+    }
   }
-
-  .c-draft--paused::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-  .c-draft--paused::after {
-    content: "Draft Paused";
-    position: fixed;
-    width: 100%;
-    top: 50%;
-    left: 0;
-    right: 0;
-    bottom: 50%;
-    font-size: 5em;
-    text-align: center;
-  }
-  .c-draft__controls {
-    @apply flex flex-row justify-around items-center bottom-0 fixed inset-x-0 text-white p-2 border-b-4 border-gray-500;
-    background-color: rgba(50, 50, 50, 0.8);
-    bottom: 90px;
-    z-index: 1;
-    max-width: 50%;
-    margin-left: 50%;
-  }
-
   .c-draft__branding { @apply text-center; }
-  .c-draft__access { @apply text-xl; }
+  .c-draft__access { @apply text-sm; }
 
-  .c-draft__footer {
-    @apply flex flex-row justify-around items-center bottom-0 fixed inset-x-0 text-white p-2 border-t-4 border-gray-500;
-    background-color: #2e4846;
-    z-index: 1;
-    text-align: center;
-  }
-  .c-draft__footer__name {
-    @apply text-3xl font-bold;
-    color: #b7fbe9;
-    text-shadow: 2px 2px 2px #000000;
-  }
-  .c-draft__footer__state {
-    @apply text-5xl font-bold;
-    color: #b7fbe9;
-    text-shadow: 2px 2px 2px #000000;
-  }
-
-  .c-draft__deck {
-    @apply text-sm;
-    min-width: 15%;
-  }
-
-  .c-draft__footer__clock {
-    @apply text-6xl font-bold;
-    color: #dece26;
-    min-width: 30%;
-  }
-
-  .c-draft__board {
-    @apply w-full flex flex-col;
-    background-color: #182625;
-    height: 100vw;
-    text-wrap: balance;
-    /*@apply flex-col-reverse;*/
-  }
-
-  .c-draft__board__round {
-    @apply flex flex-row;
-  }
-  .c-draft__board__round--reversed {
-    @apply flex-row-reverse;
-    background-color: #131e1d;
-  }
-
-  .c-draft__board__slot {
-    font-size: 16px;
-    @apply flex-1 flex flex-col p-1;
-    border-top: 1px solid #444;
-  }
-  .c-draft__board__slot--current {
-    @apply border-green-200 animate-pulse;
-    background-color: #e2e2e2;
-    color: #4f4f4f;
-  }
-  .c-draft__board__slot--selected {
-    @apply bg-gray-100 border-gray-200 text-red-800;
-  }
-
-  .c-draft__board__slot--qb {
-    @apply bg-blue-300 border-blue-400 text-blue-700;
-  }
-  .c-draft__board__slot--rb {
-    @apply bg-lime-300 border-lime-400 text-lime-700;
-  }
-  .c-draft__board__slot--wr {
-    @apply bg-yellow-300 border-yellow-400 text-yellow-700;
-  }
-  .c-draft__board__slot--te {
-    @apply bg-pink-300 border-pink-400 text-pink-700;
-  }
-  .c-draft__board__slot--k {
-    @apply bg-purple-300 border-purple-400 text-purple-700;
-  }
-  .c-draft__board__slot--dst {
-    @apply bg-indigo-300 border-indigo-400 text-indigo-700;
-  }
-
-  .c-draft__selections {
-    @apply flex grid grid-cols-2 pb-3;
-  }
-  .c-draft__selections-list {
-    @apply overflow-y-scroll;
-    max-height: 70vh;
-    border: 2px solid #222;
-  }
-
-  .c-draft__pick {
-    @apply border-b-2 border-gray-300;
-    padding: 0.2em;
-  }
-  .c-draft__pick--current {
-    @apply bg-green-500;
-    color: #4f4f4f;
-    font-weight: bold;
-  }
-  .c-draft__pick--missed {
-    color: #c45b5b;
-    background-color: #460e18;
-  }
-  .c-draft__pick--mine {
-    @apply border-l-4 border-gray-300;
-    font-weight: bold;
-    background-color: #dece26;
-    color: #222;
-  }
-
+  /* ALL DAY, MOBILE-HIDDEN STUFF */
+  .c-draft__qr,
+  .c-draft__deck,
   .c-draft__selection-prior {
-    @apply p-7;
+    display: none;
   }
 
-  .c-draft__dashboard {
-    background-color: #182625;
-  }
+  @media (min-width: 768px) {
+    .c-draft--padded {
+      @apply pt-4 pb-4;
+    }
 
-  @media (max-width: 768px) {
-    .c-draft__qr,
-    .c-draft__deck,
+    .c-draft__deck {
+      @apply text-sm;
+      min-width: 15%;
+    }
+
+    .c-draft__board {
+      @apply w-full flex flex-col;
+      background-color: #182625;
+      height: 100vw;
+      text-wrap: balance;
+      /*@apply flex-col-reverse;*/
+    }
+
+    .c-draft__board__round {
+      @apply flex flex-row;
+    }
+    .c-draft__board__round--reversed {
+      @apply flex-row-reverse;
+      background-color: #131e1d;
+    }
+
+    .c-draft__board__slot {
+      font-size: 16px;
+      @apply flex-1 flex flex-col p-1;
+      border-top: 1px solid #444;
+    }
+    .c-draft__board__slot--current {
+      @apply border-green-200 animate-pulse;
+      background-color: #e2e2e2;
+      color: #4f4f4f;
+    }
+    .c-draft__board__slot--selected {
+      @apply bg-gray-100 border-gray-200 text-red-800;
+    }
+
+    .c-draft__board__slot--qb {
+      @apply bg-blue-300 border-blue-400 text-blue-700;
+    }
+    .c-draft__board__slot--rb {
+      @apply bg-lime-300 border-lime-400 text-lime-700;
+    }
+    .c-draft__board__slot--wr {
+      @apply bg-yellow-300 border-yellow-400 text-yellow-700;
+    }
+    .c-draft__board__slot--te {
+      @apply bg-pink-300 border-pink-400 text-pink-700;
+    }
+    .c-draft__board__slot--k {
+      @apply bg-purple-300 border-purple-400 text-purple-700;
+    }
+    .c-draft__board__slot--dst {
+      @apply bg-indigo-300 border-indigo-400 text-indigo-700;
+    }
+
+    .c-draft__selections {
+      @apply flex grid grid-cols-2 pb-3;
+    }
+    .c-draft__selections-list {
+      @apply overflow-y-scroll;
+      max-height: 70vh;
+      border: 2px solid #222;
+    }
+
+    .c-draft__pick {
+      @apply border-b-2 border-gray-300;
+      padding: 0.2em;
+    }
+    .c-draft__pick--current {
+      @apply bg-green-500;
+      color: #4f4f4f;
+      font-weight: bold;
+    }
+    .c-draft__pick--missed {
+      color: #c45b5b;
+      background-color: #460e18;
+    }
+    .c-draft__pick--mine {
+      @apply border-l-4 border-gray-300;
+      font-weight: bold;
+      background-color: #dece26;
+      color: #222;
+    }
+
     .c-draft__selection-prior {
-      display: none;
+      @apply p-7;
+    }
+
+    .c-draft__dashboard {
+      background-color: #182625;
     }
   }
 }
