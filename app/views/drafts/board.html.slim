@@ -1,21 +1,23 @@
 css:
-  .c-draft__board__slot {
-    width: #{100 / [@draft.users.count, 1].max}%;
-    font-size: #{compute_text_size(@draft.users.count)}px;
+  @media (min-width: 768px) {
+    .c-draft__board__slot {
+      width: #{100 / [@draft.users.count, 1].max}%;
+      font-size: #{compute_text_size(@draft.users.count)}px;
+    }
   }
 div.c-draft__board id="board_#{@draft.slug}"
   = render partial: "drafts/board", locals: { draft: @draft }
 .c-draft__footer id="footer_#{@draft.slug}"
   = render partial: "drafts/footer", locals: { draft: @draft }
 javascript:
-  // add margin to the footer to account for it's current
-  // size to ensure one or multiple rows are not hidden
-  //(function () {
-  //  var header = document.querySelector(".c-layout-header");
-  //  var board = document.querySelector(".c-draft__board");
-  //  var footer = document.querySelector(".c-draft__footer");
-  //  var headerHeight = header.offsetHeight;
-  //  var footerHeight = footer.offsetHeight;
-  //  board.style.marginBottom =
-  //    (footerHeight - headerHeight) + "px";
-  //})();
+   add margin to the footer to account for it's current
+   size to ensure one or multiple rows are not hidden
+  (function () {
+    var header = document.querySelector(".c-layout-header");
+    var board = document.querySelector(".c-draft__board");
+    var footer = document.querySelector(".c-draft__footer");
+    var headerHeight = header.offsetHeight;
+    var footerHeight = footer.offsetHeight;
+    board.style.marginBottom =
+      (footerHeight - headerHeight) + "px";
+  })();
