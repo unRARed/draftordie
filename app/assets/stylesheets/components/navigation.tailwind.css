@@ -57,6 +57,7 @@
       width: 100%;
       border-top-right-radius: 0;
       box-shadow: none;
+      @apply text-sm;
     }
     .c-nav__item {
       display: inline-block;

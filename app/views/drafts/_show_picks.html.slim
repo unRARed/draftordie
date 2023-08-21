@@ -1,21 +1,21 @@
 .c-draft__selections
   - if draft.upcoming_selections.any?
-    - if draft.prior_selections.any?
-      div
-        h3 Prior Selections
-        .c-draft__selections-list
-          - draft.prior_selections.each do |selection|
-            = render partial: "selections/selection",
-              locals: { selection: selection,
-                is_upcoming: false,
-                user: selection.user }
-    div
-      h3 Upcoming Selections
+    .c-draft__upcoming-selections
+      h4 Upcoming Selections (#{draft.upcoming_selections.count})
       .c-draft__selections-list
         - draft.upcoming_selections.each do |selection|
           = render partial: "selections/selection",
             locals: { selection: selection,
               is_upcoming: true,
-              user: selection.user }
+              user: current_user }
+  - if draft.prior_selections.any?
+    .c-draft__prior-selections
+      h4 Prior Selections (#{draft.prior_selections.count})
+      .c-draft__selections-list
+        - draft.prior_selections.each do |selection|
+          = render partial: "selections/selection",
+            locals: { selection: selection,
+              is_upcoming: false,
+              user: current_user }
   - else
     p No selections yet.

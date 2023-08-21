@@ -1,7 +1,8 @@
 div id="pick_number_#{selection.pick_number}" class="#{draft_board_slot_class(selection)}"
-  strong Rd. #{selection.round.number} Pick #{selection.pick_number}
-  - if selection.is_missed?
-    span< Missed Pick
-  - if selection.is_selected? && !selection.is_missed?
-    span< #{selection.name} (#{selection.position})
-  span = selection&.pairing&.team_name || "Team Name Missing"
+  p
+    strong Rd. #{selection.round.number} Pick #{selection.pick_number}
+    - if selection.is_missed?
+      span< Missed Pick
+    - if selection.is_selected? && !selection.is_missed?
+      span< #{selection.name} (#{selection.position})
+  p.mt-0 = selection&.pairing&.team_name || "Team Name Missing"

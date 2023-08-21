@@ -2,10 +2,10 @@
   .c-layout-main { }
 
   .c-layout-header {
-    @apply flex justify-between items-center p-1;
+    @apply flex justify-between items-baseline p-1;
   }
 
-  .c-layout-header__title {
+  .c-layout__header-title {
     @apply text-lg;
   }
 

@@ -16,10 +16,12 @@
   .c-draft__clock {
     color: #dece26;
     min-width: 30%;
+    margin: 0;
   }
 
   .c-draft__deck {
     @apply text-sm;
     min-width: 15%;
+    margin: 0;
   }
 }

@@ -41,6 +41,10 @@
     flex-direction: column;
     border-top: 1px solid #444;
     width: 48%;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
   }
   .c-draft__board__slot--current {
     @apply border-green-200 animate-pulse;
@@ -79,53 +83,33 @@
   .c-draft__selection-prior {
     display: none;
   }
-
-  /* Overrides for Desktop / larger screens */
+  /* Overrides for medium displays */
   @media (min-width: 768px) {
     .c-draft__board {
       height: 100vw;
     }
+  .c-draft__board__slot {
+    font-size: 16px;
+    flex: 1;
+  }
     .c-draft__board__round--reversed {
       @apply flex-row-reverse;
       background-color: #131e1d;
     }
 
-
-    .c-draft__selections {
-      @apply flex grid grid-cols-2 pb-3;
-    }
-    .c-draft__selections-list {
-      @apply overflow-y-scroll;
-      max-height: 70vh;
-      border: 2px solid #222;
-    }
-
-    .c-draft__pick {
-      @apply border-b-2 border-gray-300;
-      padding: 0.2em;
-    }
-    .c-draft__pick--current {
-      @apply bg-green-500;
-      color: #4f4f4f;
-      font-weight: bold;
-    }
-    .c-draft__pick--missed {
-      color: #c45b5b;
-      background-color: #460e18;
-    }
-    .c-draft__pick--mine {
-      @apply border-l-4 border-gray-300;
-      font-weight: bold;
-      background-color: #dece26;
-      color: #222;
-    }
-
-    .c-draft__selection-prior {
-      @apply p-7;
-    }
-
     .c-draft__dashboard {
       background-color: #182625;
+    }
+  }
+  .c-draft__deck {
+    display: block;
+  }
+
+  /* Overrides for full Desktop */
+  @media (min-width: 1024px) {
+    .c-draft__qr,
+    .c-draft__selection-prior {
+      display: block;
     }
   }
 }
