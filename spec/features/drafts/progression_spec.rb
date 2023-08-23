@@ -27,12 +27,14 @@ RSpec.describe "Draft Progression", type: :feature do
       accept_confirm do
         click_on "Start Draft"
       end
-      click_on "Dashboard"
 
+      # commish is redirected to the draft dashboard
+      # and it's their turn to pick
       page.find("form", visible: true)
       within(".c-draft__pick--current") do
         expect(page).to have_content("Commish's Team")
       end
+      sleep 2
       page.find(".c-draft__pick--missed", visible: true)
 
       save_and_open_page

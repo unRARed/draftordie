@@ -1,0 +1,6 @@
+= turbo_frame_tag dom_id(@draft, :players)
+  .c-fuzzy-select__items
+    - @players.each do |player|
+      .c-fuzzy-select__item(
+        value="#{player.id}"
+      ) = player.formatted_name

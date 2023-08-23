@@ -1,6 +1,6 @@
 .c-layout__scoped.c-draft__dashboard
   - if @draft.is_running? && !@draft.is_ended?
-    .grid.grid-cols-1.gap-8.md:grid-cols-3
+    .grid.grid-cols-1.md:gap-8.md:grid-cols-3
       div.col-span-1
         .c-draft__info id="show_info_#{@draft.slug}"
           = render partial: "drafts/show_info",

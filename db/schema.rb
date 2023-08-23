@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_13_182100) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_23_060349) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -136,13 +136,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_13_182100) do
      FROM ((((drafts d
        JOIN rounds r ON ((r.draft_id = d.id)))
        JOIN selections s ON ((s.round_id = r.id)))
-       JOIN pairings p ON (((p.pairable_id = d.id) AND ((p.pairable_type)::text = 'Draft'::text) AND (p.context = 'Draft Team Name'::text))))
+       JOIN pairings p ON (((p.pairable_id = d.id) AND ((p.pairable_type)::text = 'Draft'::text))))
        LEFT JOIN players pl ON ((pl.id = s.player_id)))
     ORDER BY d.id, s.pick_number, r.number;
   SQL
   create_view "data_players_remaining_for_drafts", sql_definition: <<-SQL
-      SELECT DISTINCT ON (d.id, (concat(pl."position", ' ', pl.team, ' ', pl.name))) d.id AS draft_id,
-      pl.id AS player_id,
+      SELECT DISTINCT ON (d.id, (concat(pl."position", ' ', pl.team, ' ', pl.name))) pl.id,
+      d.id AS draft_id,
       concat(pl.name, ' (', pl."position", ', ', pl.team, ')') AS player_data,
       concat(pl."position", ' ', pl.team, ' ', pl.name) AS value_for_sort,
       (selected_players.draft_id IS NOT NULL) AS is_selected

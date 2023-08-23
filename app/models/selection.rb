@@ -144,10 +144,11 @@ class Selection < ApplicationRecord
     ""
   end
 
+  # Player name takes precedence over write-in name
   def name
+    return player.formatted_name if player.present?
     return write_in_name if write_in_name.present?
 
-    return player.formatted_name if player.present?
     "Missed"
   end
 

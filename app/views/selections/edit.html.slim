@@ -1,5 +1,3 @@
-= turbo_frame_tag @draft.current_selection
-  - if policy(@draft).edit?
-    = render partial: "selections/form",
-      locals: { draft: @draft,
-        selection: @draft.current_selection }
+= turbo_frame_tag @selection
+  = render partial: "selections/form",
+    locals: { draft: @draft, selection: @selection }

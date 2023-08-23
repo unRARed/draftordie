@@ -4,6 +4,7 @@ import "./channels"
 import "./controllers"
 import "./countdown"
 import "./modules/nav"
+import "./modules/fuzzy-select"
 import mermaid from "mermaid"
 
 let config = {

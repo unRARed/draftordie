@@ -10,7 +10,7 @@ class DraftsController < ApplicationController
     only: [:show, :commish, :member, :board]
   before_action :check_access_code, except: [
     :index, :new, :create, :access,
-    :verify_access, :create_pairing
+    :verify_access, :create_pairing, :players
   ]
   before_action :authenticate_user!,
     except: [:show, :board, :access, :verify_access]
@@ -176,6 +176,13 @@ class DraftsController < ApplicationController
         "Sound enabled!" : "Sound disabled!"
 
     redirect_to draft_path(@draft)
+  end
+
+  def players
+    @players = @draft.remaining_players
+    if params[:search].present?
+      @players = @players.search_by_name(params[:search])
+    end
   end
 
 private

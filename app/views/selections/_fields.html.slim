@@ -3,14 +3,25 @@
     .form-group.form-group--required.pb-2
       = f.label :name, "Player",
         class: "c-form__label"
-      - select_list = @draft.players_for_select[:remaining]
+      - select_list = Player.for_selection. \
+        map{|p| [p.formatted_name, p.id]}
       - if local_assigns[:is_bulk] && f.object.player.present?
         - select_list << @draft.players_for_select[:selected]. \
           find { |p| p[1] == f.object.player_id }
-      = f.select :player_id, select_list,
-        { include_blank: " - Select Player - " },
-        selected: f.object.player_id,
-        class: "c-field"
+      .c-fuzzy-select
+        = f.hidden_field :player_id, value: f.object.player_id
+        input.c-fuzzy-select__input.c-field(
+          type="text" placeholder="Search for a player"
+          value="#{params[:search]}"
+        )
+        = turbo_frame_tag dom_id(@draft, :players),
+          src: players_draft_path(@draft),
+          loading: :lazy
+      ruby:
+        # = f.select :player_id, select_list,
+        #   { include_blank: " - Select Player - " },
+        #   selected: f.object.player_id,
+        #   class: "c-field"
     - unless local_assigns[:is_bulk]
       h3 Or Write-in...
     .grid.grid-cols-5.gap-2.pt-3
@@ -22,7 +33,7 @@
             "Write-in Name (optional)" : "",
           class: "c-field"
       .form-group.form-group--required.col-span-3
-        = f.label :write_in_team, "Name",
+        = f.label :write_in_team, "Team",
           class: "c-form__label"
         = f.select :write_in_team,
           Player::TEAMS[:football].map { |t| [t, t] },

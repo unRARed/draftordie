@@ -13,6 +13,10 @@ class SelectionPolicy < ApplicationPolicy
     is_commish?
   end
 
+  def commish_edit?
+    is_commish?
+  end
+
   def update?
     is_commish?
   end

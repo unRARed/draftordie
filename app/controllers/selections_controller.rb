@@ -20,6 +20,8 @@ class SelectionsController < ApplicationController
 
   def edit
     @draft = Draft.preloaded.find(@selection.draft_id)
+    return render if policy(@draft).edit?
+
     unless @selection.draft.is_started?
       flash[:alert] = "Draft has not started yet"
       return render "drafts/show"
@@ -33,6 +35,14 @@ class SelectionsController < ApplicationController
 
   def edit_player_data
 
+  end
+
+  def commish_edit
+    @draft = Draft.find_by(slug: params[:draft_slug])
+    @selection = Selection.find(params[:id])
+    authorize @selection
+    @selection_for_display = @draft.selections_for_display.
+      find_by(selection_id: @selection.id)
   end
 
   # For updating a selection a participant
@@ -62,7 +72,8 @@ class SelectionsController < ApplicationController
   def update
     # commish actions - need to go around hooks to
     # avoid setting ended_at - maybe refactor
-    if @selection.update_columns(selection_params)
+    @selection.assign_attributes(selection_params)
+    if @selection.save(validate: false)
       flash[:notice] = "Selection updated"
     else
       flash[:alert] = @selection.errors.full_messages.join(", ")

@@ -31,8 +31,16 @@ class Draft < ApplicationRecord
   #   class_name: "Selection",
   #   optional: true
 
-  has_many :remaining_players,
+  has_many :player_data,
     class_name: "DataPlayersRemainingForDraft"
+  has_many :remaining_players,
+    -> {
+      where(
+        "data_players_remaining_for_drafts.is_selected" => false
+      )
+    },
+    through: :player_data,
+    class_name: "Player"
   has_one :progression,
     class_name: "DataStateForDraftBoard"
   has_many :selections_for_display,
@@ -82,13 +90,13 @@ class Draft < ApplicationRecord
 
   end
 
-  def players_for_select
+  def players_for_select(bulk = false)
     @players_for_select ||=
       {
-        remaining: self.remaining_players.
+        remaining: self.player_data.
           where(is_selected: false).
           map{|p| [p.player_data, p.player_id]},
-        selected: self.remaining_players.
+        selected: self.player_data.
           where(is_selected: true).
           map{|p| [p.player_data, p.player_id]}
       }

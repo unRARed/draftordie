@@ -12,6 +12,8 @@
 #  updated_at :datetime         not null
 #
 class Player < ApplicationRecord
+  include PgSearch::Model
+
   validates :name, :team, :position, :bye_week,
     presence: true
 
@@ -19,6 +21,12 @@ class Player < ApplicationRecord
     uniqueness: { scope: [:team, :position, :scraped_at] }
 
   delegate :name, to: :team, prefix: true
+
+  pg_search_scope :search_by_name,
+    against: :name,
+    using: {
+      tsearch: { prefix: true }
+    }
 
   POSITIONS = {
     football: %w[QB RB WR TE DST K],
@@ -34,18 +42,13 @@ class Player < ApplicationRecord
 
   scope :for_selection, -> {
     order(
-      Arel.sql("position = 'QB' DESC"),
-      Arel.sql("position = 'RB' DESC"),
-      Arel.sql("position = 'WR' DESC"),
-      Arel.sql("position = 'TE' DESC"),
-      Arel.sql("position = 'DST' DESC"),
-      Arel.sql("position = 'K' DESC"),
+      Arel.sql("position DESC"),
       :name
     )
   }
 
   def formatted_name
-    "(#{position}) #{name}"
+    "#{name} (#{position}) (#{team})"
   end
 
   # NOTE: re-generate football JSON player-list with:

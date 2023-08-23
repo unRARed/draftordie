@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       get :access
       post :access, to: "drafts#verify_access"
       get :toggle_sound
+      get :players
     end
 
     resources :selections, only: [:edit, :update] do
@@ -36,8 +37,10 @@ Rails.application.routes.draw do
       member do
         get :player_data, to: "selections#edit_player_data"
         patch :player_data, to: "selections#update_player_data"
+        get :commish_edit, to: "selections#commish_edit"
       end
     end
+
     resources :pairings, only: [:destroy]
   end
 end

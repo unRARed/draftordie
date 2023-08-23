@@ -48,6 +48,10 @@ class DraftPolicy < ApplicationPolicy
     is_participant?
   end
 
+  def players?
+    is_participant?
+  end
+
   # actions reserved for invted drafters
   def start_next_selection?
     is_commish? || is_participant?

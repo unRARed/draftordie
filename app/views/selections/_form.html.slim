@@ -1,5 +1,5 @@
-.c-container--md.m-auto
-  = form_for([selection.draft, selection],
+.c-container--md.m-auto.mb-1
+  = form_for([draft, selection],
     html: { class: "c-form" },
     data: { turbo_method: :patch,
       turbo_temporary: true,
