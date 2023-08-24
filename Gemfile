@@ -104,3 +104,5 @@ gem "pundit", "~> 2.3"
 gem "scenic", "~> 1.7"
 gem "sidekiq", "~> 7.1"
 gem "sidekiq-scheduler", "~> 5.0"
+
+gem "invisible_captcha", "~> 2.1"

@@ -8,7 +8,9 @@ Rails.application.routes.draw do
     get :docs, to: "pages#docs"
   end
 
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
 
   resources :drafts, param: :slug do
     member do

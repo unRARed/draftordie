@@ -2,6 +2,8 @@
   <div class="c-panel__focus">
   <h2>Sign up</h2>
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "c-form" }) do |f| %>
+    <%= invisible_captcha %>
+
     <%= render "devise/shared/error_messages", resource: resource %>
 
     <div class="field">
