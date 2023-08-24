@@ -2,7 +2,7 @@
 #
 # Table name: data_players_remaining_for_drafts
 #
-#  id             :bigint
+#  id             :bigint           primary key
 #  is_selected    :boolean
 #  player_data    :text
 #  value_for_sort :text

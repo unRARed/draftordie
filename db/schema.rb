@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_060349) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_24_064014) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -141,10 +141,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_060349) do
     ORDER BY d.id, s.pick_number, r.number;
   SQL
   create_view "data_players_remaining_for_drafts", sql_definition: <<-SQL
-      SELECT DISTINCT ON (d.id, (concat(pl."position", ' ', pl.team, ' ', pl.name))) pl.id,
+      SELECT DISTINCT ON (d.id, pl."position", (concat(pl."position", ' ', pl.name))) pl.id,
       d.id AS draft_id,
       concat(pl.name, ' (', pl."position", ', ', pl.team, ')') AS player_data,
-      concat(pl."position", ' ', pl.team, ' ', pl.name) AS value_for_sort,
+      concat(pl."position", ' ', pl.name) AS value_for_sort,
       (selected_players.draft_id IS NOT NULL) AS is_selected
      FROM ((((players pl
        CROSS JOIN drafts d)
@@ -156,6 +156,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_060349) do
                JOIN selections s_1 ON ((s_1.player_id = pl_1.id)))
                JOIN rounds r_1 ON ((r_1.id = s_1.round_id)))
                JOIN drafts d_1 ON ((d_1.id = r_1.draft_id)))) selected_players ON (((pl.id = selected_players.selected_player_id) AND (selected_players.draft_id = d.id))))
-    ORDER BY d.id, (concat(pl."position", ' ', pl.team, ' ', pl.name)) DESC, ((pl."position")::text = 'QB'::text) DESC, ((pl."position")::text = 'RB'::text) DESC, ((pl."position")::text = 'WR'::text) DESC, ((pl."position")::text = 'TE'::text) DESC, ((pl."position")::text = 'DST'::text) DESC, ((pl."position")::text = 'K'::text) DESC, pl.team, pl.name;
+    ORDER BY d.id, pl."position" DESC, (concat(pl."position", ' ', pl.name));
   SQL
 end
