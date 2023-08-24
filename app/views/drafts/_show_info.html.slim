@@ -2,7 +2,8 @@
   h2.c-draft__name = draft.name
   = render partial: "drafts/draft_deck",
     locals: { draft: draft }
-  = render partial: "drafts/selection_clock",
-    locals: { draft: draft }
+  .pb-3
+    = render partial: "drafts/selection_clock",
+      locals: { draft: draft }
   = render partial: "drafts/draft_prior_selection",
     locals: { draft: draft }

@@ -12,6 +12,13 @@
       max-height: 24vh;
       overflow-y: scroll;
       overflow-x: hidden;
+      cursor: pointer;
+
+    }
+    .c-fuzzy-select__item {
+      &:hover {
+        background-color: #3e5c5a;
+      }
     }
   }
 }
