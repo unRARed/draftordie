@@ -1,8 +1,6 @@
 - cache(f.object) do
   div
     .form-group.form-group--required.pb-2
-      = f.label :name, "Player",
-        class: "c-form__label"
       - select_list = Player.for_selection. \
         map{|p| [p.formatted_name, p.id]}
       - if local_assigns[:is_bulk] && f.object.player.present?

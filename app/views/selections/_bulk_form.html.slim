@@ -1,8 +1,7 @@
 .c-panel
   .c-selection
     .c-selection__identifier
-      .c-selection__identifier__team
-        span #{display_data.team_name}
+      h4.c-selection__identifier__team = display_data.team_name
       span.c-selection__identifier__round
         span Round #{display_data.round_number}
       span.c-selection__identifier__pick<

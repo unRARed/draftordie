@@ -33,5 +33,9 @@ puts "Seeding drafts..."
     :max, user: user,
     selection_seconds: [30, 60].sample
   )
-  draft.users << User.first(count)
+  User.first(count).each do |user|
+    draft.pairings << FactoryBot.create(:pairing,
+      :team_context, user: user
+    )
+  end
 end

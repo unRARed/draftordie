@@ -22,13 +22,13 @@
 #
 FactoryBot.define do
   factory :pairing do
-    context { "MyText" }
+    context { nil }
     pairable { nil }
   end
 
   trait :team_context do
     context { "Draft Team Name" }
-    context_value { Faker::Team.name }
+    context_value { Faker::Fantasy::Tolkien.character }
     pairable { FactoryBot.create(:draft) }
   end
 
