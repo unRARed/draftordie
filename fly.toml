@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for draftordie on 2023-07-13T00:41:00-07:00
+# fly.toml app configuration file generated for selfieleague on 2023-08-05T12:48:58-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -6,25 +6,49 @@
 app = "draftordie"
 primary_region = "sea"
 console_command = "/rails/bin/rails console"
-
-[deploy]
-  release_command = "./bin/rails db:prepare"
+kill_signal = "SIGINT"
+kill_timeout = 5
+swap_size_mb = 256
 
 [processes]
   app = "./bin/rails server"
   sidekiq = "bundle exec sidekiq"
 
 [http_service]
+  processes = ["app"]
   internal_port = 3000
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 1
-  processes = ["app"]
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "60s"
+    method = "GET"
+    timeout = "10s"
+    path = "/"
 
 [[statics]]
   guest_path = "/rails/public"
   url_prefix = "/"
 
 [env]
+  LANG = "en_US.UTF-8"
   LOG_LEVEL = "warn"
+  RACK_ENV = "production"
+  RAILS_ENV = "production"
+  RAILS_MAX_THREADS = "2"
+  WEB_CONCURRENCY = "1"
+  RAILS_LOG_TO_STDOUT = "true"
+  RAILS_SERVE_STATIC_FILES = "true"
+
+[deploy]
+  release_command = "./bin/rails db:prepare"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
