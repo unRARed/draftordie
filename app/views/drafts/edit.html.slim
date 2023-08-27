@@ -3,6 +3,10 @@
     = render "shared/errors", target: @draft
   = render "fields", f: f
   .pt-4.text-center
+    - if @draft.users.any? && @draft.users.count > 1
+      = link_to 'Set Draft Order',
+        order_draft_path(@draft),
+        class: "c-button c-button--secondary"
     - if @draft.rounds.any?
       = link_to '(Re)Generate Board',
         generate_draft_path(@draft),

@@ -23,9 +23,9 @@
     - if f.object.present?
       .form-group.form-group--required
         h3.text-center Participants
-        - if f.object.pairings.any?
+        - if f.object.team_name_pairings.any?
           .c-button-stack
-            - f.object.pairings.each do |pairing|
+            - f.object.team_name_pairings.each do |pairing|
               = link_to "Remove #{pairing.context_value}",
                 draft_pairing_path(f.object, pairing),
                 class: "c-button c-button--negative " \

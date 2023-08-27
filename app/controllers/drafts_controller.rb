@@ -122,6 +122,20 @@ class DraftsController < ApplicationController
     end
   end
 
+  def edit_order
+    prepare_order
+  end
+
+  def update_order
+    if @draft.update(draft_params)
+      flash[:notice] = "Draft order updated successfully"
+      redirect_to order_draft_path(@draft)
+    else
+      prepare_order
+      render :edit_order
+    end
+  end
+
   def start
     # if paused, we only reset the timer
     # for the current selection and unpause
@@ -193,7 +207,17 @@ private
       :round_count,
       :user_count,
       :selection_seconds,
-      :player_ids
+      :player_ids,
+      :order_pairings_attributes => [
+        :id,
+        :context_value,
+        :user_id,
+      ],
+      :team_name_pairings_attributes => [
+        :id,
+        :context_value,
+        :user_id,
+      ],
     )
   end
 
@@ -213,6 +237,14 @@ private
       return redirect_back fallback_location: root_path
     end
     authorize @draft
+  end
+
+  def prepare_order
+    @draft.users.each do |user|
+      if @draft.order_pairings.find_by(user: user).nil?
+        @draft.order_pairings.build(user: user)
+      end
+    end
   end
 
   def put_user_on_clock

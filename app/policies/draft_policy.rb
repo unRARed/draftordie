@@ -78,6 +78,14 @@ class DraftPolicy < ApplicationPolicy
     is_commish?
   end
 
+  def edit_order?
+    is_commish?
+  end
+
+  def update_order?
+    is_commish?
+  end
+
   def destroy?
     is_commish?
   end

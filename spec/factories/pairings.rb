@@ -26,13 +26,19 @@ FactoryBot.define do
     pairable { nil }
   end
 
+  trait :draft do
+    pairable { FactoryBot.create(:draft) }
+  end
+
   trait :team_context do
     context { "Draft Team Name" }
     context_value { Faker::Fantasy::Tolkien.character }
     pairable { FactoryBot.create(:draft) }
   end
 
-  trait :draft do
+  trait :order_context do
+    context { "Draft Order" }
+    context_value { Faker::Number.between(from: 1, to: 10) }
     pairable { FactoryBot.create(:draft) }
   end
 end

@@ -29,6 +29,8 @@ Rails.application.routes.draw do
       post :access, to: "drafts#verify_access"
       get :toggle_sound
       get :players
+      get :order, to: "drafts#edit_order"
+      patch :order, to: "drafts#update_order"
     end
 
     resources :selections, only: [:edit, :update] do

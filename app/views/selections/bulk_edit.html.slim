@@ -1,7 +1,7 @@
 .c-layout__scoped
   h2.text-center Bulk Edit Selections
   - @rounds.each do |round, display_data|
-    h3 Round #{round}
+    h3.pt-4 Round #{round}
     .grid.grid-cols-1.gap-2.md:grid-cols-3
       = render partial: "selections/bulk_form",
         collection: display_data,

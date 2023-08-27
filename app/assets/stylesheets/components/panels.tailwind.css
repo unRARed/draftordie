@@ -15,4 +15,13 @@
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
   }
+
+  /* Overrides for Desktop / larger screens */
+  @media (min-width: 768px) {
+    .c-panel {
+      + .c-panel {
+        margin-top: unset;
+      }
+    }
+  }
 }

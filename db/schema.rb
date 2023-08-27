@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_24_064014) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_26_235509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -118,6 +118,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_064014) do
        LEFT JOIN selections next_selection ON (((next_selection.draft_id = drafts.id) AND (next_selection.pick_number IS NOT NULL) AND (next_selection.pick_number = (current_selection.pick_number + 1)))))
     WHERE ((drafts.started_at IS NOT NULL) AND (drafts.is_paused = false));
   SQL
+  create_view "data_players_remaining_for_drafts", sql_definition: <<-SQL
+      SELECT DISTINCT ON (d.id, pl."position", (concat(pl."position", ' ', pl.name))) pl.id,
+      d.id AS draft_id,
+      concat(pl.name, ' (', pl."position", ', ', pl.team, ')') AS player_data,
+      concat(pl."position", ' ', pl.name) AS value_for_sort,
+      (selected_players.draft_id IS NOT NULL) AS is_selected
+     FROM ((((players pl
+       CROSS JOIN drafts d)
+       JOIN rounds r ON ((r.draft_id = d.id)))
+       JOIN selections s ON ((s.round_id = r.id)))
+       LEFT JOIN ( SELECT pl_1.id AS selected_player_id,
+              d_1.id AS draft_id
+             FROM (((players pl_1
+               JOIN selections s_1 ON ((s_1.player_id = pl_1.id)))
+               JOIN rounds r_1 ON ((r_1.id = s_1.round_id)))
+               JOIN drafts d_1 ON ((d_1.id = r_1.draft_id)))) selected_players ON (((pl.id = selected_players.selected_player_id) AND (selected_players.draft_id = d.id))))
+    ORDER BY d.id, pl."position" DESC, (concat(pl."position", ' ', pl.name));
+  SQL
   create_view "data_selections_for_displays", sql_definition: <<-SQL
       SELECT DISTINCT ON (d.id, s.pick_number) s.id AS selection_id,
       d.id AS draft_id,
@@ -136,26 +154,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_064014) do
      FROM ((((drafts d
        JOIN rounds r ON ((r.draft_id = d.id)))
        JOIN selections s ON ((s.round_id = r.id)))
-       JOIN pairings p ON (((p.pairable_id = d.id) AND ((p.pairable_type)::text = 'Draft'::text))))
+       JOIN pairings p ON (((p.pairable_id = d.id) AND ((p.pairable_type)::text = 'Draft'::text) AND (p.context = 'Draft Team Name'::text) AND (p.user_id = s.user_id))))
        LEFT JOIN players pl ON ((pl.id = s.player_id)))
     ORDER BY d.id, s.pick_number, r.number;
-  SQL
-  create_view "data_players_remaining_for_drafts", sql_definition: <<-SQL
-      SELECT DISTINCT ON (d.id, pl."position", (concat(pl."position", ' ', pl.name))) pl.id,
-      d.id AS draft_id,
-      concat(pl.name, ' (', pl."position", ', ', pl.team, ')') AS player_data,
-      concat(pl."position", ' ', pl.name) AS value_for_sort,
-      (selected_players.draft_id IS NOT NULL) AS is_selected
-     FROM ((((players pl
-       CROSS JOIN drafts d)
-       JOIN rounds r ON ((r.draft_id = d.id)))
-       JOIN selections s ON ((s.round_id = r.id)))
-       LEFT JOIN ( SELECT pl_1.id AS selected_player_id,
-              d_1.id AS draft_id
-             FROM (((players pl_1
-               JOIN selections s_1 ON ((s_1.player_id = pl_1.id)))
-               JOIN rounds r_1 ON ((r_1.id = s_1.round_id)))
-               JOIN drafts d_1 ON ((d_1.id = r_1.draft_id)))) selected_players ON (((pl.id = selected_players.selected_player_id) AND (selected_players.draft_id = d.id))))
-    ORDER BY d.id, pl."position" DESC, (concat(pl."position", ' ', pl.name));
   SQL
 end

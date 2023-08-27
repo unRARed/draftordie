@@ -25,12 +25,16 @@ class Pairing < ApplicationRecord
     inverse_of: :pairings
   belongs_to :pairable, polymorphic: true
 
-  validates :context_value, presence: true,
-    uniqueness: { scope: [:pairable_type, :pairable_id] },
-    if: -> {
-      context.present? &&
-      context == "Draft Team Name"
-    }
+  validate :maximum_slots
+  validates :context_value,
+    presence: true,
+    uniqueness: {
+      scope: [
+        :pairable_type, :pairable_id, :context, :context_value
+      ],
+      message: "Team Name is already taken for this draft."
+    },
+    if: -> { context == "Draft Team Name" }
 
   def for_draft(draft)
     pairable == draft
@@ -39,5 +43,22 @@ class Pairing < ApplicationRecord
   def team_name
     return nil unless context == "Draft Team Name"
     context_value
+  end
+
+private
+
+  def maximum_slots
+    return unless context == "Draft Order"
+    return unless pairable_type == "Draft"
+    return unless pairable_id.present?
+    return unless context_value.present?
+
+    ordered_count = pairable.order_pairings.count
+    team_count = pairable.team_name_pairings.count
+
+    return unless ordered_count >= team_count
+    return if pairable.order_pairings.include?(self)
+
+    pairable.errors.add(:base, "Draft Order out of range.")
   end
 end

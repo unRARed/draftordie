@@ -58,7 +58,21 @@ class Draft < ApplicationRecord
     -> { where(ended_at: nil).order(pick_number: :asc) },
     class_name: "Selection"
   has_many :pairings, as: :pairable
-  has_many :users, through: :pairings
+  has_many :team_name_pairings,
+    -> { where("pairings.context" => "Draft Team Name") },
+    class_name: "Pairing",
+    as: :pairable
+  has_many :order_pairings,
+    -> {
+      where("pairings.context" => "Draft Order").
+        order("pairings.context_value" => :asc)
+    },
+    class_name: "Pairing",
+    as: :pairable
+  has_many :users, through: :team_name_pairings
+  has_many :ordered_users,
+    through: :order_pairings,
+    source: :user
 
   validates :name, presence: true
   validates :round_count, :user_count, :selection_seconds,
@@ -68,7 +82,8 @@ class Draft < ApplicationRecord
   validates :user_count,
     numericality: { less_than_or_equal_to: 20 }
 
-  accepts_nested_attributes_for :pairings
+  accepts_nested_attributes_for :team_name_pairings,
+    :order_pairings
 
   scope :preloaded, -> {
     eager_load(:users).eager_load(rounds: { selections: :user })
@@ -172,9 +187,13 @@ class Draft < ApplicationRecord
 
         # Create selections for the round
         #
-        ordered_users = is_reversed ?
-          self.users.reverse : self.users
-        ordered_users.each do |ordered_user|
+
+        users_ordered_for_board = ordered_users.present? ?
+          self.ordered_users : self.users
+        users_ordered_for_board = is_reversed ?
+          users_ordered_for_board.reverse
+          : users_ordered_for_board
+        users_ordered_for_board.each do |ordered_user|
           round.selections.create!(
             user: ordered_user,
             pick_number: current_pick_number,
