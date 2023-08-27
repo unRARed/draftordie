@@ -65,7 +65,7 @@ class Draft < ApplicationRecord
   has_many :order_pairings,
     -> {
       where("pairings.context" => "Draft Order").
-        order("pairings.context_value" => :asc)
+        order(Arel.sql("NULLIF(regexp_replace(pairings.context_value, '\D', '', 'g'), '')::int") => :asc)
     },
     class_name: "Pairing",
     as: :pairable
