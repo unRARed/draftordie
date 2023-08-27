@@ -10,8 +10,8 @@ div.c-draft__board id="board_#{@draft.slug}"
 .c-draft__footer id="footer_#{@draft.slug}"
   = render partial: "drafts/footer", locals: { draft: @draft }
 javascript:
-   add margin to the footer to account for it's current
-   size to ensure one or multiple rows are not hidden
+  // add margin to the footer to account for it's current
+  // size to ensure one or multiple rows are not hidden
   (function () {
     var header = document.querySelector(".c-layout-header");
     var board = document.querySelector(".c-draft__board");

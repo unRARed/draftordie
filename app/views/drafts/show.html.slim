@@ -25,3 +25,10 @@
       p The draft has ended.
     - else
       p.c-draft__waiting The draft is waiting to start.
+javascript:
+  setTimeout(function() {
+    var turboBar = document.querySelector(".turbo-progress-bar");
+    if (!turboBar) { return; }
+
+    turboBar.style.display = "none";
+  }, 2000);

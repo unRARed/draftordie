@@ -30,8 +30,14 @@ document.addEventListener('turbo:frame-load', () => {
     });
 
     items.forEach((item) => {
+      // Can't do this because the list of players only
+      // contains those that HAVE NOT been selected.
+      //
+      // console.log(hiddenInput.getAttribute('value'));
+      // if (item.getAttribute('value') === hiddenInput.getAttribute('value')) {
+      //   input.value = item.textContent;
+      // }
       item.addEventListener("click", (e) => {
-        console.log(e.target.getAttribute('value'));
         hiddenInput.value = e.target.getAttribute('value');
         input.value = e.target.textContent;
       });

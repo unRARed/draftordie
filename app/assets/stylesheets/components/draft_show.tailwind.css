@@ -36,13 +36,16 @@
   @media (min-width: 768px) {
     .c-draft__selections {
       @apply flex grid grid-cols-2 pb-3 gap-2;
-      max-height: 70vh;
+      max-height: unset;
     }
     .c-draft__selections-list {
       max-height: 400px;
     }
     .c-draft__pick {
       padding: 0.2em;
+    }
+    .c-draft__info {
+      min-height: 80vh;
     }
   }
 }

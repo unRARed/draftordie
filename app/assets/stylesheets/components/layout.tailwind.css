@@ -9,10 +9,17 @@
     @apply text-lg;
   }
 
+  .c-layout-footer-wrap {
+    min-height: 100%;
+    /* MUST MATCH FOOTER HEIGHT */
+    margin-bottom: -36px;
+  }
+  .c-layout-footer-wrap__push,
+  .c-layout-footer {
+    height: 36px;
+  }
   .c-layout-footer {
     @apply text-center p-2;
-    position: sticky;
-    top: 100vh;
   }
 
   .c-layout__focus {

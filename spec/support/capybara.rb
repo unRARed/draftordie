@@ -19,8 +19,6 @@ Capybara.default_max_wait_time =
     3
   end
 
-# # Set the chromedriver version here
-Webdrivers::Chromedriver.required_version = "114.0.5735.90"
 
 # Selenium settings per:
 #   https://gist.github.com/nruth/864dc9875b4feb183b7b10ddbd25c7f4

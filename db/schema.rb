@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_26_235509) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_27_084338) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -103,21 +103,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_26_235509) do
   add_foreign_key "selections", "rounds"
   add_foreign_key "selections", "users"
 
-  create_view "data_state_for_draft_boards", sql_definition: <<-SQL
-      SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
-      drafts.slug AS draft_slug,
-      current_selection.pick_number AS current_pick_number,
-      ((current_selection.player_id IS NOT NULL) OR ((current_selection.write_in_name IS NOT NULL) AND (current_selection.write_in_position IS NOT NULL)) OR ((current_selection.started_at + ((drafts.selection_seconds)::double precision * 'PT1S'::interval)) < LOCALTIMESTAMP)) AS is_selected,
-      prior_selection.id AS prior_selection_id,
-      current_selection.id AS current_selection_id,
-      next_selection.id AS next_selection_id
-     FROM ((((drafts
-       JOIN rounds ON ((drafts.id = rounds.draft_id)))
-       JOIN selections current_selection ON (((current_selection.draft_id = drafts.id) AND (current_selection.started_at IS NOT NULL) AND (current_selection.ended_at IS NULL))))
-       LEFT JOIN selections prior_selection ON (((prior_selection.draft_id = drafts.id) AND (prior_selection.pick_number IS NOT NULL) AND (prior_selection.pick_number = (current_selection.pick_number - 1)))))
-       LEFT JOIN selections next_selection ON (((next_selection.draft_id = drafts.id) AND (next_selection.pick_number IS NOT NULL) AND (next_selection.pick_number = (current_selection.pick_number + 1)))))
-    WHERE ((drafts.started_at IS NOT NULL) AND (drafts.is_paused = false));
-  SQL
   create_view "data_players_remaining_for_drafts", sql_definition: <<-SQL
       SELECT DISTINCT ON (d.id, pl."position", (concat(pl."position", ' ', pl.name))) pl.id,
       d.id AS draft_id,
@@ -157,5 +142,43 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_26_235509) do
        JOIN pairings p ON (((p.pairable_id = d.id) AND ((p.pairable_type)::text = 'Draft'::text) AND (p.context = 'Draft Team Name'::text) AND (p.user_id = s.user_id))))
        LEFT JOIN players pl ON ((pl.id = s.player_id)))
     ORDER BY d.id, s.pick_number, r.number;
+  SQL
+  create_view "data_state_for_draft_boards", sql_definition: <<-SQL
+      SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
+      drafts.slug AS draft_slug,
+      current_selection.pick_number AS current_pick_number,
+      ((current_selection.player_id IS NOT NULL) OR ((current_selection.write_in_name IS NOT NULL) AND (current_selection.write_in_position IS NOT NULL)) OR ((current_selection.started_at + ((drafts.selection_seconds)::double precision * 'PT1S'::interval)) < LOCALTIMESTAMP)) AS is_selected,
+      prior_selection.id AS prior_selection_id,
+      current_selection.id AS current_selection_id,
+      COALESCE(orphan_selections.id, next_selection.id) AS next_selection_id
+     FROM (((((drafts
+       JOIN rounds ON ((drafts.id = rounds.draft_id)))
+       LEFT JOIN selections current_selection ON (((current_selection.draft_id = drafts.id) AND (current_selection.started_at IS NOT NULL) AND (current_selection.ended_at IS NULL))))
+       LEFT JOIN selections prior_selection ON (((prior_selection.draft_id = drafts.id) AND (prior_selection.pick_number IS NOT NULL) AND (prior_selection.pick_number = (current_selection.pick_number - 1)))))
+       LEFT JOIN selections next_selection ON (((next_selection.draft_id = drafts.id) AND (next_selection.pick_number IS NOT NULL) AND (next_selection.pick_number = (current_selection.pick_number + 1)))))
+       LEFT JOIN ( SELECT open_selections.id,
+              drafts_1.id AS draft_id
+             FROM (((drafts drafts_1
+               JOIN rounds rounds_1 ON ((drafts_1.id = rounds_1.draft_id)))
+               LEFT JOIN ( SELECT selections.id,
+                      selections.round_id,
+                      selections.user_id,
+                      selections.player_id,
+                      selections.pick_number,
+                      selections.write_in_name,
+                      selections.write_in_position,
+                      selections.created_at,
+                      selections.updated_at,
+                      selections.started_at,
+                      selections.ended_at,
+                      selections.draft_id,
+                      selections.write_in_team
+                     FROM selections
+                    ORDER BY selections.pick_number) started_selections ON (((started_selections.draft_id = drafts_1.id) AND (started_selections.started_at IS NOT NULL) AND (started_selections.ended_at IS NULL))))
+               JOIN selections open_selections ON (((open_selections.draft_id = drafts_1.id) AND (open_selections.started_at IS NULL) AND (open_selections.ended_at IS NULL))))
+            WHERE ((drafts_1.started_at IS NOT NULL) AND (drafts_1.ended_at IS NULL) AND (drafts_1.is_paused = false) AND (started_selections.id IS NULL))
+            ORDER BY open_selections.pick_number
+           LIMIT 1) orphan_selections ON ((orphan_selections.draft_id = drafts.id)))
+    WHERE ((drafts.started_at IS NOT NULL) AND (drafts.ended_at IS NULL) AND (drafts.is_paused = false));
   SQL
 end

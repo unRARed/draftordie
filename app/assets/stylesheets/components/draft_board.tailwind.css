@@ -88,10 +88,10 @@
     .c-draft__board {
       height: 100vw;
     }
-  .c-draft__board__slot {
-    font-size: 16px;
-    flex: 1;
-  }
+    .c-draft__board__slot {
+      font-size: 16px;
+      flex: 1;
+    }
     .c-draft__board__round--reversed {
       @apply flex-row-reverse;
       background-color: #131e1d;
@@ -99,6 +99,7 @@
 
     .c-draft__dashboard {
       background-color: #182625;
+      padding-top: 0.5rem;
     }
   }
   .c-draft__deck {

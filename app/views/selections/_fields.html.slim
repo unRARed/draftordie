@@ -10,7 +10,7 @@
         = f.hidden_field :player_id, value: f.object.player_id
         input.c-fuzzy-select__input.c-field(
           type="text" placeholder="Search for a player"
-          value="#{params[:search]}"
+          value="#{f.object.name if f.object.is_selected?}"
         )
         = turbo_frame_tag dom_id(@draft, :players),
           src: players_draft_path(@draft),
