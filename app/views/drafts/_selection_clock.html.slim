@@ -7,7 +7,5 @@ h3.c-draft__clock
         initCountdowns();
       }
   - elsif clock = draft.current_selection.time_remaining
-    span.minutes = "%02d" % (clock[1] || 0)
-    span
-      | :
-    span.seconds = "%02d" % (clock[2] || 0)
+    span.minutes.b-countdown__minutes = "%02d" % (clock[1] || 0)
+    span.seconds.b-countdown__seconds = "%02d" % (clock[2] || 0)

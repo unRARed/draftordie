@@ -17,6 +17,10 @@
       li Someone no-shows or bails (auto-drafters get wrecked)
       li Draft in-person and/or remotely
       li Write-in picks (late-round sleepers, FTW)
+    p.text-center.pt-4
+      = link_to "Start a new Draft",
+        new_draft_path,
+        class: "c-button c-button--hero#{' c-button--secondary' if current_user.drafts.any?}"
   .c-panel.text-center
     - if user_signed_in?
       h3 My Drafts
@@ -25,10 +29,6 @@
           = render partial: "drafts/draft_card",
             collection: current_user.drafts,
             as: :draft
-      p
-        = link_to "Start a new Draft",
-          new_draft_path,
-          class: "c-button#{' c-button--secondary' if current_user.drafts.any?}"
     - else
       h3 Sign Up Today
       = link_to "Sign Up",

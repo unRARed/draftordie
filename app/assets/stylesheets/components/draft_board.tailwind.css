@@ -28,7 +28,7 @@
   .c-draft__board {
     @apply w-full flex flex-col;
     background-color: #182625;
-    text-wrap: balance;
+    /* text-wrap: balance; */
     /*@apply flex-col-reverse;*/
   }
   .c-draft__board__round {
@@ -36,10 +36,15 @@
     flex-wrap: wrap;
   }
   .c-draft__board__slot {
+    position: relative;
+    border: 1px outset #000202;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     font-size: 16px;
     flex: 1 0 48%;
     flex-direction: column;
-    border-top: 1px solid #444;
+    /* border-top: 1px solid #444; */
     width: 48%;
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
@@ -73,6 +78,19 @@
   .c-draft__board__slot--dst {
     @apply bg-indigo-300 border-indigo-400 text-indigo-700;
   }
+  .c-draft__board__slot__identifier {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    opacity: 0.25;
+    margin: auto;
+    font-size: 10px;
+    line-height: 1;
+    &:before {
+      position: relative;
+      content: "Pick: ";
+    }
+  }
 
   .c-draft__branding { @apply text-center; }
   .c-draft__access { @apply text-sm; }
@@ -85,9 +103,8 @@
   }
   /* Overrides for medium displays */
   @media (min-width: 768px) {
-    .c-draft__board {
-      height: 100vw;
-    }
+    .c-draft__branding { text-align: left; }
+
     .c-draft__board__slot {
       font-size: 16px;
       flex: 1;

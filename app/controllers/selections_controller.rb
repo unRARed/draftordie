@@ -50,8 +50,14 @@ class SelectionsController < ApplicationController
   def update_player_data
     respond_to do |format|
       format.turbo_stream do
+        @selection.assign_attributes(selection_params)
         @selection.validate
-        return render :edit unless @selection.errors.empty?
+        unless @selection.errors.empty?
+          @draft = Draft.preloaded.find(@selection.draft_id)
+          flash[:alert] = @selection.errors.
+            full_messages.join(", ")
+          return redirect_back(fallback_location: draft_path(@draft))
+        end
 
         begin
           if @selection.update_and_advance(

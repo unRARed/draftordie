@@ -1,10 +1,10 @@
 div id="pick_number_#{selection.pick_number}" class="#{draft_board_slot_class(selection)}"
+  .c-draft__board__slot__identifier
+    ' #{selection.round.number}.#{selection.pick_number}
   p
-    span Rd. #{selection.round.number} Pick #{selection.pick_number}
+    span< = selection&.pairing&.team_name || "Team Name Missing"
     br
     - if selection.is_missed?
       span< Missed Pick
     - elsif selection.is_selected? && !selection.is_missed?
       span< = selection.name
-  p.mt-0
-    strong = selection&.pairing&.team_name || "Team Name Missing"

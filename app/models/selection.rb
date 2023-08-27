@@ -61,6 +61,10 @@ class Selection < ApplicationRecord
       allow_nil: true
     }
 
+  # Don't validate this on create as there is initially
+  # no player_id or write in values
+  validate :player_selected, on: :update
+
   validate :write_in_values_mutually_present
   validate :xor_player_or_write_in
 
@@ -207,5 +211,12 @@ private
 
     errors.add(:base,
       "Either select a player or write one in, not both.")
+  end
+
+  def player_selected
+    return unless player.nil? && write_in_name.blank?
+
+    errors.add(:base,
+      "You music select a player or write one in.")
   end
 end

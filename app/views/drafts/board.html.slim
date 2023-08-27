@@ -3,6 +3,8 @@ css:
     .c-draft__board__slot {
       width: #{100 / [@draft.users.count, 1].max}%;
       font-size: #{compute_text_size(@draft.users.count)}px;
+      /* header + footer heights */
+      min-height: #{(1080 - 52 - 68) / @draft.round_count}px;
     }
   }
 div.c-draft__board id="board_#{@draft.slug}"

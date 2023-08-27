@@ -37,6 +37,20 @@
     @apply text-xs;
   }
 
+  .c-button--lg,
+  a.c-button--lg,
+  input.c-button--lg,
+  button.c-button--lg {
+    @apply text-lg;
+  }
+
+  .c-button--lx,
+  a.c-button--xl,
+  input.c-button--xl,
+  button.c-button--xl {
+    @apply text-xl;
+  }
+
   .c-button--hero,
   a.c-button--hero,
   input.c-button--hero,
