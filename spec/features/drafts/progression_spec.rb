@@ -35,14 +35,13 @@ RSpec.describe "Draft Progression", type: :feature do
         expect(page).to have_content("Commish's Team")
       end
 
-      ProgressDraftsJob.perform_now
       # pick time expires
       sleep 4
+
       # job runs in the background
       ProgressDraftsJob.perform_now
-      sleep 10
 
-      visit(draft_path(draft))
+      sleep 4
 
       page.find(".c-draft__pick--missed", visible: true)
 
