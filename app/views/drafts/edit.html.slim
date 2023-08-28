@@ -35,6 +35,13 @@
         data: { turbo_method: :patch,
           turbo_confirm: "Are you sure?" },
         class: "c-button"
+      = link_to 'Fill Missed Selections',
+        fill_draft_path(@draft),
+        method: :patch,
+        data: { turbo_method: :patch,
+          turbo_frame: "_top",
+          turbo_confirm: "Are you really sure?" },
+        class: "c-button c-button--secondary"
     - if @draft.is_paused?
       = link_to 'Resume Draft',
         start_draft_path(@draft),

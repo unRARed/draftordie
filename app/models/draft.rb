@@ -82,8 +82,12 @@ class Draft < ApplicationRecord
   validates :user_count,
     numericality: { less_than_or_equal_to: 20 }
 
+  accepts_nested_attributes_for :order_pairings,
+    reject_if: :all_blank
   accepts_nested_attributes_for :team_name_pairings,
-    :order_pairings
+    reject_if: ->(attributes){
+      attributes["context_value"].blank?
+    }
 
   scope :preloaded, -> {
     eager_load(:users).eager_load(rounds: { selections: :user })
@@ -217,6 +221,21 @@ class Draft < ApplicationRecord
     end
 
     generate_access_code
+  end
+
+  def fill_missed_selections
+    Draft.transaction do
+      missed_selections = self.selections.where(
+        "player_id IS NULL AND write_in_name IS NULL"
+      )
+      player_ids = self.
+        remaining_players.
+        sample(missed_selections.count).
+        pluck(:id)
+      missed_selections.each_with_index do |selection, index|
+        selection.update_columns(player_id: player_ids[index])
+      end
+    end
   end
 
 private

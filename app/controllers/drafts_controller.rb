@@ -103,7 +103,8 @@ class DraftsController < ApplicationController
     @draft = Draft.new(draft_params)
     authorize @draft
     @draft.user = current_user
-    @draft.users << current_user
+    @draft.team_name_pairings.build user: current_user,
+      context_value: "Commish's Team"
 
     if @draft.save
       flash[:notice] = "Draft created successfully"
@@ -175,6 +176,15 @@ class DraftsController < ApplicationController
       command: "refresh", payload: {}
     })
     head :ok
+  end
+
+  def fill
+    if @draft.is_running?
+      flash[:error] =
+        "Draft cannot be running when filling missing selections."
+    end
+
+    @draft.fill_missed_selections
   end
 
   def generate

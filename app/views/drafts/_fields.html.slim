@@ -1,4 +1,4 @@
-.grid.grid-cols-1.gap-8.md:grid-cols-2
+div class="grid grid-cols-1 gap-8 m-auto#{' md:grid-cols-2' if f.object.persisted?}"
   .c-panel
     h3.text-center Setup Draft
     .form-group.form-group--required
@@ -17,10 +17,12 @@
       = f.label :user_count, "Number of Participants",
         class: "c-form__label"
       = f.number_field :user_count, class: "c-field"
-    = f.submit "Update Draft",
-      class: "c-button c-button--positive"
-  .c-panel
-    - if f.object.present?
+    - if f.object.persisted?
+      .mt-4.text-center
+        = f.submit "Update Draft",
+          class: "c-button c-button--positive"
+  - if f.object.persisted?
+    .c-panel
       .form-group.form-group--required
         h3.text-center Participants
         - if f.object.team_name_pairings.any?
@@ -33,8 +35,8 @@
                 method: :delete, data: { \
                   turbo_method: :delete,
                   turbo_confirm: "Are you sure?" }
-    .mt-4.text-center
-      - if @draft&.slug&.present?
-        = link_to "Invite a Participant",
-          invite_draft_path(@draft),
-          class: "c-button c-button--secondary"
+      .mt-4.text-center
+        - if @draft&.slug&.present?
+          = link_to "Invite a Participant",
+            invite_draft_path(@draft),
+            class: "c-button c-button--secondary"

@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       get :players
       get :order, to: "drafts#edit_order"
       patch :order, to: "drafts#update_order"
+      patch :fill, to: "drafts#fill"
     end
 
     resources :selections, only: [:edit, :update] do

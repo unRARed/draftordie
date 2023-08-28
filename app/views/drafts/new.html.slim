@@ -2,5 +2,6 @@
   - if @draft.errors.any?
     = render "shared/errors", target: @draft
   = render "fields", f: f
-  = f.submit "Create Draft", class: "c-button",
-    data: { turbo: false }
+  .pt-4.text-center
+    = f.submit "Create Draft", class: "c-button",
+      data: { turbo: false }
