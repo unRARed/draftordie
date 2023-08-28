@@ -1,6 +1,6 @@
 class SelectionsController < ApplicationController
   include DraftHelper
-  layout "draft"
+  layout "draft", except: [:bulk_edit]
 
   before_action :set_selection, except: [:bulk_edit]
 

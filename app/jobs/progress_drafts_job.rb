@@ -62,7 +62,8 @@ class ProgressDraftsJob < ApplicationJob
     # End all the prior "current" selections
     candidates.map{|s| s[1]}.each do |s|
       selection = Selection.find(s)
-      Selection.find(s).update(attributes)
+      selection.assign_attributes(attributes)
+      selection.save(validate: false)
     end
   end
 
