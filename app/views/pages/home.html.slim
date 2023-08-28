@@ -8,7 +8,8 @@
       to miss the entire season. If something comes up during the
       draft, your League Commissioner can strategically pause, ensuring
       that all participants have a fair and equal chance to make their
-      picks. Rely on your expertise and knowledge to assemble your team. Compete, and conquer like never before! It's time to Draft... or Die!
+      picks. Rely on your expertise and knowledge to assemble your team.
+      Compete, and conquer like never before! It's time to Draft... or Die!
     h3 Why should I use Draft or Die?
     ul
       li You want that "Player-sticker" experience (no rankings)
@@ -17,14 +18,15 @@
       li Someone no-shows or bails (auto-drafters get wrecked)
       li Draft in-person and/or remotely
       li Write-in picks (late-round sleepers, FTW)
-    p.text-center.pt-4
-      = link_to "Start a new Draft",
-        new_draft_path,
-        class: "c-button c-button--hero#{' c-button--secondary' if current_user.drafts.any?}"
+    - if user_signed_in?
+      p.text-center.pt-4
+        = link_to "Start a new Draft",
+          new_draft_path,
+          class: "c-button c-button--hero#{' c-button--secondary' if current_user&.drafts&.any?}"
   .c-panel.text-center
     - if user_signed_in?
       h3 My Drafts
-      - if current_user.drafts.any?
+      - if current_user&.drafts&.any?
         .c-draft-cards
           = render partial: "drafts/draft_card",
             collection: current_user.drafts,
