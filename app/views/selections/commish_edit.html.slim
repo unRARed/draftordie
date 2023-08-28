@@ -1,11 +1,12 @@
-= form_for([@draft, @selection],
-  html: { class: "c-form c-form--bulk" },
-  data: { turbo_method: :patch },
-  method: :patch \
-) do |f|
-  - # handle errors with flash, otherwise, N+1
-  .m-auto
-    = render partial: "selections/fields",
-      locals: { f: f, is_bulk: true }
-  = f.submit "Update Pick# #{@selection_for_display.pick_number}",
-    class: "c-button c-button--positive"
+= turbo_frame_tag @selection
+  = form_for([@draft, @selection],
+    html: { class: "c-form c-form--bulk" },
+    data: { turbo_method: :patch, turbo_frame: "_top" },
+    method: :patch \
+  ) do |f|
+    - # handle errors with flash, otherwise, N+1
+    .m-auto
+      = render partial: "selections/bulk_fields",
+        locals: { f: f, is_bulk: true }
+    = f.submit "Update Pick# #{@selection_for_display.pick_number}",
+      class: "c-button c-button--positive"

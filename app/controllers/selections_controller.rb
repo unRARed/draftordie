@@ -79,14 +79,15 @@ class SelectionsController < ApplicationController
     # commish actions - need to go around hooks to
     # avoid setting ended_at - maybe refactor
     @selection.assign_attributes(selection_params)
-    if @selection.save(validate: false)
-      flash[:notice] = "Selection updated"
+    if @selection.save
+      flash[:notice] =
+        "Round #{@selection.round_number} " \
+        "Pick #{@selection.pick_number} " \
+        "updated to #{@selection.name}"
     else
-      flash[:alert] = @selection.errors.full_messages.join(", ")
+      flash[:alert] = @selection.errors.full_messages.join("<br>")
     end
-    return redirect_back(
-      fallback_location: draft_path(@selection.draft)
-    )
+    redirect_to bulk_edit_draft_selections_path(@selection.draft)
   end
 
 private

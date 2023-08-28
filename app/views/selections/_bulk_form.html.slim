@@ -7,6 +7,6 @@
       span.c-selection__identifier__pick<
         span Pick ##{display_data.pick_number}
     = turbo_frame_tag display_data.selection,
-      src: edit_draft_selection_path( \
+      src: commish_edit_draft_selection_path( \
         display_data.draft, display_data.selection_id),
       loading: :lazy
