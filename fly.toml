@@ -12,7 +12,7 @@ swap_size_mb = 256
 
 [processes]
   app = "./bin/rails server"
-  sidekiq = "bundle exec sidekiq"
+  worker = "bundle exec sidekiq"
 
 [http_service]
   processes = ["app"]
