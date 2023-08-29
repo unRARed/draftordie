@@ -9,7 +9,15 @@ document.addEventListener('turbo:load', () => {
     { channel: "DraftChannel", slug: draftSlug },
     {
       refresh() {
-        Turbo.visit(location.href, { action: "replace" })
+        // fade out the draft board and prevent null
+        // poiner on the dashboard page
+        if (document.querySelector(".c-draft__board")) {
+          document.querySelector(".c-draft__board").
+            classList.add("c-draft__board--fade");
+        }
+        setTimeout(() => {
+          Turbo.visit(location.href, { action: "replace" })
+        }, 250)
       },
       // reacting to action cable commands sent from the server
       received(data) {

@@ -30,6 +30,12 @@
     background-color: #182625;
     /* text-wrap: balance; */
     /*@apply flex-col-reverse;*/
+    /* for fade out effect */
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+  }
+  .c-draft__board--fade {
+    opacity: 0;
   }
   .c-draft__board__round {
     @apply flex flex-row;
