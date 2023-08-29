@@ -2,6 +2,22 @@
   .c-draft {
     color: #98b5b3;
     position: relative;
+
+    &.c-draft--fade {
+      &:before {
+        position: fixed;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem;
+      }
+
+      .c-draft__board {
+        opacity: 0;
+      }
+    }
   }
   .c-draft--paused {
     &:before {
@@ -27,15 +43,12 @@
   }
   .c-draft__board {
     @apply w-full flex flex-col;
+    /* for fade out effect */
+    opacity: 1;
+    transition: opacity 1.0s ease-in-out;
     background-color: #182625;
     /* text-wrap: balance; */
     /*@apply flex-col-reverse;*/
-    /* for fade out effect */
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
-  }
-  .c-draft__board--fade {
-    opacity: 0;
   }
   .c-draft__board__round {
     @apply flex flex-row;
@@ -109,6 +122,13 @@
   }
   /* Overrides for medium displays */
   @media (min-width: 768px) {
+    .c-draft {
+      &.c-draft--fade {
+        &:before {
+          font-size: 3rem;
+        }
+      }
+    }
     .c-draft__branding { text-align: left; }
 
     .c-draft__board__slot {

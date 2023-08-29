@@ -21,6 +21,8 @@ Rails.application.routes.draw do
       get :join
       post :join, to: "drafts#create_pairing"
       delete :leave
+      delete "remove_user/:user_id",
+        to: "drafts#remove_user", as: :remove_user
       patch :start
       patch :pause
       get :invite

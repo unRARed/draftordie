@@ -136,6 +136,14 @@ class Draft < ApplicationRecord
     started_at.present?
   end
 
+  def remove_user(user)
+    return false unless (data = self.pairings.where(user: user))
+
+    Draft.transaction do
+      data.destroy_all
+    end
+  end
+
   def is_ended?
     ended_at.present? || upcoming_selections.empty?
   end

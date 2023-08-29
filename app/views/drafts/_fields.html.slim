@@ -29,7 +29,7 @@ div class="grid grid-cols-1 gap-8 m-auto#{' md:grid-cols-2' if f.object.persiste
           .c-button-stack
             - f.object.team_name_pairings.each do |pairing|
               = link_to "Remove #{pairing.context_value}",
-                draft_pairing_path(f.object, pairing),
+                remove_user_draft_path(f.object, pairing.user_id),
                 class: "c-button c-button--negative " \
                   "c-button--small",
                 method: :delete, data: { \

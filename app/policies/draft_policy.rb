@@ -62,6 +62,10 @@ class DraftPolicy < ApplicationPolicy
     is_commish?
   end
 
+  def remove_user?
+    is_commish?
+  end
+
   def fill?
     is_commish?
   end

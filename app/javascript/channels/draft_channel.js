@@ -12,12 +12,13 @@ document.addEventListener('turbo:load', () => {
         // fade out the draft board and prevent null
         // poiner on the dashboard page
         if (document.querySelector(".c-draft__board")) {
-          document.querySelector(".c-draft__board").
-            classList.add("c-draft__board--fade");
+          document.querySelector(".c-draft").
+            classList.add("c-draft--fade");
         }
         setTimeout(() => {
-          Turbo.visit(location.href, { action: "replace" })
-        }, 250)
+          location.reload();
+          // Turbo.visit(location.href, { action: "advance" })
+        }, 3000)
       },
       // reacting to action cable commands sent from the server
       received(data) {

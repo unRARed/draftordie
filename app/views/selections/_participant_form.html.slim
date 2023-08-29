@@ -3,10 +3,7 @@
     url: player_data_draft_selection_path( \
       selection.draft, selection),
     html: { class: "c-form" },
-    data: { turbo_method: :patch,
-      turbo_temporary: true,
-      turbo_action: :replace },
-    method: :patch \
+    data: { turbo_method: :patch }, method: :patch \
   ) do |f|
     - if selection.errors.any?
       = render "shared/errors",
@@ -23,10 +20,8 @@ javascript:
   (function () {
     let form = document.
       getElementById("edit_selection_#{selection.id}");
-    form.addEventListener("keyup", (event) => {
-      if (event.keyCode !== 13) { return; }
 
-      event.preventDefault();
-      this.submit();
+    form.addEventListener("submit", (event) => {
+      event.currentTarget.classList.add("c-form--submitting");
     });
   })();

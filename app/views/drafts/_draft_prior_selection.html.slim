@@ -6,4 +6,4 @@
     - if draft&.next_selection
       .c-draft__deck__next
         strong On deck:
-        span< #{draft.next_selection.pairing.team_name}
+        span< #{draft.next_selection&.pairing&.team_name}

@@ -7,4 +7,4 @@ div class="#{pick_class(selection, user)}"
     span< #{selection.name} (#{selection.position})
   br
   span Team:
-  span.text-xs< = selection.pairing.team_name
+  span.text-xs< = selection&.pairing&.team_name

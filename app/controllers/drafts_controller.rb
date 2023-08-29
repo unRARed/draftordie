@@ -67,10 +67,22 @@ class DraftsController < ApplicationController
     if @draft.is_running?
       flash[:alert] = "Draft has already started!"
     elsif @draft.users.include?(current_user)
-      @draft.users.delete(current_user)
-      flash[:alert] = "You have been removed from this draft."
+      @draft.remove_user(current_user)
+      flash[:notice] = "You have been removed from this draft."
     else
-      flash[:notice] = "You're not in this draft!"
+      flash[:warning] = "You're not in this draft!"
+    end
+    redirect_to draft_path(@draft)
+  end
+
+  def remove_user
+    if @draft.is_running?
+      flash[:alert] = "Draft has already started!"
+    elsif @draft.users.include?(current_user)
+      @draft.remove_user(params[:user_id])
+      flash[:notice] = "Participant has been removed."
+    else
+      flash[:warning] = "That participant is not in this draft!"
     end
     redirect_to draft_path(@draft)
   end

@@ -13,6 +13,13 @@ document.addEventListener('turbo:frame-load', () => {
     let hiddenInput = component.
       querySelector("input[type='hidden']");
 
+    // hiddenInput.form.addEventListener("keyup", (e) => {
+    //   event.preventDefault();
+    //   if (event.keyCode !== 13) { return; }
+
+    //   event.currentTarget.classList.add("c-form--submitting");
+    // });
+
     input.addEventListener("input", (e) => {
       if (isTyping) { return; }
 
