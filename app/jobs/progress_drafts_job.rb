@@ -30,27 +30,30 @@ class ProgressDraftsJob < ApplicationJob
       select{|c| c[1].nil? && !c[2].nil? }
     open_progressions =
       (open_progressions - orphans) if !orphans.empty?
+    # candidates are those with a current
+    # selection that IS also selected
     candidates = open_progressions.
-      select{|c| !c[1].nil? && !c[2].nil? && c[3] }
+      select{|c| !c[1].nil? && c[3] }
+
     return if candidates.empty? && orphans.empty?
 
-    fix_orphans(orphans) unless orphans.empty?
+    progress_orphans(orphans) unless orphans.empty?
 
     unless candidates.empty?
-      fix_candidates(candidates, user || nil)
+      progress_candidates(candidates, user || nil)
     end
 
     inform_clients(candidates + orphans)
   end
 
-  def fix_orphans(data)
+  def progress_orphans(data)
     draft_slugs = data.map{|s| s[0]}
     logger.info "Fixing orphans: #{draft_slugs}"
     Selection.where(id: data.map{|s| s[2]}).
       update_all(started_at: Time.current)
   end
 
-  def fix_candidates(candidates, user = nil)
+  def progress_candidates(candidates, user = nil)
     # Start the clock for All the next selections
     Selection.where(id: candidates.map{|s| s[2]}).
       update_all(started_at: Time.current)
@@ -59,11 +62,18 @@ class ProgressDraftsJob < ApplicationJob
     if !user.nil?
       attributes = attributes.merge({selecting_user: user})
     end
-    # End all the prior "current" selections
-    candidates.map{|s| s[1]}.each do |s|
-      selection = Selection.find(s)
-      selection.assign_attributes(attributes)
-      selection.save(validate: false)
+
+    # End all the "current" selections
+    candidates.each do |candidate|
+      current_selection = Selection.find(candidate[1])
+      current_selection.assign_attributes(attributes)
+      current_selection.save(validate: false)
+
+      # End the draft if this was the last selection
+      if candidate[2].nil?
+        draft = Draft.find_by(slug: candidate[0])
+        draft.update_columns(ended_at: Time.current)
+      end
     end
   end
 

@@ -155,9 +155,9 @@ class DraftsController < ApplicationController
     # start the draft and put the current selection
     # on the clock
     Draft.transaction do
+      @draft.update started_at: Time.current
       @draft.upcoming_selections.first.
-        update started_at: Time.current
-      @draft.update_columns started_at: Time.current
+        update_columns started_at: Time.current
     end
     flash[:notice] = "Draft has begun!"
     DraftChannel.broadcast_to(@draft, {
