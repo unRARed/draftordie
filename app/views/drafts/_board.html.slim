@@ -1,8 +1,8 @@
 - if draft.rounds.empty?
   p Draft Board has not been setup yet.
 - else
-  - draft.rounds.each do |round|
-    div class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
+  - draft.rounds.order(:number).each do |round|
+    div id="round_#{round.number}" class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"
       - round.ordered_selections.each do |selection|
         = render partial: "drafts/board_selection",
           locals: { selection: selection }
