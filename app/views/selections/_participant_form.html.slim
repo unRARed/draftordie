@@ -19,3 +19,14 @@
     = f.submit "Draft Player",
       class: "c-button c-button--positive",
       data: data
+javascript:
+  (function () {
+    let form = document.
+      getElementById("edit_selection_#{selection.id}");
+    form.addEventListener("keyup", (event) => {
+      if (event.keyCode !== 13) { return; }
+
+      event.preventDefault();
+      this.submit();
+    });
+  })();

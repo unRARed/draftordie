@@ -40,6 +40,7 @@ document.addEventListener('turbo:frame-load', () => {
       item.addEventListener("click", (e) => {
         hiddenInput.value = e.target.getAttribute('value');
         input.value = e.target.textContent;
+        input.focus();
       });
     });
   });

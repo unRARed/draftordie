@@ -8,10 +8,10 @@ h2.text-center Draft Order
         .form-group.form-group--required
           = ff.hidden_field :user_id, value: ff.object.user_id
           = ff.label :context_value, @draft.team_name_pairings. \
-            find{|p| p.user_id == ff.object.user_id}.context_value,
+            find{|p| p.user_id == ff.object.user_id}&.context_value,
             class: "c-form__label"
           = ff.number_field :context_value, class: "c-field",
-            value: ff.object.context_value || ff.index + 1
+            value: ff.object&.context_value || ff.index + 1
       .pt-4.text-center
         = f.submit 'Update Draft Order',
           class: "c-button c-button--primary", data: { \
