@@ -18,7 +18,7 @@ document.addEventListener('turbo:load', () => {
         setTimeout(() => {
           location.reload();
           // Turbo.visit(location.href, { action: "advance" })
-        }, 3000)
+        }, 2000)
       },
       // reacting to action cable commands sent from the server
       received(data) {

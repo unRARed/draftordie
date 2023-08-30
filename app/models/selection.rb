@@ -31,7 +31,7 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Selection < ApplicationRecord
-  BUFFER_SECONDS = 2
+  BUFFER_SECONDS = 5
 
   include DraftHelper
 
