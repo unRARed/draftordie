@@ -24,6 +24,7 @@ FactoryBot.define do
   factory :pairing do
     context { nil }
     pairable { nil }
+    user
   end
 
   trait :draft do
