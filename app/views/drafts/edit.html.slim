@@ -18,6 +18,7 @@
       = link_to 'Generate Board',
         generate_draft_path(@draft),
         method: :post,
+        id: "generate-board",
         data: { turbo_method: :post },
         class: "c-button c-button--secondary"
     - if @draft.is_running?

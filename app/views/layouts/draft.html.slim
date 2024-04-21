@@ -1,3 +1,8 @@
+- draft_classes = ["c-draft"]
+- if @draft.is_paused? && !policy(@draft).edit?
+  - draft_classes << "c-draft--paused"
+- if @draft.is_ended?
+  - draft_classes << "c-draft--ended"
 = content_for :meta do
   meta name="draft-slug" content="#{@draft.slug}"
   - if current_user
@@ -6,7 +11,7 @@
     meta name="is-sound-enabled" content="true"
   - if @draft.is_ended?
     meta name="is-draft-ended" content="true"
-div class="c-draft#{' c-draft--paused' if @draft.is_paused? && !policy(@draft).edit?}"
+div class="#{draft_classes.join(' ')}"
   = yield
 = audio_tag(Dir.glob("#{Rails.root}/app/assets/sounds/disses/*.mp3").map{|p| p.split("/sounds/").last }, controls: false, id: "disses")
 = audio_tag(Dir.glob("#{Rails.root}/app/assets/sounds/compliments/*.mp3").map{|p| p.split("/sounds/").last }, controls: false, id: "compliments")

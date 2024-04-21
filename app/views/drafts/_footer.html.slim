@@ -13,11 +13,11 @@
           span Access Code
           strong< = draft.access_code
     .col-span-4
-      - if draft.progression&.current_pick_number
+      - if draft.draft_board_state&.current_pick_number
         = render partial: "drafts/selection_clock",
           locals: { draft: draft }
     .col-span-3
-      - if draft.progression&.current_pick_number
+      - if draft.draft_board_state&.current_pick_number
         = render partial: "drafts/draft_deck",
           locals: { draft: draft }
         = render partial: "drafts/draft_prior_selection",

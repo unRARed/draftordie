@@ -1,8 +1,8 @@
 .c-draft__selection-prior
-  - if draft.progression&.prior_selection
+  - if draft.draft_board_state&.prior_selection
     strong Last pick:
-    span< #{draft.progression.prior_selection.name}
-  - if draft.progression&.next_selection
+    span< #{draft.draft_board_state.prior_selection.name}
+  - if draft.draft_board_state&.next_selection
     - if draft&.next_selection
       .c-draft__deck__next
         strong On deck:

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_13_075622) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_21_162909) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -147,7 +147,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_075622) do
       SELECT DISTINCT ON (drafts.id) drafts.id AS draft_id,
       drafts.slug AS draft_slug,
       current_selection.pick_number AS current_pick_number,
-      ((current_selection.player_id IS NOT NULL) OR ((current_selection.write_in_name IS NOT NULL) AND (current_selection.write_in_position IS NOT NULL)) OR ((current_selection.started_at + ((drafts.selection_seconds)::double precision * 'PT1S'::interval)) < LOCALTIMESTAMP)) AS is_selected,
+      CURRENT_TIMESTAMP AS now,
+      (current_selection.started_at + ((drafts.selection_seconds)::double precision * 'PT1S'::interval)) AS current_selection_ends_at,
+      ((current_selection.player_id IS NOT NULL) OR ((current_selection.write_in_name IS NOT NULL) AND (current_selection.write_in_position IS NOT NULL)) OR ((current_selection.started_at + ((drafts.selection_seconds)::double precision * 'PT1S'::interval)) < CURRENT_TIMESTAMP)) AS is_selected,
       prior_selection.id AS prior_selection_id,
       current_selection.id AS current_selection_id,
       COALESCE(orphan_selections.id, next_selection.id) AS next_selection_id

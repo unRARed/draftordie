@@ -1,14 +1,14 @@
 class DraftChannel < ApplicationCable::Channel
   def subscribed
-    @draft = Draft.eager_load(:progression).
+    @draft = Draft.eager_load(:draft_board_state).
       where(slug: params[:slug]).first
     puts "SUBSCRIBED TO DraftChannel!"
     stream_for @draft
   end
 
   def requested_selection_state(data)
-    puts "REQUESTED SELECTION STATE"
-    @draft = Draft.eager_load(:progression).
+    puts "REQUESTED: SELECTION STATE"
+    @draft = Draft.eager_load(:draft_board_state).
       where(slug: data["slug"]).first
     if @draft.is_ended?
       DraftChannel.broadcast_to(
@@ -29,8 +29,8 @@ class DraftChannel < ApplicationCable::Channel
   end
 
   def requested_selection_advance(data)
-    puts "ADVANCING SELECTION"
-    @draft = Draft.eager_load(:progression).
+    puts "REQUESTED: ADVANCE SELECTION"
+    @draft = Draft.eager_load(:draft_board_state).
       where(slug: data["slug"]).first
     return unless @draft.current_selection.time_expired?
 
@@ -47,6 +47,7 @@ class DraftChannel < ApplicationCable::Channel
   end
 
   def requested_reload(data)
+    puts "REQUESTED: RELOAD"
     return unless current_user
 
     DraftChannel.broadcast_to(@draft, {

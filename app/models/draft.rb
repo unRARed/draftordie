@@ -41,7 +41,7 @@ class Draft < ApplicationRecord
     },
     through: :player_data,
     class_name: "Player"
-  has_one :progression,
+  has_one :draft_board_state,
     class_name: "DataStateForDraftBoard"
   has_many :selections_for_display,
     class_name: "DataSelectionsForDisplay"
@@ -105,7 +105,7 @@ class Draft < ApplicationRecord
     "#{users.count} / #{user_count}"
   end
 
-  def needs_progression?
+  def needs_draft_board_state?
 
   end
 
@@ -157,12 +157,12 @@ class Draft < ApplicationRecord
   end
 
   def current_selection
-    progression&.current_selection ||
+    draft_board_state&.current_selection ||
       remaining_selections.first
   end
 
   def next_selection
-    progression&.next_selection
+    draft_board_state&.next_selection
   end
 
   def remaining_selections
@@ -184,7 +184,7 @@ class Draft < ApplicationRecord
     slug
   end
 
-  def generate_board
+  def generate_board!
     Draft.transaction do
       is_reversed = false
       current_pick_number = 1
@@ -215,6 +215,25 @@ class Draft < ApplicationRecord
         end
         round_number += 1
         is_reversed = !is_reversed
+      end
+    end
+  end
+
+  # Turns the draft on, if not already
+  def activate!
+    # Prevent restarting an active draft
+    return if started_at.present? && !is_paused
+
+    transaction do
+      # if started prior and currently only paused, we reset
+      # the timer for the current selection and unpause
+      if is_paused?
+        current_selection.update started_at: Time.current
+        update is_paused: false
+      else
+        update started_at: Time.current
+        upcoming_selections.first.
+          update_columns started_at: Time.current
       end
     end
   end

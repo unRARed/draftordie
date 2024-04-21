@@ -10,7 +10,7 @@ RSpec.describe "Draft", type: :feature do
     sign_in user
     setup_draft
     @draft = Draft.last
-    @draft.generate_board
+    @draft.generate_board!
   end
 
   describe "sends invitations to participants", js: true do

@@ -13,9 +13,9 @@
 #
 FactoryBot.define do
   factory :player do
-    team { "GB" }
-    name { "Aaron Rodgers" }
-    position { "QB" }
-    bye_week { 1 }
+    team { Player::TEAMS[:football].sample }
+    name { Faker::Name.unique.name }
+    position { Player::POSITIONS[:football].sample }
+    bye_week { (4..14).to_a.sample }
   end
 end

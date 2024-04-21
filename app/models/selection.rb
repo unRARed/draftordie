@@ -121,7 +121,7 @@ class Selection < ApplicationRecord
 
     self.transaction do
       next_selection = self.
-        draft.progression.next_selection
+        draft.draft_board_state.next_selection
       self.update(attributes)
       if next_selection.nil?
         # this was the final selection, end the draft
@@ -137,8 +137,11 @@ class Selection < ApplicationRecord
   end
 
   def time_expired?
-    ended_at.nil? && Time.current >
-      (started_at + draft.selection_seconds.seconds)
+    return false unless started_at.present?
+    # selection not ended yet
+    ended_at.nil? && Time.current > (
+      started_at + draft.selection_seconds.seconds
+    )
   end
 
   def position
@@ -153,7 +156,8 @@ class Selection < ApplicationRecord
     return player.formatted_name if player.present?
     return write_in_name if write_in_name.present?
 
-    "Missed"
+    return "Missed" if time_expired?
+    "TBD"
   end
 
   def is_selected?
@@ -181,6 +185,11 @@ class Selection < ApplicationRecord
     end
     elapsed_seconds = Time.current - self.started_at
     (draft.selection_seconds - elapsed_seconds) + BUFFER_SECONDS
+  end
+
+  def poll!
+    return unless time_expired?
+    update_columns(ended_at: Time.current)
   end
 
 private

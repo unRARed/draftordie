@@ -150,28 +150,9 @@ class DraftsController < ApplicationController
   end
 
   def start
-    # if paused, we only reset the timer
-    # for the current selection and unpause
-    if @draft.is_paused?
-      @draft.current_selection.update started_at: Time.current
-      @draft.update is_paused: false
-      flash[:notice] = "Draft has resumed!"
-      DraftChannel.broadcast_to(@draft, {
-        command: "refresh", payload: {}
-      })
-    end
-
-    # guard clause to prevent restarting a draft
-    return if @draft.started_at.present?
-
-    # start the draft and put the current selection
-    # on the clock
-    Draft.transaction do
-      @draft.update started_at: Time.current
-      @draft.upcoming_selections.first.
-        update_columns started_at: Time.current
-    end
-    flash[:notice] = "Draft has begun!"
+    action_taken = @draft.is_paused? ?  "resumed" : "started"
+    @draft.activate!
+    flash[:notice] = "Draft has #{action_taken}!"
     DraftChannel.broadcast_to(@draft, {
       command: "refresh", payload: {}
     })
@@ -200,7 +181,7 @@ class DraftsController < ApplicationController
   end
 
   def generate
-    @draft.generate_board
+    @draft.generate_board!
     flash[:notice] = "Draft board generated!"
     redirect_back fallback_location: draft_path(@draft)
   end

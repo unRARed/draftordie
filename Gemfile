@@ -80,6 +80,7 @@ group :test do
   gem "mock_redis"
   gem 'simplecov', require: false
   gem 'timecop'
+  gem "database_cleaner"
 end
 
 group :development do

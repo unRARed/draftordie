@@ -8,12 +8,14 @@ RSpec.describe "Draft Progression", type: :feature do
       email: "commish@draftordie.com")
   end
   let!(:draft) do
-    FactoryBot.create(:draft, :fast, :complete_and_ready_to_start,
+    FactoryBot.create(:draft, :fast,
+      :complete_commish_only,
       user: commish)
   end
 
   before(:each) do
     ActionController::Base.allow_forgery_protection = false
+    10.times{ FactoryBot.create :player }
   end
 
   after(:each) do
@@ -21,9 +23,15 @@ RSpec.describe "Draft Progression", type: :feature do
   end
 
   context "as the commish" do
-    it :succeeds, js: true do
+    it "works without other users", js: true do
       sign_in commish
+
       visit edit_draft_path(draft)
+      page.click_on id: "generate-board"
+      page.find(
+        ".c-notification.c-notification--notice",
+        visible: true
+      )
       accept_confirm do
         click_on "Start Draft"
       end
@@ -36,50 +44,55 @@ RSpec.describe "Draft Progression", type: :feature do
       end
 
       # pick time expires
-      sleep 4
+      sleep 2
+      # simulate job running in the background
+      ProgressDraftsJob.perform_now
+      page.find(".c-draft__pick--missed", visible: true, count: 1)
 
+      # pick time expires again
+      sleep 1
       # job runs in the background
       ProgressDraftsJob.perform_now
+      page.find(".c-draft--ended", visible: true)
+    end
 
-      sleep 4
+    it "works with another user", js: true do
+      pending "TODO: implement me"
+      fail
+      #   visit edit_draft_path(draft)
+      #   expect(page).
+      #     to have_selector(".c-draft__selections", visible: true)
+      #   sign_out commish
 
-      page.find(".c-draft__pick--missed", visible: true)
+      #   sign_in user1
+      #   visit draft_path(draft)
+      #   fill_in "Access Code", with: draft.access_code
+      #   click_on "Let me in!"
+      #   save_and_open_page
+      #   within("main .c-layout__scoped") do
+      #     expect(page).not_to have_selector("form")
+      #   end
+      #   puts draft.remaining_selections.count
+      #   sleep 2
 
-
-    #   visit edit_draft_path(draft)
-    #   expect(page).
-    #     to have_selector(".c-draft__selections", visible: true)
-    #   sign_out commish
-
-    #   sign_in user1
-    #   visit draft_path(draft)
-    #   fill_in "Access Code", with: draft.access_code
-    #   click_on "Let me in!"
-    #   save_and_open_page
-    #   within("main .c-layout__scoped") do
-    #     expect(page).not_to have_selector("form")
-    #   end
-    #   puts draft.remaining_selections.count
-    #   sleep 2
-
-    #   puts draft.remaining_selections.count
-    #   within(".c-draft__selections-list") do
-    #     save_and_open_page
-    #     expect(page).to have_selector(
-    #       ".c-draft__selection--current", count: 2
-    #     )
-    #   end
-    #   save_and_open_page
-    #   within("main .c-layout__scoped") do
-    #     page.find("form", visible: true)
-    #     click_on "Draft Player"
-    #   end
-    #   page.find(".c-notification--notice", visible: true)
-    #   expect(page).to have_content("Selection updated")
-    #   within("main .c-layout__scoped") do
-    #     expect(page).not_to have_selector("form")
-    #   end
-    #   puts ''
+      #   puts draft.remaining_selections.count
+      #   within(".c-draft__selections-list") do
+      #     save_and_open_page
+      #     expect(page).to have_selector(
+      #       ".c-draft__selection--current", count: 2
+      #     )
+      #   end
+      #   save_and_open_page
+      #   within("main .c-layout__scoped") do
+      #     page.find("form", visible: true)
+      #     click_on "Draft Player"
+      #   end
+      #   page.find(".c-notification--notice", visible: true)
+      #   expect(page).to have_content("Selection updated")
+      #   within("main .c-layout__scoped") do
+      #     expect(page).not_to have_selector("form")
+      #   end
+      #   puts ''
     end
   end
 
