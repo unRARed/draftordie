@@ -44,13 +44,13 @@ RSpec.describe "Draft Progression", type: :feature do
       end
 
       # pick time expires
-      sleep 2
+      sleep draft.selection_seconds
       # simulate job running in the background
       ProgressDraftsJob.perform_now
       page.find(".c-draft__pick--missed", visible: true, count: 1)
 
       # pick time expires again
-      sleep 1
+      sleep draft.selection_seconds
       # job runs in the background
       ProgressDraftsJob.perform_now
       page.find(".c-draft--ended", visible: true)
