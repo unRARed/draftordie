@@ -57,8 +57,71 @@ RSpec.describe "Draft Progression", type: :feature do
     end
 
     it "works with another user", js: true do
-      pending "TODO: implement me"
-      fail
+      draft.pairings << FactoryBot.create(:pairing,
+        :team_context, user: FactoryBot.create(:user),
+        context_value: "Other Team")
+
+      sign_in commish
+
+      visit edit_draft_path(draft)
+      page.click_on id: "generate-board"
+      page.find(
+        ".c-notification.c-notification--notice",
+        visible: true
+      )
+      accept_confirm do
+        click_on "Start Draft"
+      end
+
+      # commish is redirected to the draft dashboard
+      # and it's their turn to pick
+      page.find("form", visible: true)
+      expect(page).to have_content("Commish's Team")
+      expect(page).to have_content("Other Team")
+
+      # it's the commish's pick
+      within(".c-draft__pick--current") do
+        expect(page).to have_content("Commish's Team")
+      end
+
+      # but his pick time expires
+      sleep draft.selection_seconds
+      # simulate job running in the background
+      ProgressDraftsJob.perform_now
+
+      # now it's the other user's pick
+      within(".c-draft__pick--current") do
+        expect(page).to have_content("Other Team")
+      end
+
+      # and then his pick time expires
+      sleep draft.selection_seconds
+      # simulate job running in the background
+      ProgressDraftsJob.perform_now
+
+      # but still his pick
+      within(".c-draft__pick--current") do
+        expect(page).to have_content("Other Team")
+      end
+
+      # and then his pick time expires again
+      sleep draft.selection_seconds
+      # simulate job running in the background
+      ProgressDraftsJob.perform_now
+
+      # so back to the commish
+      within(".c-draft__pick--current") do
+        expect(page).to have_content("Commish's Team")
+      end
+
+      # pick time expires again
+      sleep draft.selection_seconds
+      # job runs in the background
+      ProgressDraftsJob.perform_now
+
+      # Draft is over
+      page.find(".c-draft--ended", visible: true)
+
       #   visit edit_draft_path(draft)
       #   expect(page).
       #     to have_selector(".c-draft__selections", visible: true)
