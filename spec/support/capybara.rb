@@ -58,7 +58,9 @@ chrome_options.add_preference(
 )
 
 Capybara.register_driver(:chrome_headless) do |app|
-  # chrome_options.add_argument("--headless")
+  unless ENV["HEADLESS"] == "false"
+    chrome_options.add_argument("--headless")
+  end
 
   # according to https://github.com/SeleniumHQ/selenium/blob/master/rb/lib/selenium/webdriver/remote/http/default.rb
   # Warning: Setting {#open_timeout} to non-nil values will cause a separate thread to spawn.

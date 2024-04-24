@@ -47,7 +47,7 @@ RSpec.describe "Draft Progression", type: :feature do
       sleep draft.selection_seconds
       # simulate job running in the background
       ProgressDraftsJob.perform_now
-      page.find(".c-draft__pick--missed", visible: true, count: 1)
+      page.find(".c-draft__pick--missed", visible: true)
 
       # pick time expires again
       sleep draft.selection_seconds
@@ -214,6 +214,7 @@ RSpec.describe "Draft Progression", type: :feature do
         fill_in "Access Code", with: draft.access_code
         click_on "Let me in"
 
+        page.find(".c-fuzzy-select", visible: true)
         within ".c-draft" do
           expect(page).to have_selector("form")
         end

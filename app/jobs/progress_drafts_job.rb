@@ -22,7 +22,6 @@ class ProgressDraftsJob < ApplicationJob
     # 1. those with a current selection
     # 2. those with ONLY a next selection (orphans)
     orphans = active_progressions.select(&:orphaned?)
-    puts active_progressions.length
     active_progressions =
       (active_progressions - orphans) if !orphans.empty?
     # candidates are those with a current

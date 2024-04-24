@@ -23,7 +23,6 @@ class RefreshPlayerPoolJob < ApplicationJob
     sleep 10
     ranking_table = browser.table(id: "ranking-table")
     player_rows = ranking_table.trs(class: "player-row")
-    puts player_rows.count
     Player.transaction do
       scraped_time = Time.current
       player_rows.each do |row|
@@ -45,7 +44,7 @@ class RefreshPlayerPoolJob < ApplicationJob
           end
         end
 
-        puts "Saving player: #{player.name}"
+        logger.info "Saving player: #{player.name}"
         player.save
       end
     end
