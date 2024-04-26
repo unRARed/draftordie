@@ -8,3 +8,9 @@ div id="pick_number_#{selection.pick_number}" class="#{draft_board_slot_class(se
       span< Missed Pick
     - elsif selection.is_selected? && !selection.is_missed?
       span< = selection.name
+    - if current_user.is_owner?(selection.draft)
+      = link_to "", commish_edit_draft_selection_path( \
+          selection.draft, selection.id),
+        data: { "turbo-frame": "modal-frame",
+          action: "modal#open", },
+        class: "c-draft__board__slot__edit"

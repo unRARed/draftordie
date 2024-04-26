@@ -14,6 +14,27 @@ css:
   }
 div.c-draft__board id="board_#{@draft.slug}"
   = render partial: "drafts/board", locals: { draft: @draft }
+  - if current_user.is_owner?(@draft)
+    #draft_modal
+    - # TODO: Hacky-er than I want but how to have
+    - # link to both turbo frame AND Stimulus?
+    javascript:
+      document.addEventListener("turbo:load", function () {
+        let picks = Array.from(
+          document.querySelectorAll(".c-draft__board__slot__edit")
+        );
+
+        picks.forEach(
+          function(element, index, array) {
+            element.addEventListener("click", function () {
+              setTimeout(function () {
+                document.querySelector(".c-modal").classList.
+                  add("c-modal--open");
+              }, 500); // for the delayed turbo frame refresh
+            });
+          }
+        );
+      });
 .c-draft__footer id="footer_#{@draft.slug}"
   = render partial: "drafts/footer", locals: { draft: @draft }
 javascript:
