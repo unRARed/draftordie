@@ -87,7 +87,7 @@ class SelectionsController < ApplicationController
     else
       flash[:alert] = @selection.errors.full_messages.join("<br>")
     end
-    redirect_to bulk_edit_draft_selections_path(@selection.draft)
+    redirect_to board_draft_path(@selection.draft)
   end
 
 private

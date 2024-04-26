@@ -28,7 +28,11 @@ class User < ApplicationRecord
     inverse_of: :user,
     dependent: :destroy
 
+  def is_owner?(draft)
+    draft.user == self
+  end
+
   def in_draft?(draft)
-    draft.user == self || draft.users.include?(self)
+    is_owner?(draft) || draft.users.include?(self)
   end
 end

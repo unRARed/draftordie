@@ -4,11 +4,12 @@
   "dependencies": {
     "@blaze/atoms": "^13.1.0",
     "@blaze/css": "^12.2.0",
-    "@hotwired/stimulus": "^3.2.1",
+    "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^7.3.0",
     "@tailwindcss/forms": "^0.5.3",
     "autoprefixer": "^10.4.14",
-    "esbuild": "^0.18.11",
+    "esbuild": "^0.16.x",
+    "esbuild-rails": "^1.0.7",
     "fitext": "^1.4.4",
     "mermaid": "^10.3.1",
     "postcss": "^8.4.25",
@@ -16,8 +17,14 @@
     "tailwindcss": "^3.3.2"
   },
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets",
+    "build:esbuild": "node config/esbuild.config.mjs",
     "build:css": "tailwindcss --postcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/preset-env": "^7.24.4",
+    "core-js": "^3.37.0",
+    "esbuild-plugin-babel": "^0.2.3"
+  }
 }

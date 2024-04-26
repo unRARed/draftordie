@@ -69,6 +69,15 @@
     padding-bottom: 0.1rem;
     padding-left: 0.2rem;
     padding-right: 0.2rem;
+
+    .c-draft__board__slot__edit {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      cursor: pointer;
+    }
   }
   .c-draft__board__slot--current {
     @apply border-green-200 animate-pulse;

@@ -1,0 +1,18 @@
+div(
+  data-controller="modal"
+  data-action="keydown.esc->modal#close"
+  class="c-modal"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+  role="dialog"
+)
+  div(
+    class="c-modal__cover"
+    data-action="click->modal#close"
+  )
+
+  div class="c-modal__content"
+    button data-action="click->modal#close" X
+    = turbo_frame_tag "modal-frame",
+      data: { "modal-target" => "content" } do
+      = yield
