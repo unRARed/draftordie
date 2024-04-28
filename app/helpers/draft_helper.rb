@@ -77,12 +77,6 @@ module DraftHelper
           'Setup', edit_draft_path(draft), data: { turbo: false }
         )
       )
-      @navigation.add_item(:draft, NavigationItem.new(
-          'Edit Selections',
-          bulk_edit_draft_selections_path(draft),
-          data: { turbo: false }
-        )
-      )
     end
 
     if current_user.drafts.length > 1

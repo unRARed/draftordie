@@ -1,41 +1,56 @@
-.grid.grid-cols-1.gap-8.md:grid-cols-2
+- if user_signed_in?
+  .text-center
+    h3 My Drafts
+    - if current_user&.drafts&.any?
+      .c-draft-cards
+        = render partial: "drafts/draft_card",
+          collection: current_user.drafts,
+          as: :draft
+
+- else
+  .text-center.mb-5
+    h3 Sign Up Today
+    = link_to "Sign Up",
+      new_user_registration_path,
+      class: "c-button c-button--hero"
+    = link_to "Log In",
+      new_user_session_path,
+      class: "c-button c-button--hero c-button--secondary"
+  .grid.grid-cols-4
+    .col-start-2.col-span-2.mb-5
+      p Join us at Draft or Die and transform your fantasy draft into an unforgettable experience. Bid farewell to the predictability of rankings and embrace the unpredictability of drafting your ultimate team. Say no to the frustration of auto-drafters snatching up all the value picks and hello to a dynamic draft environment where strategy and knowledge reign supreme. It's time to elevate your fantasy game and experience the excitement of drafting like never before. Don't miss out on the action – join Draft or Die today!
   .c-panel
-    h2 Draft or Die
-    p Growing tired of auto-drafters scooping up the value picks?
-      You won't find rankings here! Draft or Die helps turn your draft
-      day into a party. Shame the friend who shows up with the Fantasy
-      Magazine and drafts THAT player... you know, the one who's going
-      to miss the entire season. If something comes up during the
-      draft, your League Commissioner can strategically pause, ensuring
-      that all participants have a fair and equal chance to make their
-      picks. Rely on your expertise and knowledge to assemble your team.
-      Compete, and conquer like never before! It's time to Draft... or Die!
-    h3 Why should I use Draft or Die?
-    ul
-      li You want that "Player-sticker" experience (no rankings)
-      li You already have a sick TV to display the board
-      li Someone needs a break (pause the draft)
-      li Someone no-shows or bails (auto-drafters get wrecked)
-      li Draft in-person and/or remotely
-      li Write-in picks (late-round sleepers, FTW)
-    - if user_signed_in?
-      p.text-center.pt-4
-        = link_to "Start a new Draft",
-          new_draft_path,
-          class: "c-button c-button--hero#{' c-button--secondary' if current_user&.drafts&.any?}"
-  .c-panel.text-center
-    - if user_signed_in?
-      h3 My Drafts
-      - if current_user&.drafts&.any?
-        .c-draft-cards
-          = render partial: "drafts/draft_card",
-            collection: current_user.drafts,
-            as: :draft
-    - else
-      h3 Sign Up Today
-      = link_to "Sign Up",
-        new_user_registration_path,
-        class: "c-button c-button--hero"
-      = link_to "Log In",
-        new_user_session_path,
-        class: "c-button c-button--hero c-button--secondary"
+    h3.text-center.mb-5 Why should I use Draft or Die?
+    .grid.grid-cols-1.gap-8.md:grid-cols-2
+      div
+        = image_tag "example-draft-annotated.jpg",
+          class: "rounded-xl"
+        - if user_signed_in?
+          p.text-center.pt-4
+            = link_to "Start a new Draft",
+              new_draft_path,
+              class: "c-button c-button--hero#{' c-button--secondary' if current_user&.drafts&.any?}"
+      div
+        h4 Live Drafts are More Fun
+        p With Draft or Die, we ditch the rankings and bring back the
+          excitement of making your picks based on your own research.
+        h4 Why waste paper when you have a TV?
+        p Our platform is optimized for the big screen, making every
+          selection a cinematic experience.
+        h4 Smoke Em if you got Em
+        p The Draft Admin can strategically halt the draft to
+          accommodate breaks, ensuring that every participant has
+          the chance to regroup and strategize effectively.
+        h4 Punish No-shows
+        p With Draft or Die, auto-drafting isn't a thing. If you're
+          not there, you straight up miss your picks. Your league
+          can decide how to fill those missed picks after the draft
+          concludes. We recommend Kickers for Football Drafts.
+        h4 Remote Option
+        p Draft or Die plays best when everyone in the same room,
+          but we realize shit happens. Players can join virtually
+          from anywhere in the world, bringing fantasy sports
+          enthusiasts together like never before.
+        h4 Snag those Deep Sleepers
+        p Leverage the freedom to write in a pick, giving you the
+          flexibility to snag those hidden gems at the end of a Draft.

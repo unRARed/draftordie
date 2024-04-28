@@ -4,6 +4,8 @@
     background-color: #2e4846;
     color: #cad3b3;
     box-shadow: 3px 3px 5px #333;
+    overflow: hidden;
+    z-index: 1;
 
     + .c-panel {
       margin-top: 0.5rem;

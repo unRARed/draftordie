@@ -1,22 +1,8 @@
 class SelectionsController < ApplicationController
   include DraftHelper
-  layout "draft", except: [:bulk_edit]
+  layout "draft"
 
-  before_action :set_selection, except: [:bulk_edit]
-
-  def bulk_edit
-    @draft = Draft.find_by(slug: params[:draft_slug])
-    unless @draft.selections.any?
-      skip_authorization
-      flash[:alert] = "Draft board must be generated first"
-      return redirect_back fallback_location: draft_path(@draft)
-    end
-    authorize @draft.selections.first
-
-    build_draft_navigation
-    @rounds = @draft.
-      selections_for_display.to_a.group_by(&:round_number)
-  end
+  before_action :set_selection
 
   def edit
     @draft = Draft.preloaded.find(@selection.draft_id)

@@ -9,10 +9,6 @@ class SelectionPolicy < ApplicationPolicy
   end
 
   # Commish actions
-  def bulk_edit?
-    is_commish?
-  end
-
   def commish_edit?
     is_commish?
   end

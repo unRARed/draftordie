@@ -69,3 +69,46 @@ p + h6 { margin-top: 1.45rem; }
   font-weight: bold;
   color: pink;
 }
+
+.c-video {
+  /* &.c-video--background { */
+  /*   position: absolute; */
+  /*   top: 0; */
+  /*   bottom: 0; */
+  /*   left: 0; */
+  /*   right: 0; */
+
+  /*   &:after { */
+  /*     content: ""; */
+  /*   } */
+  /* } */
+
+  /* .c-video__source { */
+  /*   object-fit: cover; */
+  /*   height: 100%; */
+  /*   position: relative; */
+  /*   left: 0; */
+  /* } */
+
+  /* .c-video__overlay { */
+  /*   position: absolute; */
+  /*   background-image: url("black-overlay.png"); */
+  /*   top: 0; */
+  /*   bottom: 0; */
+  /*   left: 0; */
+  /*   right: 0; */
+  /*   margin: auto; */
+  /* } */
+}
+.c-video-layer {
+  /* position: relative; */
+  /* height: 100%; */
+  /* text-align: center; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: center; */
+
+  /* .c-panel { */
+  /*   background-color: rgb(46 72 70 / 50%); */
+  /* } */
+}
