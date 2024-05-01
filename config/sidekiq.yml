@@ -1,6 +1,6 @@
 ---
-:concurrency: 2
+:concurrency: 1 # was 2
 :scheduler:
   :schedule:
      ProgressDraftsJob:
-       every: ['5s']
+       every: ['30s'] # was 5s - too much for upstash cost-wise
