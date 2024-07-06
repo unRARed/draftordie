@@ -24,15 +24,20 @@ class RefreshPlayerPoolJob < ApplicationJob
     ranking_table = browser.table(id: "ranking-table")
     player_rows = ranking_table.trs(class: "player-row")
     Player.transaction do
+      pool = PlayerPool.create!
       scraped_time = Time.current
       player_rows.each do |row|
-        player = Player.new(scraped_at: scraped_time)
+        player = Player.new(
+          scraped_at: scraped_time, player_pool: pool
+        )
 
         row.each_with_index do |cell, cell_index|
           case cell_index
           when 2
             player.name = cell.a.text
-            player.team = cell.span(class: "player-cell-team").text.gsub(/\W/, '')
+            player.team = cell.
+              span(class: "player-cell-team").
+              text.gsub(/\W/, '')
           when 3
             if POSITIONS.include?(cell.text.gsub(/\d/, ""))
               player.position = cell.text.gsub(/\d/, "")
@@ -45,7 +50,7 @@ class RefreshPlayerPoolJob < ApplicationJob
         end
 
         logger.info "Saving player: #{player.name}"
-        player.save
+        player.save!
       end
     end
 

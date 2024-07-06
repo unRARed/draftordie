@@ -14,19 +14,23 @@
 #  user_count        :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  player_pool_id    :bigint           default(1), not null
 #  user_id           :bigint           not null
 #
 # Indexes
 #
-#  index_drafts_on_user_id  (user_id)
+#  index_drafts_on_player_pool_id  (player_pool_id)
+#  index_drafts_on_user_id         (user_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (player_pool_id => player_pools.id)
 #  fk_rails_...  (user_id => users.id)
 #
 class Draft < ApplicationRecord
   before_save :generate_slug, :generate_access_code
   belongs_to :user
+  belongs_to :player_pool
   # belongs_to :current_selection,
   #   class_name: "Selection",
   #   optional: true

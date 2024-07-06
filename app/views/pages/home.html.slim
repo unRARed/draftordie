@@ -6,6 +6,10 @@
         = render partial: "drafts/draft_card",
           collection: current_user.drafts,
           as: :draft
+    p.text-center.pt-4
+      = link_to "Start a new Draft",
+        new_draft_path,
+        class: "c-button c-button--hero#{' c-button--secondary' if current_user&.drafts&.any?}"
 
 - else
   .text-center.mb-5
@@ -25,11 +29,6 @@
       div
         = image_tag "example-draft-annotated.jpg",
           class: "rounded-xl"
-        - if user_signed_in?
-          p.text-center.pt-4
-            = link_to "Start a new Draft",
-              new_draft_path,
-              class: "c-button c-button--hero#{' c-button--secondary' if current_user&.drafts&.any?}"
       div
         h4 Live Drafts are More Fun
         p With Draft or Die, we ditch the rankings and bring back the

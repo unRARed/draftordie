@@ -1,4 +1,4 @@
-.c-draft-card
+.c-draft-card class="#{'c-draft-card--ended' if draft.is_ended?}"
   .c-draft-card__header
     .c-draft-card__header__title
       = link_to draft.name, draft_path(draft)

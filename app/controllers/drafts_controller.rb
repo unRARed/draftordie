@@ -115,6 +115,7 @@ class DraftsController < ApplicationController
     @draft = Draft.new(draft_params)
     authorize @draft
     @draft.user = current_user
+    @draft.player_pool_id = PlayerPool.last.id || 1
     @draft.team_name_pairings.build user: current_user,
       context_value: "Commish's Team"
 

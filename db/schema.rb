@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_21_162909) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_06_145918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,6 +27,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_21_162909) do
     t.datetime "started_at"
     t.datetime "ended_at"
     t.string "access_code"
+    t.bigint "player_pool_id", default: 1, null: false
+    t.index ["player_pool_id"], name: "index_drafts_on_player_pool_id"
     t.index ["user_id"], name: "index_drafts_on_user_id"
   end
 
@@ -42,6 +44,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_21_162909) do
     t.index ["user_id"], name: "index_pairings_on_user_id"
   end
 
+  create_table "player_pools", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "players", force: :cascade do |t|
     t.string "name"
     t.string "team"
@@ -50,6 +57,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_21_162909) do
     t.datetime "scraped_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "player_pool_id", default: 1, null: false
+    t.index ["player_pool_id"], name: "index_players_on_player_pool_id"
   end
 
   create_table "rounds", force: :cascade do |t|
@@ -95,8 +104,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_21_162909) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "drafts", "player_pools"
   add_foreign_key "drafts", "users"
   add_foreign_key "pairings", "users"
+  add_foreign_key "players", "player_pools"
   add_foreign_key "rounds", "drafts"
   add_foreign_key "selections", "drafts"
   add_foreign_key "selections", "players"

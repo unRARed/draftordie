@@ -2,17 +2,28 @@
 #
 # Table name: players
 #
-#  id         :bigint           not null, primary key
-#  bye_week   :integer
-#  name       :string
-#  position   :string
-#  scraped_at :datetime
-#  team       :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id             :bigint           not null, primary key
+#  bye_week       :integer
+#  name           :string
+#  position       :string
+#  scraped_at     :datetime
+#  team           :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  player_pool_id :bigint           default(1), not null
+#
+# Indexes
+#
+#  index_players_on_player_pool_id  (player_pool_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (player_pool_id => player_pools.id)
 #
 class Player < ApplicationRecord
   include PgSearch::Model
+
+  belongs_to :player_pool
 
   validates :name, :team, :position, :bye_week,
     presence: true
@@ -40,11 +51,15 @@ class Player < ApplicationRecord
     ],
   }
 
+  scope :latest, -> {
+    select("players.*, DATE_TRUNC('month', scraped_at)").
+    group("DATE_TRUNC('month', scraped_at), players.id")
+    order(scraped_at: :desc)
+  }
+
   scope :for_selection, -> {
-    order(
-      Arel.sql("position DESC"),
-      :name
-    )
+    latest.
+    order(Arel.sql("position DESC"), :name)
   }
 
   def formatted_name
