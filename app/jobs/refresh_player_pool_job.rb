@@ -55,5 +55,11 @@ class RefreshPlayerPoolJob < ApplicationJob
     end
 
     browser.close
+    File.open(
+      "db/seeds/player_pools/" \
+      "#{Time.current.strftime('%Y%m%d')}-football.json", "w"
+    ) do |f|
+      f.write(PlayerPool.last.players.to_json)
+    end
   end
 end

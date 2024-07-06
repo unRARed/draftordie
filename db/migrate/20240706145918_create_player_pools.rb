@@ -5,11 +5,9 @@ class CreatePlayerPools < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    PlayerPool.create!
-
     add_reference :players, :player_pool,
-      null: false, foreign_key: true, default: PlayerPool.first.id
+      null: false, foreign_key: true, default: 1
     add_reference :drafts, :player_pool,
-      null: false, foreign_key: true, default: PlayerPool.first.id
+      null: false, foreign_key: true, default: 1
   end
 end

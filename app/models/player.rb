@@ -69,6 +69,8 @@ class Player < ApplicationRecord
   # NOTE: re-generate football JSON player-list with:
   # RefreshPlayerPoolJob.perform_now
   def self.import_json(path_to_json)
+    pool = PlayerPool.create!
+
     JSON.parse(File.read(path_to_json)).each do |p|
       Player.create!(
         name: p["name"],
@@ -76,6 +78,7 @@ class Player < ApplicationRecord
         position: p["position"],
         bye_week: p["bye_week"],
         scraped_at: p["scraped_at"],
+        player_pool: pool
       )
     end
   end
