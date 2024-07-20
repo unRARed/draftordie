@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "Draft Progression", type: :feature do
   include DraftSpecHelper
 
+  let!(:player_pool) { FactoryBot.create(:player_pool) }
   let!(:commish) do
     FactoryBot.create(:user,
       email: "commish@draftordie.com")
@@ -10,6 +11,7 @@ RSpec.describe "Draft Progression", type: :feature do
   let!(:draft) do
     FactoryBot.create(:draft, :fast,
       :complete_commish_only,
+      player_pool: player_pool,
       user: commish)
   end
 
@@ -226,6 +228,7 @@ RSpec.describe "Draft Progression", type: :feature do
             native.send_keys(:return)
         end
 
+        save_and_open_page
         page.find(
           ".c-notification.c-notification--notice",
           visible: true
@@ -265,73 +268,6 @@ RSpec.describe "Draft Progression", type: :feature do
         # Draft is over
         page.find(".c-draft--ended", visible: true)
       end
-    end
-  end
-
-  context "as a spectator" do
-    it :succeeds, js: true do
-      pending "need to figure out how to test this"
-      raise
-
-      # create_and_start_draft(user)
-      # draft = Draft.last
-      # visit board_draft_path(draft)
-      # sign_out user
-
-      # sign_in second_user
-      # visit board_draft_path(draft)
-
-      # fill_in "Access Code", with: draft.access_code
-      # click_button "Let me in"
-      # # page.find('.c-draft__board', visible: true)
-
-      # click_on "Join"
-      # expect(page).to have_content("Team Name")
-      # fill_in "Team Name", with: "My Team"
-      # click_on "Join Draft"
-
-      # visit board_draft_path(draft)
-      # expect(page).
-      #   to have_selector('.c-draft__board__slot--current')
-      # expect(page).
-      #   to have_no_selector('.c-draft__board__slot--selected')
-
-      # perform_enqueued_jobs { ProgressDraftsJob.perform_later }
-
-      # visit board_draft_path(draft)
-
-      # page.find('.c-draft__board__slot--selected', visible: true)
-      # puts "got here"
-
-
-      # # job runs every 1 second checking for drafts
-      # # to advance and progresses them
-      # expect(page).to have_selector(
-      #   '.c-draft__board__slot--selected', count: 1)
-
-      # # job runs every 1 second checking for drafts
-      # # to advance and progresses them
-      # ProgressDraftsJob.perform_now
-      # visit "/drafts/#{draft.slug}"
-
-      # expect(page).to have_selector(
-      #   '.c-draft__board__slot--selected', count: 2)
-
-      # # job runs every 1 second checking for drafts
-      # # to advance and progresses them
-      # ProgressDraftsJob.perform_now
-      # expect(page).to have_selector(
-      #   '.c-draft__board__slot--selected', count: 3)
-
-      # expect(draft.selections.count).to eq(16)
-      # expect(draft.upcoming_selections.count).to eq(13)
-
-      # selections = page.all(
-      #   class: 'c-draft__board__slot--selected'
-      # ).each_with_index do |cell, cell_index|
-      #   expect(cell[:id]).
-      #     to eq("pick_number_#{cell_index + 1}")
-      # end
     end
   end
 end

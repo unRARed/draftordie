@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "Draft", type: :feature do
   include DraftSpecHelper
 
+  let!(:player_pool) { FactoryBot.create(:player_pool) }
   let!(:user) { FactoryBot.create(:user) }
   let(:second_user) { FactoryBot.create(:user) }
 
@@ -15,7 +16,16 @@ RSpec.describe "Draft", type: :feature do
 
   describe "sends invitations to participants", js: true do
     it "creates pairing records" do
-      expect(@draft.pairings.count).to eq(1)
+      expect(@draft.pairings.count).to eq(0)
+
+      # Put the commish in the draft
+      click_on "Join"
+      fill_in "Team Name", with: "Commish FTW"
+      click_button "Join"
+      page.find(".c-notification--notice")
+      expect(page).to have_content("You have joined this draft!")
+
+      click_on "Setup"
       click_on "Invite"
       fill_in "Email", with: second_user.email
       click_on "Send Invite"

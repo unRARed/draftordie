@@ -8,6 +8,7 @@
 #
 FactoryBot.define do
   factory :player_pool do
-    
+    players { [] }
+    drafts { [] }
   end
 end

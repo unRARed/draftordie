@@ -36,6 +36,7 @@ FactoryBot.define do
     user_count { 4 }
     selection_seconds { 5 }
     user
+    player_pool
     # slug
 
   end

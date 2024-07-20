@@ -13,6 +13,8 @@ div(
 
   div class="c-modal__content"
     button data-action="click->modal#close" X
-    = turbo_frame_tag "modal-frame",
-      data: { "modal-target" => "content" } do
+    = turbo_frame_tag( \
+      "modal-frame", loading: "lazy", src: nil,
+      data: { "modal-target" => "content" } \
+    ) do
       = yield

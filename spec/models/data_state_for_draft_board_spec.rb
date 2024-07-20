@@ -22,9 +22,11 @@ RSpec.describe DataStateForDraftBoard, type: :model do
   end
 
   context "during active draft" do
+    let!(:player_pool) { FactoryBot.create(:player_pool) }
     let!(:players) { 10.times{ FactoryBot.create :player } }
     let!(:draft) do
-      FactoryBot.create :draft, :fast, :complete_commish_only
+      FactoryBot.create :draft, :fast, :complete_commish_only,
+        player_pool: player_pool
     end
     subject { DataStateForDraftBoard.all.first }
 

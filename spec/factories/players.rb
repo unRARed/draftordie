@@ -26,5 +26,6 @@ FactoryBot.define do
     name { Faker::Name.unique.name }
     position { Player::POSITIONS[:football].sample }
     bye_week { (4..14).to_a.sample }
+    player_pool
   end
 end
