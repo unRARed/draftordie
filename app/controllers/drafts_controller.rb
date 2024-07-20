@@ -47,6 +47,10 @@ class DraftsController < ApplicationController
   end
 
   def create_pairing
+    if pairing_params[:context_value].blank?
+      flash[:alert] = "Team name cannot be blank."
+      return redirect_to join_draft_path(@draft)
+    end
     if @draft.is_running?
       flash[:alert] = "Draft has already started."
     elsif @draft.users.count >= @draft.user_count

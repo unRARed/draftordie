@@ -1,11 +1,18 @@
-= form_for(@pairing, url: join_draft_path(@pairing.pairable, @pairing),
-  html: { class: "c-form" } \
-) do |f|
-  - if @pairing.errors.any?
-    = render "shared/errors", target: @pairing
-  .form-group.form-group--required
-    = f.label :context_value, "Team Name",
-      class: "c-form__label"
-    = f.text_field :context_value
-  = f.submit "Join Draft",
-    class: "c-button c-button--positive"
+.text-center.mb-5
+  h2 Get in the Draft
+  p
+    span> Give your team a name and secure your spot in
+    strong = @draft.name
+    span .
+.m-auto.max-w-72
+  = form_for(@pairing, url: join_draft_path(@pairing.pairable, @pairing),
+    html: { class: "c-form" } \
+  ) do |f|
+    - if @pairing.errors.any?
+      = render "shared/errors", target: @pairing
+    .form-group.form-group--required.mb-3
+      = f.label :context_value, "Team Name",
+        class: "c-form__label"
+      = f.text_field :context_value
+    = f.submit "Join Draft",
+      class: "c-button c-button--positive"
