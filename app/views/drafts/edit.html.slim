@@ -1,3 +1,7 @@
+.text-center
+  h2.mb-0 #{@draft.name}
+  p.mb-3
+    | (Access Code: #{@draft.access_code})
 = form_for @draft, html: { class: "c-form" } do |f|
   - if @draft.errors.any?
     = render "shared/errors", target: @draft

@@ -1,5 +1,9 @@
 - if draft.rounds.empty?
-  p Draft Board has not been setup yet.
+  .text-center
+    h2.mb-0 = draft.name
+    p.mb-3
+      | (Access Code: #{draft.access_code})
+    p Draft Board has not been setup yet.
 - else
   - draft.rounds.order(:number).each do |round|
     div id="round_#{round.number}" class="c-draft__board__round#{' c-draft__board__round--reversed' if round.is_reversed}"

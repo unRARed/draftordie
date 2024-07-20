@@ -14,7 +14,7 @@ css:
   }
 div.c-draft__board id="board_#{@draft.slug}"
   = render partial: "drafts/board", locals: { draft: @draft }
-  - if current_user.is_owner?(@draft)
+  - if current_user&.is_owner?(@draft)
     #draft_modal
     - # TODO: Hacky-er than I want but how to have
     - # link to both turbo frame AND Stimulus?

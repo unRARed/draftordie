@@ -46,13 +46,14 @@
     /* for fade out effect */
     opacity: 1;
     transition: opacity 1.0s ease-in-out;
-    background-color: #182625;
+    /* background-color: #182625; */
     /* text-wrap: balance; */
     /*@apply flex-col-reverse;*/
   }
   .c-draft__board__round {
     @apply flex flex-row;
     flex-wrap: wrap;
+    background-color: #182625;
   }
   .c-draft__board__slot {
     position: relative;

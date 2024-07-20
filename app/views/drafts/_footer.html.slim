@@ -1,4 +1,7 @@
-- if draft.is_ended?
+- if draft.rounds.empty?
+  .c-draft__branding.text-center
+    h2.c-draft__name = draft.name
+- elsif draft.is_ended?
   .c-draft__branding.text-center
     h2.c-draft__name = draft.name
     p.text-center.pt-1 The Draft has Ended

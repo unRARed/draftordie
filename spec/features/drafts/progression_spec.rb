@@ -228,7 +228,6 @@ RSpec.describe "Draft Progression", type: :feature do
             native.send_keys(:return)
         end
 
-        save_and_open_page
         page.find(
           ".c-notification.c-notification--notice",
           visible: true
