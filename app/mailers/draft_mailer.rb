@@ -1,9 +1,9 @@
 class DraftMailer < ApplicationMailer
-  def invite(draft:, email:)
-    @draft = draft
-    @email = email
+  def invite
+    @draft = params[:draft]
+    @email = params[:email]
     mail(
-      to: email,
+      to: @email,
       subject: "You've been invited to a draft!"
     )
   end

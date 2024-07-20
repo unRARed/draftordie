@@ -1,7 +1,14 @@
-div Use this access code to join "#{@draft.name}"
-= @draft.access_code
-hr
-= link_to "Join this Draft",
-  draft_url(@draft,
-    params: { access_code: @draft.access_code }),
-  class: "c-button c-button--secondary"
+.m-auto.max-w-96.text-center.mt-3
+  p.mb-0 You've been invited to:
+  h2.m-0 = @draft.name
+
+  p.mb-0.mt-4 Use this Access Code when prompted:
+  h2.mt-0 style="font-family: Arial;" = @draft.access_code
+  = link_to "Join this Draft",
+    draft_url(@draft,
+      params: { access_code: @draft.access_code }),
+    class: "c-button c-button--hero"
+  p.mt-4
+    span> There is but one choice to make:
+    = link_to "Draft or Die", root_url
+    span .

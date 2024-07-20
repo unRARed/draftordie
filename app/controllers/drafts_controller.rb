@@ -104,7 +104,8 @@ class DraftsController < ApplicationController
   def create_invite
     # send email to user inviting to draft
     DraftMailer.
-      invite(draft: @draft, email: params[:email]).
+      with(draft: @draft, email: params[:email]).
+      invite.
       deliver_now
     flash[:notice] = "Invite sent!"
     redirect_to invite_draft_path(@draft)
