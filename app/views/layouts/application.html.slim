@@ -6,6 +6,13 @@ html
       name="viewport"
       content="width=device-width,initial-scale=1"
     )
+    link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"
+    link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"
+    link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"
+    link rel="manifest" href="/site.webmanifest"
+    link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2e4946"
+    meta name="msapplication-TileColor" content="#2e4946"
+    meta name="theme-color" content="#2e4946"
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag "application",
@@ -21,8 +28,12 @@ html
     section.c-layout-footer-wrap
       .c-layout__scoped
         header.c-layout-header
-          .c-layout__header-title
-            = link_to "Draft or Die", root_path
+          .c-nav-logo
+            = link_to root_path
+              = image_tag "draft-or-die-logo-v1.png",
+                alt: "Draft or Die",
+                width: 120,
+                class: "c-layout-header__logo"
           .c-layout__header-navigation
             = render "shared/navigation"
       - if flash.any?

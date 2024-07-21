@@ -1,32 +1,35 @@
-- if user_signed_in?
-  .text-center
-    h3 My Drafts
-    - if current_user&.drafts&.any?
-      .c-draft-cards
-        = render partial: "drafts/draft_card",
-          collection: current_user.drafts,
-          as: :draft
-    p.text-center.pt-4
-      = link_to "Start a new Draft",
-        new_draft_path,
-        class: "c-button c-button--hero#{' c-button--secondary' if current_user&.drafts&.any?}"
+.container.mx-auto
+  h1.text-center.mb-5.m-auto.max-w-96.mt-3
+    = image_tag "draft-or-die-logo-v1.png",
+      alt: "Draft or Die",
+      width: 600,
+      class: "c-layout-header__logo"
+  - if user_signed_in?
+    .text-center
+      h3 My Drafts
+      - if current_user&.drafts&.any?
+        .c-draft-cards
+          = render partial: "drafts/draft_card",
+            collection: current_user.drafts,
+            as: :draft
+      p.text-center.pt-4
+        = link_to "Start a new Draft",
+          new_draft_path,
+          class: "c-button c-button--hero#{' c-button--secondary' if current_user&.drafts&.any?}"
 
-- else
-  .text-center.mb-5
-    h3 Sign Up Today
-    = link_to "Sign Up",
-      new_user_registration_path,
-      class: "c-button c-button--hero"
-    = link_to "Log In",
-      new_user_session_path,
-      class: "c-button c-button--hero c-button--secondary"
-  .grid.grid-cols-4
-    .col-start-2.col-span-2.mb-5
-      p Join us at Draft or Die and transform your fantasy draft into an unforgettable experience. Bid farewell to the predictability of rankings and embrace the unpredictability of drafting your ultimate team. Say no to the frustration of auto-drafters snatching up all the value picks and hello to a dynamic draft environment where strategy and knowledge reign supreme. It's time to elevate your fantasy game and experience the excitement of drafting like never before. Don't miss out on the action – join Draft or Die today!
-  .c-panel
-    h3.text-center.mb-5 Why should I use Draft or Die?
+  - else
+    .text-center.mb-5
+      = link_to "Sign Up",
+        new_user_registration_path,
+        class: "c-button c-button--hero"
+      = link_to "Log In",
+        new_user_session_path,
+        class: "c-button c-button--hero c-button--secondary"
+    .grid.grid-cols-4
+      .col-start-2.col-span-2.mb-5
     .grid.grid-cols-1.gap-8.md:grid-cols-2
       div
+        p.mb-3 Join us at Draft or Die and transform your fantasy draft into an unforgettable experience. Bid farewell to the predictability of rankings and embrace the unpredictability of drafting your ultimate team. Say no to the frustration of auto-drafters snatching up all the value picks and hello to a dynamic draft environment where strategy and knowledge reign supreme. It's time to elevate your fantasy game and experience the excitement of drafting like never before. Don't miss out on the action – join Draft or Die today!
         = image_tag "example-draft-annotated.jpg",
           class: "rounded-xl"
       div

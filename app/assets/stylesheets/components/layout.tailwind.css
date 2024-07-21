@@ -2,7 +2,15 @@
   .c-layout-main { }
 
   .c-layout-header {
+    position: relative;
     @apply flex justify-between items-baseline p-1;
+
+    img {
+      position: absolute;
+      z-index: 1;
+      top: 10px;
+      left: 0;
+    }
   }
 
   .c-layout__header-title {
