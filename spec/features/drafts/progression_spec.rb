@@ -187,6 +187,18 @@ RSpec.describe "Draft Progression", type: :feature do
         within(".c-draft__pick--current") do
           expect(page).to have_content("Commish's Team")
         end
+        expect(current_path).to eq(draft_path(draft))
+
+        # Users can still navigate away from their selection
+        within ".c-layout__header-navigation" do
+          click_on "Board"
+        end
+        expect(page).to have_content("You're on the clock")
+        expect(current_path).to eq(board_draft_path(draft))
+
+        # they return to the dashboard
+        click_on "Make your selection"
+        expect(page).to have_content("Upcoming Selections")
 
         # Commish selects a player
         within ".c-fuzzy-select" do

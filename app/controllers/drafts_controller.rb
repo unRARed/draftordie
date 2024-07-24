@@ -15,7 +15,7 @@ class DraftsController < ApplicationController
   before_action :authenticate_user!,
     except: [:show, :board, :access, :verify_access]
   before_action :build_draft_navigation
-  before_action :put_user_on_clock, only: [:board, :edit]
+  before_action :warn_selecting_user, only: [:board, :edit]
   skip_after_action :verify_policy_scoped, :only => :index
 
   def board; end
@@ -254,11 +254,12 @@ private
     end
   end
 
-  def put_user_on_clock
+  def warn_selecting_user
     return unless @draft&.is_running?
+
     if current_user == @draft&.current_selection&.user
-      flash[:warning] = "You're on the clock!"
-      return redirect_to(draft_path(@draft))
+      # warn user they're on the clock, but let them go elsewhere
+      flash.now[:warning] = "You're on the clock. <a href='#{draft_path(@draft)}'>Make your selection</a> before time expires!"
     end
   end
 
