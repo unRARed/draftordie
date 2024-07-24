@@ -18,6 +18,7 @@
     color: #dece26;
     min-width: 30%;
     margin: 0;
+    @apply font-mono;
   }
 
   .c-draft__deck {

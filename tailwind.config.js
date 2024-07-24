@@ -11,6 +11,7 @@ module.exports = {
     extend: {
       fontFamily: {
         heading: ['Keania One', 'cursive'],
+        mono: ['Kode Mono', 'monospace'],
       },
     },
   },
