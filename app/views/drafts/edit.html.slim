@@ -11,20 +11,21 @@
       = link_to 'Set Draft Order',
         order_draft_path(@draft),
         class: "c-button c-button--secondary"
-    - if @draft.rounds.any?
-      = link_to '(Re)Generate Board',
-        generate_draft_path(@draft),
-        method: :post,
-        data: { turbo_method: :post,
-          turbo_confirm: "Are you sure?" },
-        class: "c-button c-button--secondary"
-    - else
-      = link_to 'Generate Board',
-        generate_draft_path(@draft),
-        method: :post,
-        id: "generate-board",
-        data: { turbo_method: :post },
-        class: "c-button c-button--secondary"
+    - if f.object.team_name_pairings.any?
+      - if @draft.rounds.any?
+        = link_to '(Re)Generate Board',
+          generate_draft_path(@draft),
+          method: :post,
+          data: { turbo_method: :post,
+            turbo_confirm: "Are you sure?" },
+          class: "c-button c-button--secondary"
+      - else
+        = link_to 'Generate Board',
+          generate_draft_path(@draft),
+          method: :post,
+          id: "generate-board",
+          data: { turbo_method: :post },
+          class: "c-button c-button--secondary"
     - if @draft.is_running?
       = link_to 'Pause Draft',
         pause_draft_path(@draft),
@@ -34,19 +35,20 @@
           turbo_confirm: "Are you sure?" },
         class: "c-button c-button--secondary"
     - else
-      = link_to 'Start Draft',
-        start_draft_path(@draft),
-        method: :patch,
-        data: { turbo_method: :patch,
-          turbo_confirm: "Are you sure?" },
-        class: "c-button"
-      = link_to 'Fill Missed Selections',
-        fill_draft_path(@draft),
-        method: :patch,
-        data: { turbo_method: :patch,
-          turbo_frame: "_top",
-          turbo_confirm: "Are you really sure?" },
-        class: "c-button c-button--secondary"
+      - if f.object.team_name_pairings.any?
+        = link_to 'Start Draft',
+          start_draft_path(@draft),
+          method: :patch,
+          data: { turbo_method: :patch,
+            turbo_confirm: "Are you sure?" },
+          class: "c-button"
+        = link_to 'Fill Missed Selections',
+          fill_draft_path(@draft),
+          method: :patch,
+          data: { turbo_method: :patch,
+            turbo_frame: "_top",
+            turbo_confirm: "Are you really sure?" },
+          class: "c-button c-button--secondary"
     - if @draft.is_paused?
       = link_to 'Resume Draft',
         start_draft_path(@draft),

@@ -1,4 +1,8 @@
-.c-container--md
+.text-center.mb-5
+  h2 Invite a Participant
+  p Enter the email address belonging to the person you
+    would like to include in this draft.
+.c-container--md.m-auto.mb-1.pt-1.max-w-sm
   = form_tag invite_draft_path(@draft),
     method: :post, html: { class: "c-form" },
     data: { turbo_method: :post } \
@@ -8,6 +12,6 @@
     .form-group.form-group--required
       = label_tag :email, "Email",
         class: "c-form__label"
-      = text_field_tag :email
+      = text_field_tag :email, nil, class: "c-field"
     = submit_tag "Send Invite",
       class: "c-button c-button--positive"

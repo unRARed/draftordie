@@ -25,19 +25,21 @@ user.save(validate: false)
 puts "Seeding players..."
 # generate players JSON with:
 # RefreshPlayerPoolJob.perform_now
-Dir.glob("db/seeds/player_pools/*.json").each do |file|
-  PlayerPool.import(file)
-end
+nfl = PlayerPool.import(
+  "2024 NFL Standard plus IDP",
+  Dir.glob("db/seeds/player_pools/football/*.json")
+)
 
 puts "Seeding drafts..."
 [8, 10, 12, 14, 16, 20].each do |count|
   draft = FactoryBot.create(:draft,
     :max, user: user,
+    player_pool: nfl,
     selection_seconds: [30, 60].sample
   )
   User.first(count).each do |user|
-    draft.pairings << FactoryBot.create(:pairing,
-      :team_context, user: user
+    FactoryBot.create(:pairing,
+      :team_context, user: user, pairable: draft
     )
   end
 end

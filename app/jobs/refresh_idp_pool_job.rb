@@ -1,7 +1,7 @@
-class RefreshPlayerPoolJob < ApplicationJob
+class RefreshIdpPoolJob < ApplicationJob
   queue_as :default
 
-  POSITIONS = %w[QB RB WR TE K DST].freeze
+  POSITIONS = %w[LB S DE CB DT].freeze
 
   def perform(*args)
     Watir.default_timeout = 5
@@ -15,7 +15,7 @@ class RefreshPlayerPoolJob < ApplicationJob
     }
 
     browser = Watir::Browser.new :chrome, options: { prefs: prefs }
-    browser.goto 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php'
+    browser.goto 'https://www.fantasypros.com/nfl/rankings/idp-cheatsheets.php'
     browser.elements(tag_name: 'div', class: 'player-cell').
       wait_until(&:exists?)
 
@@ -57,7 +57,7 @@ class RefreshPlayerPoolJob < ApplicationJob
     browser.close
     File.open(
       "db/seeds/player_pools/football/" \
-      "#{Time.current.strftime('%Y%m%d')}-football.json", "w"
+      "#{Time.current.strftime('%Y%m%d')}-football-idp.json", "w"
     ) do |f|
       f.write(PlayerPool.last.players.to_json)
     end

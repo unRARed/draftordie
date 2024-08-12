@@ -215,6 +215,7 @@ private
       :user_count,
       :selection_seconds,
       :player_ids,
+      :player_pool_id,
       :order_pairings_attributes => [
         :id,
         :context_value,

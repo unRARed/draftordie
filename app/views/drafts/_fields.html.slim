@@ -2,6 +2,13 @@ div class="grid grid-cols-1 gap-8 m-auto#{' md:grid-cols-2' if f.object.persiste
   .c-panel
     h3.text-center Setup Draft
     .form-group.form-group--required
+      = f.label :player_pool, "Player Pool",
+        class: "c-form__label"
+      = f.select :player_pool, options_for_select( \
+        PlayerPool.all.map { |pool| [pool.name, pool.id] }, selected: f.object.player_pool_id),
+        { include_blank: "Select a Player Pool" },
+        { class: "c-field" }
+    .form-group.form-group--required
       = f.label :name, "Draft Name",
         class: "c-form__label"
       = f.text_field :name, class: "c-field"
