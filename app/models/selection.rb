@@ -154,7 +154,7 @@ class Selection < ApplicationRecord
   # Player name takes precedence over write-in name
   def name
     return player.formatted_name if player.present?
-    return write_in_name if write_in_name.present?
+    return formatted_write_in_name if write_in_name.present?
 
     return "Missed" if time_expired?
     "TBD"
@@ -199,6 +199,17 @@ private
     return unless self.is_selected?
 
     self.set_end
+  end
+
+  def formatted_write_in_name
+    parts = [write_in_name]
+    if write_in_position.present?
+      parts << "(#{write_in_position})"
+    end
+    if write_in_team.present?
+      parts << "(#{write_in_team})"
+    end
+    parts.join(" ")
   end
 
   def write_in_values_mutually_present

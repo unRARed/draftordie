@@ -12,6 +12,7 @@ RSpec.describe "Draft Creation", type: :feature do
 
   it :succeeds, js: true do
     visit "/drafts/new"
+    select player_pool.name, from: "Player Pool"
     fill_in "Name", with: "My Draft"
     fill_in "Number of Rounds", with: 4
     fill_in "Time per Selection", with: 1

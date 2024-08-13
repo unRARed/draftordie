@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_12_041228) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_12_060346) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -117,24 +117,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_12_041228) do
   add_foreign_key "selections", "rounds"
   add_foreign_key "selections", "users"
 
-  create_view "data_players_remaining_for_drafts", sql_definition: <<-SQL
-      SELECT DISTINCT ON (d.id, pl."position", (concat(pl."position", ' ', pl.name))) pl.id,
-      d.id AS draft_id,
-      concat(pl.name, ' (', pl."position", ', ', pl.team, ')') AS player_data,
-      concat(pl."position", ' ', pl.name) AS value_for_sort,
-      (selected_players.draft_id IS NOT NULL) AS is_selected
-     FROM ((((players pl
-       CROSS JOIN drafts d)
-       JOIN rounds r ON ((r.draft_id = d.id)))
-       JOIN selections s ON ((s.round_id = r.id)))
-       LEFT JOIN ( SELECT pl_1.id AS selected_player_id,
-              d_1.id AS draft_id
-             FROM (((players pl_1
-               JOIN selections s_1 ON ((s_1.player_id = pl_1.id)))
-               JOIN rounds r_1 ON ((r_1.id = s_1.round_id)))
-               JOIN drafts d_1 ON ((d_1.id = r_1.draft_id)))) selected_players ON (((pl.id = selected_players.selected_player_id) AND (selected_players.draft_id = d.id))))
-    ORDER BY d.id, pl."position" DESC, (concat(pl."position", ' ', pl.name));
-  SQL
   create_view "data_selections_for_displays", sql_definition: <<-SQL
       SELECT DISTINCT ON (d.id, s.pick_number) s.id AS selection_id,
       d.id AS draft_id,
@@ -196,5 +178,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_12_041228) do
             ORDER BY open_selections.pick_number
            LIMIT 1) orphan_selections ON ((orphan_selections.draft_id = drafts.id)))
     WHERE ((drafts.started_at IS NOT NULL) AND (drafts.ended_at IS NULL) AND (drafts.is_paused = false));
+  SQL
+  create_view "data_players_remaining_for_drafts", sql_definition: <<-SQL
+      SELECT DISTINCT ON (d.id, pl."position", (concat(pl."position", ' ', pl.name))) pl.id,
+      d.id AS draft_id,
+      concat(pl.name, ' (', pl."position", ', ', pl.team, ')') AS player_data,
+      concat(pl."position", ' ', pl.name) AS value_for_sort,
+      (selected_players.draft_id IS NOT NULL) AS is_selected
+     FROM (((((drafts d
+       JOIN player_pools pp ON ((pp.id = d.player_pool_id)))
+       JOIN players pl ON ((pl.player_pool_id = pp.id)))
+       JOIN rounds r ON ((r.draft_id = d.id)))
+       JOIN selections s ON ((s.round_id = r.id)))
+       LEFT JOIN ( SELECT pl_1.id AS selected_player_id,
+              d_1.id AS draft_id
+             FROM ((((players pl_1
+               JOIN selections s_1 ON ((s_1.player_id = pl_1.id)))
+               JOIN rounds r_1 ON ((r_1.id = s_1.round_id)))
+               JOIN drafts d_1 ON ((d_1.id = r_1.draft_id)))
+               JOIN player_pools pp_1 ON ((pp_1.id = d_1.player_pool_id)))) selected_players ON (((pl.id = selected_players.selected_player_id) AND (selected_players.draft_id = d.id))))
+    ORDER BY d.id, pl."position" DESC, (concat(pl."position", ' ', pl.name));
   SQL
 end

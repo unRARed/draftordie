@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe "Draft Progression", type: :feature do
   include DraftSpecHelper
 
-  let!(:player_pool) { FactoryBot.create(:player_pool) }
+  let!(:player_pool) do
+    FactoryBot.create(:player_pool_with_players)
+  end
   let!(:commish) do
     FactoryBot.create(:user,
       email: "commish@draftordie.com")

@@ -41,6 +41,10 @@ class Draft < ApplicationRecord
     -> {
       where(
         "data_players_remaining_for_drafts.is_selected" => false
+      ).
+      order(
+        position: :desc,
+        value_for_sort: :asc
       )
     },
     through: :player_data,

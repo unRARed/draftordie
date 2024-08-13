@@ -18,6 +18,8 @@ class PlayerPool < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
+  scope :active, -> { where(is_active: true) }
+
   # NOTE: Re-generate football JSON player-list locally with:
   #
   #   RefreshPlayerPoolJob.perform_now

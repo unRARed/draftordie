@@ -30,11 +30,32 @@
 require 'rails_helper'
 
 RSpec.describe Draft, type: :model do
+  subject { FactoryBot.build(:draft) }
+
   context "instance methods" do
     describe "#current_selection" do
       let!(:draft) { FactoryBot.create(:draft) }
 
       it "returns the next upcoming selection"
+    end
+
+    describe "#remaining_players" do
+      it "excludes players not in the player_pool" do
+        player_pool1 = FactoryBot.create(:player_pool)
+        player_pool2 = FactoryBot.create(:player_pool)
+        player1 = FactoryBot.
+          create(:player, player_pool: player_pool1)
+        player2 = FactoryBot.
+          create(:player, player_pool: player_pool2)
+        draft = FactoryBot.create(
+          :draft,:complete_commish_only,
+          player_pool: player_pool1
+        )
+        draft.generate_board!
+        expect(draft.remaining_players.count).to eq(1)
+        expect(draft.remaining_players).to include(player1)
+        expect(draft.remaining_players).not_to include(player2)
+      end
     end
   end
 end

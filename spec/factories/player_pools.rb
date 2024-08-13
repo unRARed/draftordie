@@ -18,4 +18,17 @@ FactoryBot.define do
     players { [] }
     drafts { [] }
   end
+
+  factory :player_pool_with_players, parent: :player_pool do
+    transient do
+      players_count { 5 }
+    end
+
+    after(:create) do |player_pool, evaluator|
+      create_list(:player,
+        evaluator.players_count,
+        player_pool: player_pool
+      )
+    end
+  end
 end

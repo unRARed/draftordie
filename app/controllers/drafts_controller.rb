@@ -120,7 +120,6 @@ class DraftsController < ApplicationController
     @draft = Draft.new(draft_params)
     authorize @draft
     @draft.user = current_user
-    @draft.player_pool_id = PlayerPool.last&.id || 1
 
     if @draft.save
       flash[:notice] = "Draft created successfully"

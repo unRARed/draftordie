@@ -73,3 +73,5 @@ yarn-debug.log*
 !/app/assets/builds/.keep
 
 .DS_Store
+
+erd.pdf

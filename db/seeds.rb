@@ -25,7 +25,12 @@ user.save(validate: false)
 puts "Seeding players..."
 # generate players JSON with:
 # RefreshPlayerPoolJob.perform_now
-nfl = PlayerPool.import(
+pools = []
+pools << PlayerPool.import(
+  "2024 NFL Standard",
+  Dir.glob("db/seeds/player_pools/football/*football.json")
+)
+pools << PlayerPool.import(
   "2024 NFL Standard plus IDP",
   Dir.glob("db/seeds/player_pools/football/*.json")
 )
@@ -34,7 +39,7 @@ puts "Seeding drafts..."
 [8, 10, 12, 14, 16, 20].each do |count|
   draft = FactoryBot.create(:draft,
     :max, user: user,
-    player_pool: nfl,
+    player_pool: pools.sample,
     selection_seconds: [30, 60].sample
   )
   User.first(count).each do |user|

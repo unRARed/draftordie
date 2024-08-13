@@ -98,6 +98,7 @@ group :development do
   gem "letter_opener_web"
   gem "annotate", "~> 3.2"
   gem "dockerfile-rails", ">= 1.5"
+  gem "rails-erd"
 end
 
 gem "watir", "~> 7.2"
