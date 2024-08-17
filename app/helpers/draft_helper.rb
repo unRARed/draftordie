@@ -33,8 +33,10 @@ module DraftHelper
 
   def compute_text_size(user_count)
     case user_count
-    when 15..20
+    when 17..20
       6
+    when 15..16
+      8
     when 11..14
       9
     when 7..10
