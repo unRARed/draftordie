@@ -7,6 +7,6 @@
     - # handle errors with flash, otherwise, N+1
     .m-auto
       = render partial: "selections/bulk_fields",
-        locals: { f: f, is_bulk: true }
+        locals: { f: f, is_bulk: true, draft: @draft }
     = f.submit "Update Pick# #{@selection_for_display.pick_number}",
       class: "c-button c-button--positive"

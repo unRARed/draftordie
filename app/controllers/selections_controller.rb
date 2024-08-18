@@ -80,6 +80,7 @@ private
 
   def selection_params
     params.require(:selection).permit(
+      :is_commish_action,
       :write_in_name,
       :write_in_team,
       :write_in_position,

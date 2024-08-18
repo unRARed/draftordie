@@ -35,7 +35,7 @@ class Selection < ApplicationRecord
 
   include DraftHelper
 
-  attr_accessor :selecting_user
+  attr_accessor :selecting_user, :is_commish_action
 
   belongs_to :draft
   belongs_to :round
@@ -63,7 +63,8 @@ class Selection < ApplicationRecord
 
   # Don't validate this on create as there is initially
   # no player_id or write in values
-  validate :player_selected, on: :update
+  validate :player_selected, on: :update,
+    unless: -> { is_commish_action }
 
   validate :write_in_values_mutually_present
   validate :xor_player_or_write_in

@@ -1,7 +1,11 @@
 .pt-2
+  = f.hidden_field :is_commish_action, value: true
   .form-group.form-group--required.pb-2
-    - select_list = Player.for_selection. \
+    - select_list = draft.remaining_players. \
       map{|p| [p.formatted_name, p.id]}
+    - if f.object.player.present?
+      - select_list << draft.players_for_select[:selected]. \
+        find { |p| p[1] == f.object.player_id }
     = f.select :player_id, select_list,
       { include_blank: " - Select Player - " },
       selected: f.object.player_id,

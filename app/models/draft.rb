@@ -122,10 +122,10 @@ class Draft < ApplicationRecord
       {
         remaining: self.player_data.
           where(is_selected: false).
-          map{|p| [p.player_data, p.player_id]},
+          map{|p| [p.player_data, p.id]},
         selected: self.player_data.
           where(is_selected: true).
-          map{|p| [p.player_data, p.player_id]}
+          map{|p| [p.player_data, p.id]}
       }
   end
   # def remaining_players

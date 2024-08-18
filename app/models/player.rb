@@ -63,6 +63,6 @@ class Player < ApplicationRecord
   }
 
   def formatted_name
-    "#{name} (#{position}) (#{team})"
+    "#{name} (#{position}, #{team})"
   end
 end

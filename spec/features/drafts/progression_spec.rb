@@ -42,22 +42,58 @@ RSpec.describe "Draft Progression", type: :feature do
 
       # commish is redirected to the draft dashboard
       # and it's their turn to pick
+      player_list = []
+      selected_player = nil
       page.find("form", visible: true)
       within(".c-draft__pick--current") do
         expect(page).to have_content("Commish's Team")
       end
+      within(".c-fuzzy-select") do
+        all(".c-fuzzy-select__item").each_with_index do |item, i|
+          if i == 0
+            item.click
+            selected_player = item.text
+          else
+            player_list << item.text
+          end
+        end
+      end
+      click_on "Draft Player"
+      find(
+        ".c-notification.c-notification--notice",
+        visible: true
+      )
 
       # pick time expires
       sleep draft.selection_seconds
       # simulate job running in the background
       ProgressDraftsJob.perform_now
-      page.find(".c-draft__pick--missed", visible: true)
+
+      visit board_draft_path(draft)
+
+      # commish changes their first selection
+      within("#pick_number_1") do
+        find(".c-draft__board__slot__edit").click
+        expect(page).to have_content selected_player
+      end
+      within(".c-form--bulk") do
+        expect(player_list).
+          not_to include(find("option[selected]").text)
+        expect(selected_player).
+          to eq(find("option[selected]").text)
+        select player_list.first, from: "selection_player_id"
+        click_on "Update Pick"
+      end
+      within("#pick_number_1") do
+        find(".c-draft__board__slot__edit").click
+        expect(page).not_to have_content selected_player
+      end
 
       # pick time expires again
       sleep draft.selection_seconds
       # job runs in the background
       ProgressDraftsJob.perform_now
-      page.find(".c-draft--ended", visible: true)
+      first(".c-draft--ended", visible: true)
     end
 
     it "works for two users", js: true do
