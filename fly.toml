@@ -30,6 +30,14 @@ kill_timeout = 5
     method = "GET"
     timeout = "10s"
     path = "/"
+  [[http_service.checks]]
+    grace_period = "3s"
+    interval = "2s"
+    method = "GET"
+    path = "/bnzg3si3tbs3yb5ya48o"
+    protocol = "http"
+    restart_limit = 0
+    timeout = "10s"
 
 [[statics]]
   guest_path = "/rails/public"

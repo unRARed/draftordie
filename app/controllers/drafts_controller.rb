@@ -31,6 +31,11 @@ class DraftsController < ApplicationController
     redirect_to root_path
   end
 
+  def progress
+    ProgressDraftsJob.perform_now
+    head :ok
+  end
+
   def verify_access
     access_code =
       params[:access_code].upcase
