@@ -3,4 +3,4 @@
 :scheduler:
   :schedule:
      ProgressDraftsJob:
-       every: ['30s'] # was 5s - too much for upstash cost-wise
+       every: ['10s'] # was 5s - too much for upstash cost-wise
